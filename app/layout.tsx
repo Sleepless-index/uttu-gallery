@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
-
-const zhongsong = localFont({
-  src: "./fonts/STZHONGS.TTF",
-  variable: "--font-zhongsong",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Arcanist Dashboard — Reverse: 1999 Tracker",
@@ -21,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${zhongsong.variable} antialiased`}>{children}</body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }
