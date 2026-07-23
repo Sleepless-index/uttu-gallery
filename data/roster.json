@@ -1,0 +1,1042 @@
+[
+  {
+    "id": 3154,
+    "slug": "silverwing_eagle",
+    "name": "Silverwing Eagle",
+    "rarity": 5,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3147,
+    "slug": "ms._stranger",
+    "name": "Ms. Stranger",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3146,
+    "slug": "rhiannon",
+    "name": "Rhiannon",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3145,
+    "slug": "everecho",
+    "name": "Everecho",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3144,
+    "slug": "coppélia",
+    "name": "Coppélia",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3143,
+    "slug": "enigma",
+    "name": "Enigma",
+    "rarity": 6,
+    "afflatus": "Intelligence",
+    "race": "Human"
+  },
+  {
+    "id": 3142,
+    "slug": "ramona",
+    "name": "Ramona",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3141,
+    "slug": "paper_heron",
+    "name": "Paper Heron",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3140,
+    "slug": "cornerstone",
+    "name": "Cornerstone",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3139,
+    "slug": "lorentz_butterfly",
+    "name": "Lorentz Butterfly",
+    "rarity": 6,
+    "afflatus": "Intelligence",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3138,
+    "slug": "reed",
+    "name": "Reed",
+    "rarity": 4,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3137,
+    "slug": "cheng_heguang",
+    "name": "Cheng Heguang",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3136,
+    "slug": "lady_by_the_lake",
+    "name": "<i>Lady by the Lake</i>",
+    "rarity": 4,
+    "afflatus": "Plant",
+    "race": "Awakened"
+  },
+  {
+    "id": 3135,
+    "slug": "brume",
+    "name": "Brume",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3134,
+    "slug": "beryl",
+    "name": "Beryl",
+    "rarity": 6,
+    "afflatus": "Intelligence",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3132,
+    "slug": "corvus",
+    "name": "Corvus",
+    "rarity": 6,
+    "afflatus": "Intelligence",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3128,
+    "slug": "charon",
+    "name": "Charon",
+    "rarity": 6,
+    "afflatus": "Spirit",
+    "race": "Awakened"
+  },
+  {
+    "id": 3127,
+    "slug": "marsha",
+    "name": "Marsha",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3126,
+    "slug": "sentinel",
+    "name": "Sentinel",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3125,
+    "slug": "rubuska",
+    "name": "Rubuska",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3124,
+    "slug": "kassandra",
+    "name": "Kassandra",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Human"
+  },
+  {
+    "id": 3123,
+    "slug": "ezio_auditore",
+    "name": "Ezio Auditore",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Human"
+  },
+  {
+    "id": 3122,
+    "slug": "alexios",
+    "name": "Alexios",
+    "rarity": 5,
+    "afflatus": "Beast",
+    "race": "Human"
+  },
+  {
+    "id": 3121,
+    "slug": "moldir",
+    "name": "Moldir",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Mixed"
+  },
+  {
+    "id": 3120,
+    "slug": "nautika",
+    "name": "Nautika",
+    "rarity": 6,
+    "afflatus": "Spirit",
+    "race": "Infected"
+  },
+  {
+    "id": 3118,
+    "slug": "name_day",
+    "name": "Name Day",
+    "rarity": 5,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3117,
+    "slug": "kiperina",
+    "name": "Kiperina",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3116,
+    "slug": "hissabeth",
+    "name": "Hissabeth",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3115,
+    "slug": "buddy_fairchild",
+    "name": "Buddy Fairchild",
+    "rarity": 5,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3114,
+    "slug": "recoleta",
+    "name": "Recoleta",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3113,
+    "slug": "aleph",
+    "name": "Aleph",
+    "rarity": 6,
+    "afflatus": "Intelligence",
+    "race": "Human"
+  },
+  {
+    "id": 3112,
+    "slug": "loggerhead",
+    "name": "Loggerhead",
+    "rarity": 5,
+    "afflatus": "Plant",
+    "race": "Awakened"
+  },
+  {
+    "id": 3111,
+    "slug": "noire",
+    "name": "Noire",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3110,
+    "slug": "liang_yue",
+    "name": "Liang Yue",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Mixed"
+  },
+  {
+    "id": 3109,
+    "slug": "fatutu",
+    "name": "Fatutu",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3108,
+    "slug": "barcarola",
+    "name": "Barcarola",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3107,
+    "slug": "ulrich",
+    "name": "Ulrich",
+    "rarity": 6,
+    "afflatus": "Intelligence",
+    "race": "Awakened"
+  },
+  {
+    "id": 3106,
+    "slug": "brimley",
+    "name": "Brimley",
+    "rarity": 5,
+    "afflatus": "Mineral",
+    "race": "Awakened"
+  },
+  {
+    "id": 3105,
+    "slug": "flutterpage",
+    "name": "Flutterpage",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Mixed"
+  },
+  {
+    "id": 3104,
+    "slug": "willow",
+    "name": "Willow",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3103,
+    "slug": "mr._duncan",
+    "name": "Mr. Duncan",
+    "rarity": 5,
+    "afflatus": "Beast",
+    "race": "Human"
+  },
+  {
+    "id": 3102,
+    "slug": "lopera",
+    "name": "Lopera",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3101,
+    "slug": "white_rum",
+    "name": "White Rum",
+    "rarity": 4,
+    "afflatus": "Intelligence",
+    "race": "Awakened"
+  },
+  {
+    "id": 3100,
+    "slug": "anjo_nala",
+    "name": "Anjo Nala",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Beyond"
+  },
+  {
+    "id": 3099,
+    "slug": "barbara",
+    "name": "Barbara",
+    "rarity": 5,
+    "afflatus": "Spirit",
+    "race": "Mixed"
+  },
+  {
+    "id": 3098,
+    "slug": "tuesday",
+    "name": "Tuesday",
+    "rarity": 6,
+    "afflatus": "Spirit",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3097,
+    "slug": "argus",
+    "name": "Argus",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3096,
+    "slug": "pioneer",
+    "name": "Pioneer",
+    "rarity": 3,
+    "afflatus": "Spirit",
+    "race": "Awakened"
+  },
+  {
+    "id": 3095,
+    "slug": "mercuria",
+    "name": "Mercuria",
+    "rarity": 6,
+    "afflatus": "Spirit",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3094,
+    "slug": "j",
+    "name": "J",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Mixed"
+  },
+  {
+    "id": 3092,
+    "slug": "igor",
+    "name": "Igor",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Mixed"
+  },
+  {
+    "id": 3091,
+    "slug": "lorelei",
+    "name": "Lorelei",
+    "rarity": 5,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3088,
+    "slug": "semmelweis",
+    "name": "Semmelweis",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Infected"
+  },
+  {
+    "id": 3087,
+    "slug": "vila",
+    "name": "Vila",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3086,
+    "slug": "lucy",
+    "name": "Lucy",
+    "rarity": 6,
+    "afflatus": "Intelligence",
+    "race": "Awakened"
+  },
+  {
+    "id": 3084,
+    "slug": "getian",
+    "name": "Getian",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3083,
+    "slug": "jiu_niangzi",
+    "name": "Jiu Niangzi",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Mixed"
+  },
+  {
+    "id": 3082,
+    "slug": "yenisei",
+    "name": "Yenisei",
+    "rarity": 5,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3081,
+    "slug": "isolde",
+    "name": "Isolde",
+    "rarity": 6,
+    "afflatus": "Spirit",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3080,
+    "slug": "kakania",
+    "name": "Kakania",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3079,
+    "slug": "6",
+    "name": 6,
+    "rarity": 6,
+    "afflatus": "Intelligence",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3078,
+    "slug": "avgust",
+    "name": "Avgust",
+    "rarity": 5,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3077,
+    "slug": "windsong",
+    "name": "Windsong",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3076,
+    "slug": "ulu",
+    "name": "Ulu",
+    "rarity": 5,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3075,
+    "slug": "desert_flannel",
+    "name": "Desert Flannel",
+    "rarity": 5,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3074,
+    "slug": "ezra_theodore",
+    "name": "Ezra Theodore",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Human"
+  },
+  {
+    "id": 3073,
+    "slug": "spathodea",
+    "name": "Spathodea",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3072,
+    "slug": "shamane",
+    "name": "Shamane",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3071,
+    "slug": "kanjira",
+    "name": "Kanjira",
+    "rarity": 5,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3070,
+    "slug": "kaalaa_baunaa",
+    "name": "Kaalaa Baunaa",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3066,
+    "slug": "37",
+    "name": 37,
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3065,
+    "slug": "marcus",
+    "name": "Marcus",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3064,
+    "slug": "diggers",
+    "name": "Diggers",
+    "rarity": 5,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3063,
+    "slug": "pickles",
+    "name": "Pickles",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3062,
+    "slug": "melania",
+    "name": "Melania",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3061,
+    "slug": "horropedia",
+    "name": "Horropedia",
+    "rarity": 5,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3060,
+    "slug": "blonney",
+    "name": "Blonney",
+    "rarity": 5,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3059,
+    "slug": "door",
+    "name": "Door",
+    "rarity": 2,
+    "afflatus": "Intelligence",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3058,
+    "slug": "erick",
+    "name": "Erick",
+    "rarity": 4,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3057,
+    "slug": "mesmer_jr.",
+    "name": "Mesmer Jr.",
+    "rarity": 4,
+    "afflatus": "Intelligence",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3056,
+    "slug": "jessica",
+    "name": "Jessica",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Beyond"
+  },
+  {
+    "id": 3055,
+    "slug": "sputnik",
+    "name": "Sputnik",
+    "rarity": 3,
+    "afflatus": "Star",
+    "race": "Awakened"
+  },
+  {
+    "id": 3054,
+    "slug": "onion",
+    "name": "ONiON",
+    "rarity": 3,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3053,
+    "slug": "tooth_fairy",
+    "name": "Tooth Fairy",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3052,
+    "slug": "ms._newbabel",
+    "name": "Ms. Newbabel",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3051,
+    "slug": "eternity",
+    "name": "Eternity",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3050,
+    "slug": "darley_clatter",
+    "name": "Darley Clatter",
+    "rarity": 3,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3049,
+    "slug": "click",
+    "name": "Click",
+    "rarity": 5,
+    "afflatus": "Spirit",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3048,
+    "slug": "voyager",
+    "name": "Voyager",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Beyond"
+  },
+  {
+    "id": 3047,
+    "slug": "medicine_pocket",
+    "name": "Medicine Pocket",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3046,
+    "slug": "poltergeist",
+    "name": "Poltergeist",
+    "rarity": 4,
+    "afflatus": "Spirit",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3045,
+    "slug": "bette",
+    "name": "Bette",
+    "rarity": 3,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3044,
+    "slug": "ms._moissan",
+    "name": "Ms. Moissan",
+    "rarity": 4,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3043,
+    "slug": "tennant",
+    "name": "Tennant",
+    "rarity": 5,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3042,
+    "slug": "rabies",
+    "name": "Rabies",
+    "rarity": 4,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3041,
+    "slug": "matilda",
+    "name": "Matilda",
+    "rarity": 5,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3040,
+    "slug": "twins_sleep",
+    "name": "Twins Sleep",
+    "rarity": 3,
+    "afflatus": "Spirit",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3039,
+    "slug": "an-an_lee",
+    "name": "An-an Lee",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3038,
+    "slug": "satsuki",
+    "name": "Satsuki",
+    "rarity": 5,
+    "afflatus": "Plant",
+    "race": "Mixed"
+  },
+  {
+    "id": 3037,
+    "slug": "necrologist",
+    "name": "Necrologist",
+    "rarity": 5,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3036,
+    "slug": "john_titor",
+    "name": "John Titor",
+    "rarity": 3,
+    "afflatus": "Intelligence",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3035,
+    "slug": "leilani",
+    "name": "Leilani",
+    "rarity": 3,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3034,
+    "slug": "alien_t",
+    "name": "aliEn T",
+    "rarity": 3,
+    "afflatus": "Star",
+    "race": "Beyond"
+  },
+  {
+    "id": 3033,
+    "slug": "ttt",
+    "name": "TTT",
+    "rarity": 4,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3032,
+    "slug": "centurion",
+    "name": "Centurion",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3031,
+    "slug": "cristallo",
+    "name": "Cristallo",
+    "rarity": 4,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3030,
+    "slug": "la_source",
+    "name": "La Source",
+    "rarity": 3,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3028,
+    "slug": "apple",
+    "name": "APPLe",
+    "rarity": 4,
+    "afflatus": "Star",
+    "race": "Awakened"
+  },
+  {
+    "id": 3027,
+    "slug": "ms._radio",
+    "name": "Ms. Radio",
+    "rarity": 2,
+    "afflatus": "Spirit",
+    "race": "Awakened"
+  },
+  {
+    "id": 3026,
+    "slug": "mondlicht",
+    "name": "Mondlicht",
+    "rarity": 4,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3025,
+    "slug": "regulus",
+    "name": "Regulus",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3024,
+    "slug": "balloon_party",
+    "name": "Balloon Party",
+    "rarity": 5,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3023,
+    "slug": "sonetto",
+    "name": "Sonetto",
+    "rarity": 5,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3022,
+    "slug": "dikke",
+    "name": "Dikke",
+    "rarity": 5,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3020,
+    "slug": "bkornblume",
+    "name": "Bkornblume",
+    "rarity": 5,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3018,
+    "slug": "oliver_fog",
+    "name": "Oliver Fog",
+    "rarity": 4,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3017,
+    "slug": "charlie",
+    "name": "Charlie",
+    "rarity": 5,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3016,
+    "slug": "baby_blue",
+    "name": "Baby Blue",
+    "rarity": 5,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3015,
+    "slug": "pavia",
+    "name": "Pavia",
+    "rarity": 4,
+    "afflatus": "Beast",
+    "race": "Mixed"
+  },
+  {
+    "id": 3014,
+    "slug": "bunny_bunny",
+    "name": "Bunny Bunny",
+    "rarity": 4,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3013,
+    "slug": "зима",
+    "name": "Зима",
+    "rarity": 4,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3012,
+    "slug": "the_fool",
+    "name": "The Fool",
+    "rarity": 3,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3011,
+    "slug": "sweetheart",
+    "name": "Sweetheart",
+    "rarity": 5,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3010,
+    "slug": "x",
+    "name": "X",
+    "rarity": 5,
+    "afflatus": "Intelligence",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3009,
+    "slug": "sotheby",
+    "name": "Sotheby",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3007,
+    "slug": "a_knight",
+    "name": "A Knight",
+    "rarity": 6,
+    "afflatus": "Spirit",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3006,
+    "slug": "eagle",
+    "name": "Eagle",
+    "rarity": 4,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3005,
+    "slug": "nick_bottom",
+    "name": "Nick Bottom",
+    "rarity": 4,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3004,
+    "slug": "lilya",
+    "name": "Lilya",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3003,
+    "slug": "druvis_iii",
+    "name": "Druvis III",
+    "rarity": 6,
+    "afflatus": "Plant",
+    "race": "Arcanist"
+  }
+]

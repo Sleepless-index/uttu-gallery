@@ -1,0 +1,72 @@
+{
+  "character": {
+    "meta": {
+      "slug": "37",
+      "version": "1.4",
+      "url": ""
+    },
+    "identity": {
+      "name": "37",
+      "title": "",
+      "rarity": 6,
+      "afflatus": "Star",
+      "damage_type": "Mental",
+      "role_tags": ["DPS", "Extra Action"],
+      "va": "Emily Stranges",
+      "other_names": []
+    },
+    "combat": {
+      "base_stats": {
+        "ATK": 269,
+        "HP": 1242,
+        "reality_def": 113,
+        "mental_def": 131,
+        "critical_technique": 313
+      },
+      "skills": {
+        "insights": [
+          { "tier": "I", "text": "" }
+        ],
+        "portray": [
+          { "level": 1, "text": "" }
+        ]
+      }
+    },
+    "profile": {
+      "medium": "",
+      "inspired": "",
+      "fragrance_note": "",
+      "dimensions": "",
+      "exhibition_blurb": ""
+    },
+    "cosmetics": {
+      "default_garments": { "base_id": 306601, "insight_id": 306602 },
+      "garments": [
+        {
+          "id": 306603,
+          "pose_id": 306613,
+          "name": "Happy Bird Catcher",
+          "category": "basic",
+          "price": { "usd": 6.99, "cny": 45, "jpy": 980, "krw": 8800, "twd": 230 },
+          "flavor_text": ""
+        },
+        {
+          "id": 306604,
+          "pose_id": 306614,
+          "name": "Down in the Grotto",
+          "category": "unique",
+          "price": null,
+          "flavor_text": ""
+        },
+        {
+          "id": 306605,
+          "pose_id": 306615,
+          "name": "完美的流体",
+          "category": "basic",
+          "price": null,
+          "flavor_text": ""
+        }
+      ]
+    }
+  }
+}
