@@ -10,7 +10,7 @@
 
 /** Path to a character's base portrait art, relative to /public. */
 export function characterArtPath(id: number): string {
-  return `/art/${id}01.png`;
+  return `/art/${id}01.webp`;
 }
 
 /**
@@ -39,7 +39,7 @@ export function hasCharacterI2Art(id: number): boolean {
 /** Path to a character's Insight 2 alternate portrait, relative to /public. Falls back to the base art if none exists. */
 export function characterI2ArtPath(id: number): string {
   if (!hasCharacterI2Art(id)) return characterArtPath(id);
-  return `/art/${id}02.png`;
+  return `/art/${id}02.webp`;
 }
 
 /** Path to an afflatus icon, relative to /public. */

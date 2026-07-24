@@ -61,7 +61,7 @@ export default function Home() {
       case "name-asc":
         return [...result].sort((a, b) => a.name.localeCompare(b.name));
       default:
-        return [...result].sort((a, b) => b.rarity - a.rarity || a.id - b.id);
+        return [...result].sort((a, b) => b.rarity - a.rarity || b.id - a.id);
     }
   }, [search, rarity, afflatus, owned, sort, state]);
 
@@ -139,8 +139,8 @@ export default function Home() {
                 No arcanists match your filters.
               </p>
             ) : (
-              <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
-                {filtered.map((c) => (
+              <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
+                {filtered.map((c, i) => (
                   <CharacterCard
                     key={c.id}
                     character={c}
@@ -149,6 +149,7 @@ export default function Home() {
                     onOpen={setOpenCharacterId}
                     wishlisted={state.wishlist.includes(c.id)}
                     showI2Art={showI2Art}
+                    priority={i < 12}
                   />
                 ))}
               </div>

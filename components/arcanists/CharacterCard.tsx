@@ -18,6 +18,7 @@ interface CharacterCardProps {
   onOpen: (id: number) => void;
   wishlisted: boolean;
   showI2Art?: boolean;
+  priority?: boolean;
 }
 
 export function CharacterCard({
@@ -27,6 +28,7 @@ export function CharacterCard({
   onOpen,
   wishlisted,
   showI2Art = false,
+  priority = false,
 }: CharacterCardProps) {
   const displayName = parseDisplayName(character.name);
 
@@ -62,7 +64,10 @@ export function CharacterCard({
         {/* Dark gradient, subtle vignette from top to bottom */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/10 to-black/60" />
 
-        {/* Character art, full bleed, fills the entire card */}
+        {/* Character art, full bleed, fills the entire card. `priority` is
+            only true for the first couple rows (see page.tsx) — those are
+            the images actually above the fold and worth eager-loading;
+            marking every card priority would defeat lazy loading entirely. */}
         <Image
           src={
             showI2Art && hasCharacterI2Art(character.id)
@@ -73,6 +78,7 @@ export function CharacterCard({
           fill
           sizes="(max-width: 640px) 33vw, (max-width: 1024px) 16vw, 140px"
           className="object-cover object-top"
+          priority={priority}
         />
 
         {/* Rarity plate, anchored to the bottom, original asset untouched */}
