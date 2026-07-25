@@ -13,6 +13,8 @@ import { FilterSection } from "@/components/ui/FilterSection";
 import { MenuItem } from "@/components/ui/MenuItem";
 import { IconFilter } from "@/components/ui/IconFilter";
 
+type Garment = (typeof garments)[number];
+
 type GarmentCategoryFilter = "all" | string;
 
 const CATEGORY_ORDER = ["unique", "advanced", "basic", "roar_jukebox", "free"];
@@ -23,6 +25,132 @@ const CATEGORY_LABEL: Record<string, string> = {
   roar_jukebox: "Roar Jukebox",
   free: "Free",
 };
+
+// Rarity → CSS color var, for the tinted vignette. Falls back to the
+// lowest rarity tone if an unexpected value shows up.
+const RARITY_TINT: Record<number, string> = {
+  6: "var(--color-rarity-6)",
+  5: "var(--color-rarity-5)",
+  4: "var(--color-rarity-4)",
+  3: "var(--color-rarity-3)",
+  2: "var(--color-rarity-2)",
+};
+
+function rarityTint(rarity: number): string {
+  return RARITY_TINT[rarity] ?? RARITY_TINT[2];
+}
+
+// Initials fallback for when the art fails to load — first letter of
+// up to the first two words of the display name.
+function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
+interface GarmentCardProps {
+  garment: Garment;
+  charName: string;
+  rarity: number;
+  onOpen: (id: number) => void;
+}
+
+function GarmentCard({ garment, charName, rarity, onOpen }: GarmentCardProps) {
+  const [artLoaded, setArtLoaded] = useState(false);
+  const [artErrored, setArtErrored] = useState(false);
+  const [plateErrored, setPlateErrored] = useState(false);
+  const name = garmentDisplayName(garment);
+  const character = parseDisplayName(charName);
+
+  return (
+    <button onClick={() => onOpen(garment.id)} className="group relative outline-none">
+      <div
+        className="relative w-full overflow-hidden rounded-md border border-[var(--color-border)] transition-all duration-200 active:scale-[0.98] group-hover:-translate-y-1 group-hover:border-[var(--color-border-strong)] group-hover:shadow-lg group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)]"
+        style={{ aspectRatio: "224 / 524" }}
+      >
+        {/* Solid backdrop behind cutout art */}
+        <div className="absolute inset-0 bg-[var(--color-surface)]" />
+
+        {/* Dark vignette, top to bottom, with a faint rarity-colored glow
+            breathing in at the base. */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0.6) 100%), linear-gradient(to bottom, transparent 65%, color-mix(in srgb, ${rarityTint(rarity)} 8%, transparent) 100%)`,
+          }}
+        />
+
+        {/* Loading skeleton — shown until the art resolves */}
+        {!artLoaded && !artErrored && (
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute inset-0 animate-[shimmer_1.6s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+          </div>
+        )}
+
+        {!artErrored && (
+          <Image
+            src={garmentCardPath(garment)}
+            alt={name}
+            fill
+            sizes="(max-width: 640px) 33vw, (max-width: 1024px) 16vw, 140px"
+            className={`origin-top scale-110 object-cover object-top transition-opacity duration-200 ${artLoaded ? "opacity-100" : "opacity-0"}`}
+            onLoad={() => setArtLoaded(true)}
+            onError={() => setArtErrored(true)}
+          />
+        )}
+
+        {/* Broken-art fallback — initials on a flat panel */}
+        {artErrored && (
+          <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-surface-hover)]">
+            <span
+              className="text-3xl text-[var(--color-text-faint)]"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              {initials(name)}
+            </span>
+          </div>
+        )}
+
+        {/* Rarity plate, anchored to the bottom — uses the character's rarity */}
+        {!plateErrored && (
+          <div className="absolute inset-x-0 bottom-0 h-[55%]">
+            <Image
+              src={rarityPlatePath(rarity)}
+              alt=""
+              fill
+              sizes="140px"
+              className="object-cover object-bottom"
+              onError={() => setPlateErrored(true)}
+            />
+          </div>
+        )}
+
+        {/* Name, raised off the bottom edge */}
+        <div className="absolute inset-x-0 bottom-5 z-10 flex flex-col gap-0.5 px-2 leading-[1.15]">
+          <span
+            className={`block text-center text-[0.68rem] font-medium text-white/60 ${character.italic ? "italic" : ""}`}
+            style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}
+          >
+            {character.text}
+          </span>
+          <span
+            className="block text-balance text-center text-[0.95rem] font-semibold text-white"
+            style={{
+              textShadow: "0 1px 4px rgba(0,0,0,0.9)",
+              fontFamily: "var(--font-display)",
+            }}
+            title={name}
+          >
+            {name}
+          </span>
+        </div>
+      </div>
+    </button>
+  );
+}
 
 export function GarmentsView() {
   const [openGarmentId, setOpenGarmentId] = useState<number | null>(null);
@@ -104,66 +232,15 @@ export function GarmentsView() {
         </p>
       ) : (
         <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
-          {filtered.map((g) => {
-            const charName = characterNameById.get(g.characterId) ?? "";
-            return (
-              <button
-                key={g.id}
-                onClick={() => setOpenGarmentId(g.id)}
-                className="group relative"
-              >
-                <div
-                  className="relative w-full overflow-hidden rounded-md border border-[var(--color-border-strong)] transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-lg"
-                  style={{ aspectRatio: "224 / 524" }}
-                >
-                  {/* Solid backdrop behind cutout art */}
-                  <div className="absolute inset-0 bg-[var(--color-surface)]" />
-
-                  {/* Dark gradient vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/10 to-black/60" />
-
-                  <Image
-                    src={garmentCardPath(g)}
-                    alt={garmentDisplayName(g)}
-                    fill
-                    sizes="(max-width: 640px) 33vw, (max-width: 1024px) 16vw, 140px"
-                    className="object-cover object-top"
-                  />
-
-                  {/* Rarity plate, anchored to the bottom — uses the character's rarity */}
-                  <div className="absolute inset-x-0 bottom-0 h-[55%]">
-                    <Image
-                      src={rarityPlatePath(characterRarityById.get(g.characterId) ?? 6)}
-                      alt=""
-                      fill
-                      sizes="140px"
-                      className="object-cover object-bottom"
-                    />
-                  </div>
-
-                  {/* Name, raised off the bottom edge */}
-                  <div className="absolute inset-x-0 bottom-5 z-10 flex flex-col gap-0.5 px-2 leading-[1.15]">
-                    <span
-                      className={`block text-center text-[0.68rem] font-medium text-white/60 ${parseDisplayName(charName).italic ? "italic" : ""}`}
-                      style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}
-                    >
-                      {parseDisplayName(charName).text}
-                    </span>
-                    <span
-                      className="block text-balance text-center text-[0.95rem] font-semibold text-white"
-                      style={{
-                        textShadow: "0 1px 4px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.7)",
-                        fontFamily: "var(--font-display)",
-                      }}
-                      title={garmentDisplayName(g)}
-                    >
-                      {garmentDisplayName(g)}
-                    </span>
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+          {filtered.map((g) => (
+            <GarmentCard
+              key={g.id}
+              garment={g}
+              charName={characterNameById.get(g.characterId) ?? ""}
+              rarity={characterRarityById.get(g.characterId) ?? 6}
+              onOpen={setOpenGarmentId}
+            />
+          ))}
         </div>
       )}
 
