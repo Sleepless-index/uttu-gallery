@@ -10,13 +10,34 @@ import { SourceTable } from "@/components/cleardrops/SourceTable";
 import { AverageIncomeRow } from "@/components/cleardrops/AverageIncomeRow";
 import { ConversionTile } from "@/components/cleardrops/ConversionTile";
 import { useCleardropState } from "@/lib/hooks/useCleardropState";
-import { calculateCleardrops } from "@/lib/calculations/cleardrops";
+import { calculateCleardrops, limboCyclesFromPatchDates, lucidscapeCyclesFromPatchDates } from "@/lib/calculations/cleardrops";
 import { CLEARDROP_RATES } from "@/lib/types";
 import { CURRENCY_ICONS } from "@/lib/assets/currencyAssets";
 
 export function CleardropsView() {
   const { state, hydrated, update, reset } = useCleardropState();
   const breakdown = calculateCleardrops(state);
+
+  // Limbo resets on the 16th of each month, Lucidscape on the 1st — cycles
+  // cleared auto-follows how many of each reset date fall in the patch
+  // range. Recalculated on every date change; still a plain NumberField
+  // underneath, so it stays manually overridable afterward.
+  function handleDateChange(patch: { startDate?: string; endDate?: string }) {
+    const nextStart = patch.startDate ?? state.startDate;
+    const nextEnd = patch.endDate ?? state.endDate;
+    // While picking a new range, the end date is briefly cleared — skip
+    // recalculating cycles until both dates are set again, so it doesn't
+    // momentarily zero them out mid-pick.
+    if (!nextStart || !nextEnd) {
+      update(patch);
+      return;
+    }
+    update({
+      ...patch,
+      limboCycles: limboCyclesFromPatchDates(nextStart, nextEnd),
+      lucidscapeCycles: lucidscapeCyclesFromPatchDates(nextStart, nextEnd),
+    });
+  }
 
   if (!hydrated) {
     return (
@@ -57,15 +78,15 @@ export function CleardropsView() {
               label="Date range"
               startDate={state.startDate}
               endDate={state.endDate}
-              onStartChange={(v) => update({ startDate: v })}
-              onEndChange={(v) => update({ endDate: v })}
+              onStartChange={(v) => handleDateChange({ startDate: v })}
+              onEndChange={(v) => handleDateChange({ endDate: v })}
             />
           </div>
 
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
             <SectionHeader
               title="Endgame cycles"
-              info="Limbo and Lucidscape each pay 700 Cleardrops per full clear, on a monthly reset cycle."
+              info="Limbo and Lucidscape each pay 700 Cleardrops per full clear. Limbo resets on the 16th, Lucidscape on the 1st — auto-filled from your patch dates."
             />
             <div className="grid grid-cols-2 gap-3">
               <NumberField
@@ -195,7 +216,7 @@ export function CleardropsView() {
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
             <SectionHeader
               title="Average Income"
-              info="Your total Cleardrops for this patch, spread evenly across a day, a week, and a 30.44-day month."
+              info="Recurring Daily/Weekly task income only — Limbo, Lucidscape, and subscriptions aren't a steady rate, so they're left out here."
             />
             <AverageIncomeRow
               perDay={breakdown.avgPerDay}

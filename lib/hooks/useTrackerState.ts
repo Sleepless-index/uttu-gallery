@@ -2,11 +2,13 @@
 
 import { useCallback, useEffect, useState } from "react";
 import {
+  emptyProfile,
   emptyProgress,
   emptyTrackerState,
   type CharacterProgress,
   type TrackerState,
   type UpcomingArcanist,
+  type UserProfile,
 } from "@/lib/types";
 import { roster } from "@/lib/data/roster";
 
@@ -20,8 +22,8 @@ function loadState(): TrackerState {
     const parsed = JSON.parse(raw) as Partial<TrackerState>;
     return {
       progress: parsed.progress ?? {},
-      wishlist: parsed.wishlist ?? [],
       upcoming: parsed.upcoming ?? [],
+      profile: { ...emptyProfile(), ...parsed.profile },
     };
   } catch {
     return emptyTrackerState();
@@ -64,29 +66,12 @@ export function useTrackerState() {
   const toggleOwned = useCallback((id: number) => {
     setState((prev) => {
       const current = prev.progress[id] ?? emptyProgress();
-      const nextOwned = !current.owned;
       return {
         ...prev,
         progress: {
           ...prev.progress,
-          [id]: { ...current, owned: nextOwned },
+          [id]: { ...current, owned: !current.owned },
         },
-        // Owning a character clears it from the wishlist automatically.
-        wishlist: nextOwned
-          ? prev.wishlist.filter((w) => w !== id)
-          : prev.wishlist,
-      };
-    });
-  }, []);
-
-  const toggleWishlist = useCallback((id: number) => {
-    setState((prev) => {
-      const already = prev.wishlist.includes(id);
-      return {
-        ...prev,
-        wishlist: already
-          ? prev.wishlist.filter((w) => w !== id)
-          : [...prev.wishlist, id],
       };
     });
   }, []);
@@ -106,6 +91,13 @@ export function useTrackerState() {
     setState((prev) => ({
       ...prev,
       upcoming: prev.upcoming.filter((u) => u.uid !== uid),
+    }));
+  }, []);
+
+  const updateProfile = useCallback((patch: Partial<UserProfile>) => {
+    setState((prev) => ({
+      ...prev,
+      profile: { ...emptyProfile(), ...prev.profile, ...patch },
     }));
   }, []);
 
@@ -129,10 +121,10 @@ export function useTrackerState() {
     getProgress,
     updateProgress,
     toggleOwned,
-    toggleWishlist,
     addUpcoming,
     removeUpcoming,
     resetAll,
     importState,
+    updateProfile,
   };
 }

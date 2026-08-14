@@ -7,7 +7,6 @@ import { garments } from "@/lib/data/garments";
 import { garmentCardPath, garmentDisplayName } from "@/lib/assets/garmentAssets";
 import { rarityPlatePath } from "@/lib/assets/characterAssets";
 import { parseDisplayName } from "@/lib/data/roster";
-import { GarmentModal } from "@/components/garments/GarmentModal";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { FilterSection } from "@/components/ui/FilterSection";
 import { MenuItem } from "@/components/ui/MenuItem";
@@ -55,10 +54,9 @@ interface GarmentCardProps {
   garment: Garment;
   charName: string;
   rarity: number;
-  onOpen: (id: number) => void;
 }
 
-function GarmentCard({ garment, charName, rarity, onOpen }: GarmentCardProps) {
+function GarmentCard({ garment, charName, rarity }: GarmentCardProps) {
   const [artLoaded, setArtLoaded] = useState(false);
   const [artErrored, setArtErrored] = useState(false);
   const [plateErrored, setPlateErrored] = useState(false);
@@ -66,7 +64,7 @@ function GarmentCard({ garment, charName, rarity, onOpen }: GarmentCardProps) {
   const character = parseDisplayName(charName);
 
   return (
-    <button onClick={() => onOpen(garment.id)} className="group relative outline-none">
+    <div className="group relative">
       <div
         className="relative w-full overflow-hidden rounded-md border border-[var(--color-border)] transition-all duration-200 active:scale-[0.98] group-hover:-translate-y-1 group-hover:border-[var(--color-border-strong)] group-hover:shadow-lg group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)]"
         style={{ aspectRatio: "224 / 524" }}
@@ -148,12 +146,11 @@ function GarmentCard({ garment, charName, rarity, onOpen }: GarmentCardProps) {
           </span>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
 export function GarmentsView() {
-  const [openGarmentId, setOpenGarmentId] = useState<number | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<GarmentCategoryFilter>("all");
 
   const characterRarityById = useMemo(() => {
@@ -182,11 +179,6 @@ export function GarmentsView() {
       return rarityB - rarityA || b.characterId - a.characterId;
     });
   }, [categoryFilter, characterRarityById]);
-
-  const openGarment = garments.find((g) => g.id === openGarmentId) ?? null;
-  const openCharacter = openGarment
-    ? roster.find((c) => c.id === openGarment.characterId) ?? null
-    : null;
 
   return (
     <>
@@ -238,17 +230,10 @@ export function GarmentsView() {
               garment={g}
               charName={characterNameById.get(g.characterId) ?? ""}
               rarity={characterRarityById.get(g.characterId) ?? 6}
-              onOpen={setOpenGarmentId}
             />
           ))}
         </div>
       )}
-
-      <GarmentModal
-        garment={openGarment}
-        character={openCharacter}
-        onClose={() => setOpenGarmentId(null)}
-      />
     </>
   );
 }

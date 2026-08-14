@@ -1,4 +1,4 @@
-import { CLEARDROP_RATES, type CleardropPatchState } from "@/lib/types";
+import { CLEARDROP_RATES, countDayOfMonthInRange, type CleardropPatchState } from "@/lib/types";
 
 export interface CleardropSource {
   key: string;
@@ -46,6 +46,25 @@ export function daysBetween(startDate: string, endDate: string): number {
   const end = new Date(endDate);
   const diff = Math.round((end.getTime() - start.getTime()) / 86400000) + 1;
   return Math.max(0, diff);
+}
+
+
+/**
+ * Limbo cycles cleared, auto-derived from the patch date range.
+ * Limbo resets on the 16th of every month, so this counts how many
+ * 16ths fall within the range — 0 if the range doesn't span one.
+ */
+export function limboCyclesFromPatchDates(startDate: string, endDate: string): number {
+  return countDayOfMonthInRange(startDate, endDate, 16);
+}
+
+/**
+ * Lucidscape cycles cleared, auto-derived from the patch date range.
+ * Lucidscape resets on the 1st of every month, so this counts how many
+ * 1sts fall within the range — 0 if the range doesn't span one.
+ */
+export function lucidscapeCyclesFromPatchDates(startDate: string, endDate: string): number {
+  return countDayOfMonthInRange(startDate, endDate, 1);
 }
 
 const SOURCE_COLORS = {
@@ -110,9 +129,15 @@ export function calculateCleardrops(state: CleardropPatchState): CleardropBreakd
     { key: "battlePass", label: "Battle Pass", total: battlePassCleardropTotal, color: SOURCE_COLORS.battlePass },
   ].filter((s) => s.total > 0);
 
-  const avgPerDay = patchDays > 0 ? Math.round(cleardropGrandTotal / patchDays) : 0;
-  const avgPerWeek = patchDays > 0 ? Math.round(cleardropGrandTotal / (patchDays / 7)) : 0;
-  const avgPerMonth = patchDays > 0 ? Math.round(cleardropGrandTotal / (patchDays / 30.44)) : 0;
+  // Average income reflects only recurring Daily/Weekly task income — Limbo,
+  // Lucidscape, subscriptions, and one-off extras are excluded since they're
+  // not a steady per-day rate and would otherwise inflate this figure.
+  const avgPerDay = CLEARDROP_RATES.dailyPerDay;
+  const avgPerWeek = avgPerDay * 7 + CLEARDROP_RATES.weeklyPerWeek;
+  // "Per month" scales with the actual patch length (N days), not a flat 30
+  // days — dailies across all N days, plus however many weekly payouts land
+  // in that same N-day span.
+  const avgPerMonth = dailyTotal + weeklyTotal;
 
   return {
     patchDays,

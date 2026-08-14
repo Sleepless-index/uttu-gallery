@@ -26,6 +26,8 @@ export interface CharacterProgress {
   resonance: number; // 0-15
   insight: number; // 0-3
   level: number; // 0-60 (0 = unset)
+  /** Garment id the user has picked for this character, if any. */
+  selectedGarmentId?: number;
 }
 
 export const emptyProgress = (): CharacterProgress => ({
@@ -44,14 +46,28 @@ export interface UpcomingArcanist {
   note?: string;
 }
 
+/** Display identity shown on the roster page and exported PNG header. */
+export interface UserProfile {
+  name: string;
+  uid: string;
+  /** Filename (no extension) of the selected icon under /public/pfp, if any. */
+  pfpId?: string;
+}
+
+export const emptyProfile = (): UserProfile => ({
+  name: "",
+  uid: "",
+  pfpId: "170001",
+});
+
 export interface TrackerState {
   progress: Record<number, CharacterProgress>;
-  wishlist: number[];
   upcoming: UpcomingArcanist[];
+  profile: UserProfile;
 }
 
 export const emptyTrackerState = (): TrackerState => ({
   progress: {},
-  wishlist: [],
   upcoming: [],
+  profile: emptyProfile(),
 });

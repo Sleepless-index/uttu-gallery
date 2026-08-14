@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Sidebar } from "@/components/layout/Sidebar";
 
 const zhongsong = localFont({
   src: "./fonts/STZHONGS.ttf",
@@ -21,7 +22,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${zhongsong.variable} antialiased`}>{children}</body>
+      <body className={`${zhongsong.variable} antialiased`}>
+        <div className="flex min-h-screen">
+          <Sidebar />
+          <div className="min-w-0 flex-1">{children}</div>
+        </div>
+      </body>
     </html>
   );
 }

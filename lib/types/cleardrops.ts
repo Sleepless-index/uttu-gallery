@@ -41,14 +41,45 @@ function defaultDateRange(): { startDate: string; endDate: string } {
   return { startDate: fmt(start), endDate: fmt(end) };
 }
 
-export const emptyCleardropState = (): CleardropPatchState => ({
-  ...defaultDateRange(),
-  limboCycles: 1,
-  lucidscapeCycles: 1,
-  extraCleardrops: 0,
-  unilog: 0,
-  crystalDrops: 0,
-  monthlyCard: false,
-  battlePass: false,
-  battlePassTier: "collectors",
-});
+/**
+ * Counts how many times a given day-of-month occurs within an inclusive
+ * start/end date range. Shared by the default state below and by the
+ * cleardrops calculations module, since Limbo/Lucidscape both reset on a
+ * fixed calendar day each month rather than a rolling window.
+ */
+export function countDayOfMonthInRange(startDate: string, endDate: string, dayOfMonth: number): number {
+  if (!startDate || !endDate) return 0;
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  if (end < start) return 0;
+
+  let count = 0;
+  const cursor = new Date(start.getFullYear(), start.getMonth(), 1);
+  while (cursor <= end) {
+    const candidate = new Date(cursor.getFullYear(), cursor.getMonth(), dayOfMonth);
+    if (candidate >= start && candidate <= end) {
+      count += 1;
+    }
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+  return count;
+}
+
+export const emptyCleardropState = (): CleardropPatchState => {
+  const { startDate, endDate } = defaultDateRange();
+  return {
+    startDate,
+    endDate,
+    // Limbo resets the 16th, Lucidscape the 1st — seed cycles from the
+    // default 42-day range so the initial numbers are accurate, not just
+    // a placeholder of 1.
+    limboCycles: countDayOfMonthInRange(startDate, endDate, 16),
+    lucidscapeCycles: countDayOfMonthInRange(startDate, endDate, 1),
+    extraCleardrops: 0,
+    unilog: 0,
+    crystalDrops: 0,
+    monthlyCard: false,
+    battlePass: false,
+    battlePassTier: "collectors",
+  };
+};

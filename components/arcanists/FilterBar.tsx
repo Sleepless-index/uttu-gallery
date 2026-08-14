@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AFFLATUS_META } from "@/lib/afflatus";
 import type { Afflatus, RarityFilter, OwnedFilter, SortOrder } from "@/lib/types";
@@ -10,8 +9,6 @@ import { MenuItem } from "@/components/ui/MenuItem";
 import { IconFilter } from "@/components/ui/IconFilter";
 
 interface FilterBarProps {
-  search: string;
-  onSearchChange: (v: string) => void;
   rarity: RarityFilter;
   onRarityChange: (r: RarityFilter) => void;
   afflatus: Afflatus | "all";
@@ -20,9 +17,6 @@ interface FilterBarProps {
   onStatusChange: (o: OwnedFilter) => void;
   sort: SortOrder;
   onSortChange: (s: SortOrder) => void;
-  editMode: boolean;
-  onToggleEditMode: () => void;
-  onReset: () => void;
   showI2Art: boolean;
   onToggleI2Art: () => void;
 }
@@ -40,7 +34,6 @@ const STATUS_LABEL: Record<OwnedFilter, string> = {
   all: "All arcanists",
   owned: "Owned",
   unowned: "Not owned",
-  wishlist: "Wishlist",
 };
 
 const RARITY_LABEL: Record<string, string> = {
@@ -59,28 +52,7 @@ const SORT_LABEL: Record<SortOrder, string> = {
   "name-asc": "Name: A to Z",
 };
 
-function IconSearch() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-      <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M11 11L14.5 14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconDots() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <circle cx="8" cy="3.5" r="1.3" fill="currentColor" />
-      <circle cx="8" cy="8" r="1.3" fill="currentColor" />
-      <circle cx="8" cy="12.5" r="1.3" fill="currentColor" />
-    </svg>
-  );
-}
-
 export function FilterBar({
-  search,
-  onSearchChange,
   rarity,
   onRarityChange,
   afflatus,
@@ -89,42 +61,11 @@ export function FilterBar({
   onStatusChange,
   sort,
   onSortChange,
-  editMode,
-  onToggleEditMode,
-  onReset,
   showI2Art,
   onToggleI2Art,
 }: FilterBarProps) {
-  const [actionsOpen, setActionsOpen] = useState(false);
-  const actionsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!actionsOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (actionsRef.current && !actionsRef.current.contains(e.target as Node)) {
-        setActionsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [actionsOpen]);
-
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {/* Search */}
-      <div className="relative">
-        <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--color-text-faint)]">
-          <IconSearch />
-        </span>
-        <input
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          type="text"
-          placeholder="Search arcanists…"
-          className="w-44 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] py-2 pl-8 pr-3 text-[0.78rem] text-[var(--color-text)] outline-none transition-colors focus:border-[var(--color-accent)] placeholder:text-[var(--color-text-faint)]"
-        />
-      </div>
-
       {/* Consolidated filters */}
       <Dropdown
         label="Filters"
@@ -231,31 +172,6 @@ export function FilterBar({
         )}
       </Dropdown>
 
-      {/* Quick owned-only toggle */}
-      <button
-        type="button"
-        onClick={() => onStatusChange(status === "owned" ? "all" : "owned")}
-        aria-pressed={status === "owned"}
-        className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-[0.75rem] font-medium transition-colors
-          ${
-            status === "owned"
-              ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-white"
-              : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
-          }`}
-      >
-        <span
-          className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded border text-[0.55rem]
-            ${
-              status === "owned"
-                ? "border-white bg-white text-[var(--color-accent)]"
-                : "border-[var(--color-border-strong)] text-transparent"
-            }`}
-        >
-          ✓
-        </span>
-        Owned only
-      </button>
-
       {/* Global I2 art toggle */}
       <button
         type="button"
@@ -274,55 +190,6 @@ export function FilterBar({
           <Image src="/insight/insight-2.webp" alt="Insight 2" fill sizes="20px" className="object-contain" />
         </span>
       </button>
-
-      {/* Actions dropdown */}
-      <div className="relative" ref={actionsRef}>
-        <button
-          onClick={() => setActionsOpen((v) => !v)}
-          aria-label="More actions"
-          aria-expanded={actionsOpen}
-          className={`flex h-9 w-9 items-center justify-center rounded-lg border transition-colors
-            ${
-              actionsOpen
-                ? "border-[var(--color-border-strong)] bg-[var(--color-surface-hover)] text-[var(--color-text)]"
-                : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
-            }`}
-        >
-          <IconDots />
-        </button>
-        {actionsOpen && (
-          <div className="absolute right-0 top-[calc(100%+6px)] z-50 w-48 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-panel)] py-1 shadow-xl">
-            <button
-              onClick={() => {
-                onToggleEditMode();
-                setActionsOpen(false);
-              }}
-              className="flex w-full items-center justify-between px-3 py-2 text-left text-[0.75rem] text-[var(--color-text)] transition-colors hover:bg-[var(--color-surface-hover)]"
-            >
-              Edit mode
-              <span
-                className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border text-[0.6rem]
-                  ${
-                    editMode
-                      ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-white"
-                      : "border-[var(--color-border-strong)] text-transparent"
-                  }`}
-              >
-                ✓
-              </span>
-            </button>
-            <button
-              onClick={() => {
-                onReset();
-                setActionsOpen(false);
-              }}
-              className="flex w-full items-center px-3 py-2 text-left text-[0.75rem] text-[var(--color-danger)] transition-colors hover:bg-[var(--color-surface-hover)]"
-            >
-              Reset all data
-            </button>
-          </div>
-        )}
-      </div>
     </div>
   );
 }

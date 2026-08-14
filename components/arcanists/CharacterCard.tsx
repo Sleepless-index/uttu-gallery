@@ -8,16 +8,16 @@ import {
   hasCharacterI2Art,
   afflatusIconPath,
   rarityPlatePath,
+  insightIconPath,
 } from "@/lib/assets/characterAssets";
+import { garmentCardPath } from "@/lib/assets/garmentAssets";
+import { garmentsForCharacter } from "@/lib/data/garments";
 import { parseDisplayName } from "@/lib/data/roster";
 import type { RosterCharacter, CharacterProgress } from "@/lib/types";
 
 interface CharacterCardProps {
   character: RosterCharacter;
   progress: CharacterProgress;
-  editMode: boolean;
-  onOpen: (id: number) => void;
-  wishlisted: boolean;
   showI2Art?: boolean;
   priority?: boolean;
 }
@@ -50,9 +50,6 @@ function initials(name: string): string {
 export function CharacterCard({
   character,
   progress,
-  editMode,
-  onOpen,
-  wishlisted,
   showI2Art = false,
   priority = false,
 }: CharacterCardProps) {
@@ -60,17 +57,24 @@ export function CharacterCard({
   const [artLoaded, setArtLoaded] = useState(false);
   const [artErrored, setArtErrored] = useState(false);
   const [plateErrored, setPlateErrored] = useState(false);
+  const hasLevelInfo = progress.level > 0;
+
+  // A selected garment takes priority over base/I2 art — this is what
+  // keeps the roster card in sync with whatever the detail modal's
+  // carousel last centered on.
+  const selectedGarment =
+    progress.selectedGarmentId != null
+      ? garmentsForCharacter(character.id).find((g) => g.id === progress.selectedGarmentId)
+      : undefined;
+
+  const artSrc = selectedGarment
+    ? garmentCardPath(selectedGarment)
+    : showI2Art && hasCharacterI2Art(character.id)
+      ? characterI2ArtPath(character.id)
+      : characterArtPath(character.id);
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={() => onOpen(character.id)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") onOpen(character.id);
-      }}
-      className="group relative cursor-pointer pt-3 outline-none"
-    >
+    <div className="group relative pt-3">
       {/* Afflatus bookmark — hangs above the card's top edge, left side */}
       <div className="absolute left-2 top-1.5 z-20 h-11 w-7">
         <Image
@@ -114,11 +118,7 @@ export function CharacterCard({
             marking every card priority would defeat lazy loading entirely. */}
         {!artErrored && (
           <Image
-            src={
-              showI2Art && hasCharacterI2Art(character.id)
-                ? characterI2ArtPath(character.id)
-                : characterArtPath(character.id)
-            }
+            src={artSrc}
             alt={displayName.text}
             fill
             sizes="(max-width: 640px) 33vw, (max-width: 1024px) 16vw, 140px"
@@ -156,38 +156,62 @@ export function CharacterCard({
           </div>
         )}
 
-        {/* Wishlist badge, top-right — solid chip, only shown when active */}
-        {wishlisted && (
-          <div className="absolute right-1.5 top-1.5 z-10 flex h-5 w-5 items-center justify-center rounded bg-[var(--color-accent)] text-[0.62rem] text-white">
-            ★
+        {/* Bottom info stack — name only until the user has logged a level;
+            once level is set, show insight tier, level, name, and portrait
+            pips, matching the in-game card layout. */}
+        {hasLevelInfo ? (
+          <div className="absolute inset-x-0 bottom-2 z-10 flex flex-col items-center gap-0.5">
+            {progress.insight > 0 && (
+              <span className="relative mb-0.5 h-6 w-6 shrink-0">
+                <Image
+                  src={insightIconPath(progress.insight as 1 | 2 | 3)}
+                  alt={`Insight ${progress.insight}`}
+                  fill
+                  sizes="24px"
+                  className="object-contain drop-shadow-md"
+                />
+              </span>
+            )}
+            <span
+              className="text-[0.85rem] font-semibold leading-tight text-white/90"
+              style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}
+            >
+              Lv.{progress.level}
+            </span>
+            <span
+              className={`block max-w-full px-2 text-center text-[1rem] font-semibold leading-tight text-white ${displayName.italic ? "italic" : ""}`}
+              style={{
+                textShadow: "0 1px 4px rgba(0,0,0,0.9)",
+                fontFamily: "var(--font-display)",
+              }}
+            >
+              {displayName.text}
+            </span>
+            {progress.portrait > 0 && (
+              <div className="mt-1.5 flex w-full items-center justify-between px-3">
+                {Array.from({ length: 5 }, (_, i) => i + 1).map((n) => (
+                  <span
+                    key={n}
+                    className={`h-[3px] flex-1 rounded-full ${n <= progress.portrait ? "bg-[var(--color-accent)]" : "bg-white/25"} ${n > 1 ? "ml-1" : ""}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-        )}
-
-        {/* Name, raised off the bottom edge with breathing room below it */}
-        <div className="absolute inset-x-0 bottom-5 z-10 px-2">
-          <span
-            className={`block truncate text-center text-[1.05rem] font-semibold leading-tight text-white ${displayName.italic ? "italic" : ""}`}
-            style={{
-              textShadow: "0 1px 4px rgba(0,0,0,0.9)",
-              fontFamily: "var(--font-display)",
-            }}
-            title={displayName.text}
-          >
-            {displayName.text}
-          </span>
-        </div>
-
-        {/* Edit mode indicator — solid accent border, no transparency */}
-        {editMode && (
-          <div className="pointer-events-none absolute inset-0 z-10 border-2 border-transparent transition-colors duration-150 group-hover:border-[var(--color-accent)]" />
-        )}
-        {editMode && (
-          <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 flex translate-y-[-100%] items-center justify-center bg-[var(--color-accent)] py-1 transition-transform duration-150 group-hover:translate-y-0">
-            <span className="text-[0.6rem] font-semibold uppercase tracking-wide text-white">
-              Click to edit
+        ) : (
+          <div className="absolute inset-x-0 bottom-2 z-10 px-2">
+            <span
+              className={`block text-center text-[1.05rem] font-semibold leading-tight text-white ${displayName.italic ? "italic" : ""}`}
+              style={{
+                textShadow: "0 1px 4px rgba(0,0,0,0.9)",
+                fontFamily: "var(--font-display)",
+              }}
+            >
+              {displayName.text}
             </span>
           </div>
         )}
+
       </div>
     </div>
   );
