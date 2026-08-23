@@ -16,14 +16,14 @@ export function ExportHeader({ profile }: ExportHeaderProps) {
   // A pfpId saved before an icon was removed/renamed would 404 — checking
   // against the current known list here avoids handing toPng() a dead URL,
   // rather than finding out only when the export itself fails on it.
-  const hasValidPfp = !!profile.pfpId && pfpIds.includes(profile.pfpId);
+  const validPfpId = profile.pfpId && pfpIds.includes(profile.pfpId) ? profile.pfpId : undefined;
 
   return (
     <div className="mb-6 flex items-center gap-4">
       <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl border-2 border-[var(--color-border)] bg-[var(--color-surface)]">
-        {hasValidPfp && (
+        {validPfpId && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={pfpPath(profile.pfpId)} alt="" className="h-full w-full object-cover" />
+          <img src={pfpPath(validPfpId)} alt="" className="h-full w-full object-cover" />
         )}
       </div>
       <div className="flex flex-col justify-center">
