@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { AFFLATUS_META } from "@/lib/afflatus";
+import { afflatusFilterIconPath } from "@/lib/afflatus";
 import type { Afflatus, RarityFilter, OwnedFilter, SortOrder } from "@/lib/types";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { FilterSection } from "@/components/ui/FilterSection";
@@ -66,6 +66,26 @@ export function FilterBar({
 }: FilterBarProps) {
   return (
     <div className="flex flex-wrap items-center gap-2">
+      {/* Global I2 art toggle — rendered first so it sits to the left of
+          Filters, keeping Filters as the rightmost control in the group. */}
+      <button
+        type="button"
+        onClick={onToggleI2Art}
+        aria-pressed={showI2Art}
+        aria-label="Toggle Insight 2 art"
+        title="Insight 2 art"
+        className={`flex h-9 w-9 items-center justify-center rounded-lg border transition-colors
+          ${
+            showI2Art
+              ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-white"
+              : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
+          }`}
+      >
+        <span className="relative h-5 w-5">
+          <Image src="/insight/insight-2.webp" alt="Insight 2" fill sizes="20px" className="object-contain" />
+        </span>
+      </button>
+
       {/* Consolidated filters */}
       <Dropdown
         label="Filters"
@@ -134,10 +154,16 @@ export function FilterBar({
                           : "bg-[var(--color-surface)] text-[var(--color-text-dim)] hover:text-[var(--color-text)]"
                       }`}
                   >
-                    <span
-                      className="inline-block h-2 w-2 rounded-full"
-                      style={{ background: afflatus === a ? "white" : AFFLATUS_META[a].colorVar }}
-                    />
+                    <span className="relative h-4 w-4 shrink-0">
+                      <Image
+                        src={afflatusFilterIconPath(a)}
+                        alt=""
+                        fill
+                        sizes="16px"
+                        className="object-contain"
+                        style={{ filter: afflatus === a ? "brightness(0) invert(1)" : undefined }}
+                      />
+                    </span>
                     {a}
                   </button>
                 ))}
@@ -171,25 +197,6 @@ export function FilterBar({
           </div>
         )}
       </Dropdown>
-
-      {/* Global I2 art toggle */}
-      <button
-        type="button"
-        onClick={onToggleI2Art}
-        aria-pressed={showI2Art}
-        aria-label="Toggle Insight 2 art"
-        title="Insight 2 art"
-        className={`flex h-9 w-9 items-center justify-center rounded-lg border transition-colors
-          ${
-            showI2Art
-              ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-white"
-              : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
-          }`}
-      >
-        <span className="relative h-5 w-5">
-          <Image src="/insight/insight-2.webp" alt="Insight 2" fill sizes="20px" className="object-contain" />
-        </span>
-      </button>
     </div>
   );
 }

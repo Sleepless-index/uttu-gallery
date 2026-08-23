@@ -72,7 +72,6 @@ export function CleardropsView() {
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
             <SectionHeader
               title="Patch dates"
-              info="Full patches typically run about 42 days (6 weeks) per patch, often split into two banner phases."
             />
             <DateRangeField
               label="Date range"
@@ -86,7 +85,6 @@ export function CleardropsView() {
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
             <SectionHeader
               title="Endgame cycles"
-              info="Limbo and Lucidscape each pay 700 Cleardrops per full clear. Limbo resets on the 16th, Lucidscape on the 1st — auto-filled from your patch dates."
             />
             <div className="grid grid-cols-2 gap-3">
               <NumberField
@@ -109,7 +107,6 @@ export function CleardropsView() {
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
             <SectionHeader
               title="Subscriptions"
-              info="Check the ones you're subscribed to this patch — their income gets added to the breakdown automatically."
             />
             <div className="flex flex-col gap-1">
               <CheckToggle
@@ -160,7 +157,6 @@ export function CleardropsView() {
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
             <SectionHeader
               title="Other currency"
-              info="1 Unilog = 1 pull. 180 Crystal Drops = 1 pull. Add anything from events or codes as Extra Cleardrops."
             />
             <div className="flex flex-wrap gap-4">
               <NumberField
@@ -190,7 +186,6 @@ export function CleardropsView() {
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
             <SectionHeader
               title="Income by source"
-              info="How your total Cleardrops break down across Daily, Weekly, Limbo, Lucidscape, and any subscriptions or extras."
             />
             {breakdown.sources.length === 0 ? (
               <p className="py-6 text-center text-sm text-[var(--color-text-faint)]">
@@ -218,7 +213,6 @@ export function CleardropsView() {
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
             <SectionHeader
               title="Average Income"
-              info="Recurring Daily/Weekly task income only — Limbo, Lucidscape, and subscriptions aren't a steady rate, so they're left out here."
             />
             <AverageIncomeRow
               perDay={breakdown.avgPerDay}
@@ -230,7 +224,6 @@ export function CleardropsView() {
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-5">
             <SectionHeader
               title="Conversion Summary"
-              info="Unilog pulls is your grand total — Cleardrops, Crystal Drops, and Unilog all converted and combined into one pull count."
             />
             <div className="flex flex-col gap-2.5 sm:flex-row">
               <ConversionTile

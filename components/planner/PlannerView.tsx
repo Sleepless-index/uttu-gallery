@@ -3,12 +3,9 @@
 import { useMemo } from "react";
 import { NumberField } from "@/components/ui/NumberField";
 import { MilestoneRow } from "@/components/planner/MilestoneRow";
-import { InfoTooltip } from "@/components/ui/InfoTooltip";
 import { usePlannerState } from "@/lib/hooks/usePlannerState";
 import { calculateMilestones } from "@/lib/calculations/pullPlanner";
 import { CLEARDROP_RATES } from "@/lib/types";
-
-const MILESTONE_LABELS = ["Base", "P1", "P2", "P3", "P4", "P5"];
 
 export function PlannerView() {
   const { state, hydrated, update, reset } = usePlannerState();
@@ -28,22 +25,6 @@ export function PlannerView() {
     [totalPulls, state.currentPity, state.guaranteed, state.currentCopies]
   );
 
-  const targetMilestone = milestones[state.targetCopies - 1];
-
-  // Rough Album of the Lost estimate: every copy pulled beyond the target,
-  // among 6-star pulls that aren't the featured character, converts to
-  // Album once Portray is maxed. This is informational only — see note below.
-  const albumEstimate = useMemo(() => {
-    // Expected number of non-featured 6-star pulls within the pull budget,
-    // used only as a rough side-estimate, not tied to any specific character.
-    // We approximate using the overall 6-star rate (2.36%) minus expected
-    // featured pulls implied by the milestone math.
-    const expectedSixStars = Math.round(totalPulls * 0.0236);
-    const expectedFeatured = Math.min(expectedSixStars, state.targetCopies);
-    const expectedOffBanner = Math.max(0, expectedSixStars - expectedFeatured);
-    return expectedOffBanner * 12;
-  }, [totalPulls, state.targetCopies]);
-
   if (!hydrated) {
     return (
       <div className="flex flex-1 items-center justify-center">
@@ -60,15 +41,6 @@ export function PlannerView() {
             <h1 className="text-[1.1rem] font-semibold text-[var(--color-text)]">
               Pull Planner
             </h1>
-            <InfoTooltip>
-              Base 6★ rate is 1.5%, rising to 4% at pull 60 and +2.5% per
-              pull after, guaranteed by pull 70. Each 6★ has a 50% chance of
-              being the featured character — if not, the next 6★ is
-              guaranteed to be. These odds are computed exactly, not
-              simulated. Album of the Lost is a rough estimate only; the
-              Pawnshop&apos;s monthly selection usually won&apos;t include
-              whichever character you&apos;re currently planning for.
-            </InfoTooltip>
           </div>
           <p className="text-[0.75rem] text-[var(--color-text-faint)]">
             Your odds of reaching a Portray target, given your pulls and pity.
@@ -115,22 +87,6 @@ export function PlannerView() {
               min={0}
               max={6}
             />
-          </div>
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {MILESTONE_LABELS.map((label, i) => (
-              <button
-                key={label}
-                onClick={() => update({ targetCopies: i + 1 })}
-                className={`rounded-lg px-3 py-1.5 text-[0.72rem] font-medium transition-colors
-                  ${
-                    state.targetCopies === i + 1
-                      ? "bg-[var(--color-accent)] text-white"
-                      : "bg-[var(--color-surface)] text-[var(--color-text-dim)] hover:text-[var(--color-text)]"
-                  }`}
-              >
-                {label}
-              </button>
-            ))}
           </div>
         </div>
 
