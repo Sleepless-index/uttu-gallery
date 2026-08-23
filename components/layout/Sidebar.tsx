@@ -82,20 +82,13 @@ function IconPlanner() {
 }
 
 function IconMyCharacters() {
-  // Filled/starred bust — a personal roster, distinct from the full gallery
+  // 2x2 grid — a personal collection, distinct from the full gallery's bust icon
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <circle cx="8" cy="5.3" r="2.8" stroke="currentColor" strokeWidth="1.4" fill="currentColor" fillOpacity="0.18" />
-      <path
-        d="M2.5 14c0-2.8 2.46-4.5 5.5-4.5s5.5 1.7 5.5 4.5"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M12.2 2.3l.55 1.15 1.25.18-.9.9.21 1.27-1.11-.6-1.11.6.21-1.27-.9-.9 1.25-.18.55-1.15Z"
-        fill="currentColor"
-      />
+      <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.4" />
+      <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.4" />
+      <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.4" />
+      <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.4" />
     </svg>
   );
 }
