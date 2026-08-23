@@ -13,6 +13,13 @@ Checks:
   - Rarity plates:   public/icons/bg-rare-{rarity}.webp   (rarity clamped 2-6)
   - Garment cards:   public/garments/cards/{garment.id}.webp
 
+Also flags the reverse problem: an {id}02.webp file that exists on disk but
+whose id isn't listed in I2_ART_IDS. When that happens, the app silently
+falls back to base art for that character even though Insight 2 art is
+sitting right there — this is exactly the "why doesn't my new character's
+I2 art show up" bug, and it happens every time new I2 art is added without
+updating that manifest by hand.
+
 Usage:
     python3 scripts/check-missing-images.py
 
@@ -111,6 +118,50 @@ def check_roster(roster: list[dict], i2_ids: set[int]) -> dict[str, list[str]]:
     return missing
 
 
+def find_unregistered_i2_art(
+    roster: list[dict], i2_ids: set[int], garment_ids: set[int]
+) -> tuple[list[str], list[str]]:
+    """Find {id}02.webp files in public/art/ whose id is a real roster
+    character but isn't in I2_ART_IDS — art that exists but the app doesn't
+    know to use.
+
+    Also flags a narrower, easy-to-miss case: some garment ids happen to be
+    numerically identical to a character's-id-plus-"02" (e.g. garment 301202
+    looks exactly like character 3012's I2 art filename). That's harmless
+    while garment cards stay in public/garments/cards/, but if one is ever
+    misfiled into public/art/ instead, it would otherwise be silently
+    misread as that character's I2 portrait. Reported separately so a real
+    "you forgot to register this" doesn't get lost among coincidental ids
+    that were never meant to be I2 art at all.
+    """
+    roster_ids = {c["id"] for c in roster}
+    art_dir = PUBLIC_DIR / "art"
+    if not art_dir.exists():
+        return [], []
+
+    unregistered = []
+    possible_misfiled_garments = []
+    id_to_name = {c["id"]: c.get("name", str(c["id"])) for c in roster}
+    for path in sorted(art_dir.glob("*02.webp")):
+        match = re.match(r"^(\d+)02\.webp$", path.name)
+        if not match:
+            continue
+        cid = int(match.group(1))
+        if cid not in roster_ids or cid in i2_ids:
+            continue
+        full_id = int(match.group(1) + "02")
+        if full_id in garment_ids:
+            possible_misfiled_garments.append(
+                f"art/{path.name} — id {full_id} matches a garment id, not {id_to_name[cid]}'s "
+                f"(id {cid}) I2 art; likely a garment card in the wrong folder, not missing I2 art"
+            )
+        else:
+            unregistered.append(
+                f"{id_to_name[cid]} (id {cid}) -> art/{path.name} exists but {cid} is not in I2_ART_IDS"
+            )
+    return unregistered, possible_misfiled_garments
+
+
 def check_garments(garments_data: list[dict]) -> list[str]:
     missing = []
     for entry in garments_data:
@@ -125,7 +176,7 @@ def check_garments(garments_data: list[dict]) -> list[str]:
 
 
 def print_section(title: str, items: list[str]):
-    print(f"\n{title}: {len(items)} missing")
+    print(f"\n{title}: {len(items)} found")
     for item in items:
         print(f"  - {item}")
 
@@ -137,22 +188,37 @@ def main():
     roster = load_json(DATA_DIR / "roster.json")
     garments_data = load_json(DATA_DIR / "garments.json")
     i2_ids = load_i2_art_ids()
+    garment_ids = {g["id"] for entry in garments_data for g in entry.get("garments", [])}
 
     roster_missing = check_roster(roster, i2_ids)
     garment_missing = check_garments(garments_data)
+    unregistered_i2, misfiled_garments = find_unregistered_i2_art(roster, i2_ids, garment_ids)
 
     print_section("Missing base character art", roster_missing["base_art"])
     print_section("Missing Insight 2 art", roster_missing["i2_art"])
     print_section("Missing afflatus icons", roster_missing["afflatus_icon"])
     print_section("Missing rarity plates", roster_missing["rarity_plate"])
     print_section("Missing garment card art", garment_missing)
+    print_section(
+        "I2 art on disk but NOT registered in I2_ART_IDS (won't display until added)",
+        unregistered_i2,
+    )
+    print_section(
+        "Garment cards possibly misfiled into public/art/ (id coincides with a character+02 pattern)",
+        misfiled_garments,
+    )
 
-    total = sum(len(v) for v in roster_missing.values()) + len(garment_missing)
+    total = (
+        sum(len(v) for v in roster_missing.values())
+        + len(garment_missing)
+        + len(unregistered_i2)
+        + len(misfiled_garments)
+    )
     print(f"\n{'=' * 50}")
     if total == 0:
-        print("All images present. Nothing missing.")
+        print("All images present and registered. Nothing to fix.")
     else:
-        print(f"TOTAL MISSING: {total}")
+        print(f"TOTAL ISSUES: {total}")
     print(f"{'=' * 50}")
 
     sys.exit(1 if total > 0 else 0)
