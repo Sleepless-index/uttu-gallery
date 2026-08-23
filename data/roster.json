@@ -1,11 +1,46 @@
 [
   {
+    "id": 3157,
+    "slug": "narcissus",
+    "name": "Narcissus",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Arcanist"
+  },
+  {
+    "id": 3156,
+    "slug": "hedone",
+    "name": "Hedone",
+    "rarity": 6,
+    "afflatus": "Mineral",
+    "race": "Arcanist"
+  },
+  {
     "id": 3154,
     "slug": "silverwing_eagle",
     "name": "Silverwing Eagle",
     "rarity": 5,
     "afflatus": "Plant",
     "race": "Arcanist"
+  },
+  {
+    "id": 3151,
+    "slug": "nora",
+    "name": "NORA",
+    "rarity": 4,
+    "afflatus": "Spirit",
+    "race": "Unclassified"
+  },
+  {
+    "id": 3149,
+    "slug": "the_twins",
+    "name": "The Twins",
+    "rarity": 6,
+    "afflatus": [
+      "Mineral",
+      "Star"
+    ],
+    "race": "Unclassified"
   },
   {
     "id": 3147,
