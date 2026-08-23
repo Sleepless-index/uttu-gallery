@@ -10,7 +10,7 @@ import { TeamExportGrid } from "@/components/teams/TeamExportGrid";
 
 /** Teams stack top-to-bottom within a column; once a column holds this many
  * teams, the next team starts a new column to the right, beside the first. */
-const TEAMS_PER_COLUMN = 5;
+const TEAMS_PER_COLUMN = 4;
 
 function IconPlus() {
   return (
@@ -164,7 +164,7 @@ export default function MyTeamsPage() {
           </div>
         ) : (
           <div
-            className="grid grid-cols-1 gap-4 sm:[grid-auto-flow:column] sm:[grid-auto-columns:minmax(620px,720px)]"
+            className="grid grid-cols-1 gap-4 sm:grid-cols-none sm:[grid-auto-flow:column] sm:[grid-auto-columns:minmax(620px,720px)]"
             style={{
               gridTemplateRows: `repeat(${rowCount}, auto)`,
             }}
@@ -194,7 +194,13 @@ export default function MyTeamsPage() {
         style={{ position: "fixed", top: 0, left: "-99999px", pointerEvents: "none" }}
       >
         <div ref={exportRef}>
-          <TeamExportGrid teams={state.teams} resolveCharacter={resolveCharacter} profile={state.profile} />
+          <TeamExportGrid
+            teams={state.teams}
+            resolveCharacter={resolveCharacter}
+            getProgress={getProgress}
+            profile={state.profile}
+            teamsPerColumn={TEAMS_PER_COLUMN}
+          />
         </div>
       </div>
 
