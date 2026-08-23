@@ -50,7 +50,7 @@ export default function ArcanistsPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-[var(--color-bg)]">
-      <main className="flex-1 overflow-y-auto px-6 py-8">
+      <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 sm:py-8">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-[0.8rem] font-medium text-[var(--color-text-dim)]">
             Showing {filtered.length} arcanist{filtered.length === 1 ? "" : "s"}
@@ -78,7 +78,7 @@ export default function ArcanistsPage() {
             No arcanists match your filters.
           </p>
         ) : (
-          <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
+          <div className="grid grid-cols-4 gap-2 sm:gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
             {filtered.map((c, i) => (
               <CharacterCard
                 key={c.id}

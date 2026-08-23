@@ -55,11 +55,21 @@ function IconEmptyRoster() {
   );
 }
 
+function IconInsight2() {
+  return (
+    <span className="relative h-[15px] w-[15px]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/insight/insight-2.webp" alt="" className="h-full w-full object-contain" />
+    </span>
+  );
+}
+
 export default function MyCharactersPage() {
   const { state, hydrated, getProgress, updateProgress } = useTrackerState();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [detailCharacterId, setDetailCharacterId] = useState<number | null>(null);
   const [exporting, setExporting] = useState(false);
+  const [showI2Art, setShowI2Art] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
 
   const myCharacters = useMemo(() => {
@@ -129,7 +139,7 @@ export default function MyCharactersPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-[var(--color-bg)]">
-      <main className="flex-1 overflow-y-auto px-6 py-8">
+      <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 sm:py-8">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-[0.8rem] font-medium text-[var(--color-text-dim)]">
             {myCharacters.length === 0
@@ -139,14 +149,31 @@ export default function MyCharactersPage() {
 
           <div className="flex items-center gap-2">
             {myCharacters.length > 0 && (
-              <button
-                onClick={handleExport}
-                disabled={exporting}
-                className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
-              >
-                {exporting ? <IconSpinner /> : <IconDownload />}
-                {exporting ? "Exporting…" : "Export PNG"}
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() => setShowI2Art((v) => !v)}
+                  aria-pressed={showI2Art}
+                  aria-label="Toggle Insight 2 art for all characters"
+                  title="Show Insight 2 art"
+                  className={`flex h-9 w-9 items-center justify-center rounded-lg border transition-colors
+                    ${
+                      showI2Art
+                        ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-white"
+                        : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
+                    }`}
+                >
+                  <IconInsight2 />
+                </button>
+                <button
+                  onClick={handleExport}
+                  disabled={exporting}
+                  className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
+                >
+                  {exporting ? <IconSpinner /> : <IconDownload />}
+                  {exporting ? "Exporting…" : "Export PNG"}
+                </button>
+              </>
             )}
             <button
               onClick={() => setPickerOpen(true)}
@@ -178,7 +205,7 @@ export default function MyCharactersPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
+          <div className="grid grid-cols-4 gap-2 sm:gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
             {myCharacters.map((c, i) => (
               <button
                 key={c.id}
@@ -189,6 +216,7 @@ export default function MyCharactersPage() {
                 <CharacterCard
                   character={c}
                   progress={getProgress(c.id)}
+                  showI2Art={showI2Art}
                   priority={i < 12}
                 />
               </button>
@@ -206,7 +234,7 @@ export default function MyCharactersPage() {
         style={{ position: "fixed", top: 0, left: "-99999px", pointerEvents: "none" }}
       >
         <div ref={exportRef}>
-          <ExportGrid characters={myCharacters} getProgress={getProgress} profile={state.profile} />
+          <ExportGrid characters={myCharacters} getProgress={getProgress} profile={state.profile} showI2Art={showI2Art} />
         </div>
       </div>
 

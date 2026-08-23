@@ -78,7 +78,7 @@ export function FilterBar({
             <FilterSection title="Status">
               <div className="flex flex-col gap-0.5">
                 {(Object.keys(STATUS_LABEL) as OwnedFilter[])
-                  .filter((key) => key !== "owned")
+                  .filter((key) => key !== "unowned")
                   .map((key) => (
                     <MenuItem
                       key={key}

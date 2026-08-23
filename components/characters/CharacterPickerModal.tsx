@@ -1,15 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
 import { roster } from "@/lib/data/roster";
 import { parseDisplayName } from "@/lib/data/roster";
-import { afflatusIconPath, rarityPlatePath, characterArtPath } from "@/lib/assets/characterAssets";
 import { AFFLATUS_META } from "@/lib/afflatus";
 import type { Afflatus, RarityFilter } from "@/lib/types";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { FilterSection } from "@/components/ui/FilterSection";
 import { IconFilter } from "@/components/ui/IconFilter";
+import { useBodyScrollLock } from "@/lib/hooks/useBodyScrollLock";
+import { PickerCard } from "@/components/characters/PickerCard";
 
 interface CharacterPickerModalProps {
   /** Currently-selected character ids (owned/added), used to pre-check and to diff on Done. */
@@ -47,114 +47,8 @@ function IconClose() {
   );
 }
 
-function IconCheck() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 16 16" fill="none">
-      <path d="M3.5 8.3l2.8 2.8 6.2-6.6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function initials(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0]?.toUpperCase() ?? "")
-    .join("");
-}
-
-function PickerCard({
-  id,
-  name,
-  rarity,
-  afflatus,
-  italic,
-  selected,
-  onToggle,
-}: {
-  id: number;
-  name: string;
-  rarity: number;
-  afflatus: Afflatus;
-  italic: boolean;
-  selected: boolean;
-  onToggle: () => void;
-}) {
-  const [artLoaded, setArtLoaded] = useState(false);
-  const [artErrored, setArtErrored] = useState(false);
-
-  return (
-    <button
-      type="button"
-      onClick={onToggle}
-      aria-pressed={selected}
-      className="group relative pt-3 text-left outline-none"
-    >
-      <div className="absolute left-2 top-1.5 z-20 h-9 w-6">
-        <Image src={afflatusIconPath(afflatus)} alt={afflatus} fill sizes="24px" className="object-contain object-top drop-shadow-md" />
-      </div>
-
-      <div
-        className={`relative overflow-hidden rounded-md border transition-all duration-150
-          ${selected ? "border-[var(--color-accent)] ring-2 ring-[var(--color-accent)] ring-offset-2 ring-offset-[var(--color-panel)]" : "border-[var(--color-border)] group-hover:border-[var(--color-border-strong)]"}`}
-        style={{ aspectRatio: "224 / 524" }}
-      >
-        <div className="absolute inset-0 bg-[var(--color-surface)]" />
-
-        {!artLoaded && !artErrored && (
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute inset-0 animate-[shimmer_1.6s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-          </div>
-        )}
-
-        {!artErrored && (
-          <Image
-            src={characterArtPath(id)}
-            alt={name}
-            fill
-            sizes="(max-width: 640px) 33vw, (max-width: 1024px) 16vw, 130px"
-            className={`origin-top scale-105 object-cover object-top transition-opacity duration-200 ${artLoaded ? "opacity-100" : "opacity-0"}`}
-            onLoad={() => setArtLoaded(true)}
-            onError={() => setArtErrored(true)}
-          />
-        )}
-
-        {artErrored && (
-          <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-surface-hover)]">
-            <span className="text-2xl text-[var(--color-text-faint)]" style={{ fontFamily: "var(--font-display)" }}>
-              {initials(name)}
-            </span>
-          </div>
-        )}
-
-        <div className="absolute inset-x-0 bottom-0 h-[50%]">
-          <Image src={rarityPlatePath(rarity)} alt="" fill sizes="130px" className="object-cover object-bottom" />
-        </div>
-
-        <div className="absolute inset-x-0 bottom-1.5 z-10 px-2">
-          <span
-            className={`block text-center text-[0.9rem] font-semibold leading-tight text-white ${italic ? "italic" : ""}`}
-            style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)", fontFamily: "var(--font-display)" }}
-          >
-            {name}
-          </span>
-        </div>
-
-        {/* Dim + check overlay when selected */}
-        <div
-          className={`pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-black/45 transition-opacity duration-150 ${selected ? "opacity-100" : "opacity-0"}`}
-        >
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-accent)] text-white shadow-lg">
-            <IconCheck />
-          </span>
-        </div>
-      </div>
-    </button>
-  );
-}
-
 export function CharacterPickerModal({ selectedIds, onClose, onDone }: CharacterPickerModalProps) {
+  useBodyScrollLock();
   const [draft, setDraft] = useState<Set<number>>(() => new Set(selectedIds));
   const [search, setSearch] = useState("");
   const [rarity, setRarity] = useState<RarityFilter>("all");
@@ -202,8 +96,8 @@ export function CharacterPickerModal({ selectedIds, onClose, onDone }: Character
         </div>
 
         {/* Filters */}
-        <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-[var(--color-border)] px-5 py-3">
-          <div className="relative">
+        <div className="flex shrink-0 flex-wrap items-center gap-2 px-5 py-3">
+          <div className="relative w-full sm:w-auto sm:flex-none">
             <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--color-text-faint)]">
               <IconSearch />
             </span>
@@ -212,7 +106,7 @@ export function CharacterPickerModal({ selectedIds, onClose, onDone }: Character
               onChange={(e) => setSearch(e.target.value)}
               type="text"
               placeholder="Search arcanists…"
-              className="w-44 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] py-2 pl-8 pr-3 text-[0.78rem] text-[var(--color-text)] outline-none transition-colors focus:border-[var(--color-accent)] placeholder:text-[var(--color-text-faint)]"
+              className="w-full min-w-0 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] py-2 pl-8 pr-3 text-[0.78rem] text-[var(--color-text)] outline-none transition-colors focus:border-[var(--color-accent)] placeholder:text-[var(--color-text-faint)] sm:w-44"
             />
           </div>
 

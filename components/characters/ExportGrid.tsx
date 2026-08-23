@@ -1,5 +1,7 @@
 import {
   characterArtPath,
+  characterI2ArtPath,
+  hasCharacterI2Art,
   afflatusIconPath,
   rarityPlatePath,
   insightIconPath,
@@ -27,24 +29,30 @@ function rarityTint(rarity: number): string {
 interface ExportCardProps {
   character: RosterCharacter;
   progress: CharacterProgress;
+  showI2Art?: boolean;
 }
 
 /** Static, plain-<img> replica of CharacterCard — used only for PNG export.
  * Avoids Next's image optimizer proxy so html-to-image can capture every
  * card reliably without CORS/timing flakiness. Visuals intentionally
  * mirror CharacterCard exactly; keep the two in sync if that card changes. */
-function ExportCard({ character, progress }: ExportCardProps) {
+function ExportCard({ character, progress, showI2Art = false }: ExportCardProps) {
   const displayName = parseDisplayName(character.name);
   const hasLevelInfo = progress.level > 0;
 
   const selectedGarment =
-    progress.selectedGarmentId != null
+    typeof progress.selectedGarmentId === "number"
       ? garmentsForCharacter(character.id).find((g) => g.id === progress.selectedGarmentId)
       : undefined;
+  const selectedInsight2 = progress.selectedGarmentId === "insight2";
+  const autoInsight2 =
+    progress.selectedGarmentId == null && progress.insight >= 2 && hasCharacterI2Art(character.id);
 
   const artSrc = selectedGarment
     ? garmentCardPath(selectedGarment)
-    : characterArtPath(character.id);
+    : selectedInsight2 || autoInsight2 || (showI2Art && hasCharacterI2Art(character.id))
+      ? characterI2ArtPath(character.id)
+      : characterArtPath(character.id);
 
   return (
     <div className="relative pt-3">
@@ -117,7 +125,7 @@ function ExportCard({ character, progress }: ExportCardProps) {
                 {Array.from({ length: 5 }, (_, i) => i + 1).map((n) => (
                   <span
                     key={n}
-                    className={`h-[3px] flex-1 rounded-full ${n <= progress.portrait ? "bg-[var(--color-accent)]" : "bg-white/25"} ${n > 1 ? "ml-1" : ""}`}
+                    className={`h-[3px] flex-1 rounded-full ${n <= progress.portrait ? "bg-[var(--color-portrait-bar)]" : "bg-white/25"} ${n > 1 ? "ml-1" : ""}`}
                   />
                 ))}
               </div>
@@ -172,17 +180,18 @@ interface ExportGridProps {
   characters: RosterCharacter[];
   getProgress: (id: number) => CharacterProgress;
   profile: UserProfile;
+  showI2Art?: boolean;
 }
 
 /** Fixed-width grid (not responsive) so the exported PNG has a predictable,
  * consistent layout regardless of the viewer's own screen size. */
-export function ExportGrid({ characters, getProgress, profile }: ExportGridProps) {
+export function ExportGrid({ characters, getProgress, profile, showI2Art = false }: ExportGridProps) {
   return (
     <div className="w-fit bg-[var(--color-bg)] p-6">
       <ExportHeader profile={profile} />
       <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(8, 140px)" }}>
         {characters.map((c) => (
-          <ExportCard key={c.id} character={c} progress={getProgress(c.id)} />
+          <ExportCard key={c.id} character={c} progress={getProgress(c.id)} showI2Art={showI2Art} />
         ))}
       </div>
     </div>

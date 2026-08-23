@@ -6,6 +6,18 @@ const nextConfig: NextConfig = {
     // image optimizer handles resizing/format negotiation and caches the
     // results at the edge, so this stays on.
     unoptimized: false,
+
+    // Allowlists jsDelivr as a remote image source for next/image, in case
+    // assets are ever moved off-repo to a jsDelivr-fronted GitHub repo (see
+    // lib/assets/assetUrl.ts). Harmless no-op while NEXT_PUBLIC_ASSET_BASE_URL
+    // is unset and everything still resolves to same-origin /public paths.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cdn.jsdelivr.net",
+        pathname: "/gh/**",
+      },
+    ],
   },
 
   async headers() {

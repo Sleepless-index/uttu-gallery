@@ -22,6 +22,9 @@
   --color-success: #4fb87a;
   --color-danger: #e15b5b;
 
+  /* ---- Roster portrait progress bar (distinct from the main accent) ---- */
+  --color-portrait-bar: #f4bd70;
+
   /* ---- Afflatus (identity dots only, not thematic) ---- */
   --color-afl-star: #e0b84f;
   --color-afl-plant: #5fb87a;

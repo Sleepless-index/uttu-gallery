@@ -1,12 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import type { RosterCharacter, CharacterProgress } from "@/lib/types";
 import { garmentsForCharacter } from "@/lib/data/garments";
 import { garmentCardPath, garmentDisplayName } from "@/lib/assets/garmentAssets";
-import { characterArtPath, afflatusIconPath, insightIconPath } from "@/lib/assets/characterAssets";
+import {
+  characterArtPath,
+  characterI2ArtPath,
+  hasCharacterI2Art,
+  afflatusIconPath,
+  insightIconPath,
+} from "@/lib/assets/characterAssets";
 import { parseDisplayName } from "@/lib/data/roster";
+import { useBodyScrollLock } from "@/lib/hooks/useBodyScrollLock";
 
 interface CharacterDetailModalProps {
   character: RosterCharacter;
@@ -34,10 +41,10 @@ const QUICK_FILL_PRESETS: QuickFillPreset[] = [
   { label: "I3 · Lv60 · R10", insight: 3, level: 60, resonance: 10 },
 ];
 
-/** One carousel entry — either the character's base look or a real garment. */
+/** One carousel entry — the character's base look, its Insight 2 alternate art, or a real garment. */
 interface CarouselItem {
   key: string;
-  garmentId?: number;
+  garmentId?: number | "insight2";
   cardImage: string;
   label: string;
 }
@@ -95,6 +102,30 @@ function Stepper({
   onChange: (next: number) => void;
   rightSlot?: React.ReactNode;
 }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(String(value));
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  function startEditing() {
+    setDraft(String(value));
+    setEditing(true);
+  }
+
+  function commit() {
+    const parsed = Math.round(Number(draft));
+    if (Number.isFinite(parsed)) {
+      onChange(Math.max(0, Math.min(max, parsed)));
+    }
+    setEditing(false);
+  }
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }
+  }, [editing]);
+
   return (
     <div className="flex flex-1 flex-col gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5">
       <div className="flex items-center justify-between gap-2">
@@ -109,20 +140,50 @@ function Stepper({
           onClick={() => onChange(Math.max(0, value - 1))}
           disabled={value <= 0}
           aria-label={`Decrease ${label}`}
-          className="flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-text-dim)] transition-colors hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)] disabled:opacity-30 disabled:hover:bg-transparent"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[var(--color-border)] bg-[var(--color-panel)] text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] active:bg-[var(--color-surface-hover)] disabled:opacity-30 disabled:hover:border-[var(--color-border)] disabled:hover:text-[var(--color-text-dim)]"
         >
           <IconMinus />
         </button>
-        <span className="text-[0.95rem] font-semibold text-[var(--color-text)] tabular-nums">
-          {value}
-          <span className="text-[0.7rem] font-normal text-[var(--color-text-faint)]"> / {max}</span>
-        </span>
+
+        {editing ? (
+          <input
+            ref={inputRef}
+            type="number"
+            inputMode="numeric"
+            min={0}
+            max={max}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onBlur={commit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                commit();
+              } else if (e.key === "Escape") {
+                e.preventDefault();
+                setEditing(false);
+              }
+            }}
+            className="w-14 rounded-md border border-[var(--color-accent)] bg-transparent text-center text-[0.95rem] font-semibold text-[var(--color-text)] tabular-nums outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={startEditing}
+            aria-label={`Edit ${label} (currently ${value} of ${max})`}
+            className="rounded-md px-1.5 py-0.5 text-[0.95rem] font-semibold text-[var(--color-text)] tabular-nums transition-colors hover:bg-[var(--color-surface-hover)]"
+          >
+            {value}
+            <span className="text-[0.7rem] font-normal text-[var(--color-text-faint)]"> / {max}</span>
+          </button>
+        )}
+
         <button
           type="button"
           onClick={() => onChange(Math.min(max, value + 1))}
           disabled={value >= max}
           aria-label={`Increase ${label}`}
-          className="flex h-7 w-7 items-center justify-center rounded-md text-[var(--color-text-dim)] transition-colors hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)] disabled:opacity-30 disabled:hover:bg-transparent"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[var(--color-border)] bg-[var(--color-panel)] text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] active:bg-[var(--color-surface-hover)] disabled:opacity-30 disabled:hover:border-[var(--color-border)] disabled:hover:text-[var(--color-text-dim)]"
         >
           <IconPlus />
         </button>
@@ -299,9 +360,14 @@ function GarmentCarousel({
               }}
             >
               <div
-                className={`relative w-full overflow-hidden rounded-lg border shadow-xl transition-colors duration-200
-                  ${isCenter ? "border-[var(--color-accent)] ring-2 ring-[var(--color-accent)]" : "border-[var(--color-border)]"}`}
-                style={{ aspectRatio: "224 / 524" }}
+                className={`relative w-full overflow-hidden rounded-lg border transition-colors duration-200
+                  ${isCenter ? "border-[var(--color-accent)]" : "border-[var(--color-border)]"}`}
+                style={{
+                  aspectRatio: "224 / 524",
+                  boxShadow: isCenter
+                    ? "0 0 0 4px var(--color-accent), 0 0 0 7px rgba(0,0,0,0.85)"
+                    : undefined,
+                }}
               >
                 <Image
                   src={item.cardImage}
@@ -313,7 +379,8 @@ function GarmentCarousel({
               </div>
 
               <span
-                className={`w-full text-center text-[0.7rem] leading-tight transition-colors duration-200
+                title={item.label}
+                className={`w-full truncate text-center text-[0.7rem] leading-tight transition-colors duration-200
                   ${isCenter ? "font-semibold text-[var(--color-text)]" : "font-medium text-[var(--color-text-faint)]"}`}
               >
                 {item.label}
@@ -346,7 +413,8 @@ export function CharacterDetailModal({
   const displayName = parseDisplayName(character.name);
   const characterGarments = garmentsForCharacter(character.id);
 
-  // Base look is always the first carousel entry; real garments follow.
+  // Base look is always the first carousel entry, followed by the Insight 2
+  // alternate art (when the character has one) and then real garments.
   const items: CarouselItem[] = useMemo(() => {
     const base: CarouselItem = {
       key: "base",
@@ -354,27 +422,92 @@ export function CharacterDetailModal({
       cardImage: characterArtPath(character.id),
       label: "Base",
     };
+    const insight2: CarouselItem[] = hasCharacterI2Art(character.id)
+      ? [
+          {
+            key: "insight2",
+            garmentId: "insight2",
+            cardImage: characterI2ArtPath(character.id),
+            label: "Insight 2",
+          },
+        ]
+      : [];
     const garmentItems: CarouselItem[] = characterGarments.map((g) => ({
       key: String(g.id),
       garmentId: g.id,
       cardImage: garmentCardPath(g),
       label: garmentDisplayName(g),
     }));
-    return [base, ...garmentItems];
+    return [base, ...insight2, ...garmentItems];
   }, [character.id, characterGarments]);
 
   const initialIndex = useMemo(() => {
-    if (progress.selectedGarmentId == null) return 0; // base
+    if (progress.selectedGarmentId == null) {
+      // No stored preference — default to the Insight 2 look once the
+      // character has actually reached Insight 2, if that art exists.
+      if (progress.insight >= 2 && hasCharacterI2Art(character.id)) {
+        const i2Idx = items.findIndex((it) => it.garmentId === "insight2");
+        if (i2Idx !== -1) return i2Idx;
+      }
+      return 0; // base
+    }
     const idx = items.findIndex((it) => it.garmentId === progress.selectedGarmentId);
     return idx === -1 ? 0 : idx;
-  }, [items, progress.selectedGarmentId]);
+  }, [items, progress.selectedGarmentId, progress.insight, character.id]);
 
+  // `centerIndex` is purely a live preview — swiping/clicking through the
+  // carousel while the modal is open only changes what's shown here. It is
+  // NOT written back to progress unless the user explicitly presses Equip
+  // (see equip() below), so browsing garments/art never silently overwrites
+  // the user's stored preference.
   const [centerIndex, setCenterIndex] = useState(initialIndex);
+  const centerIndexRef = useRef(centerIndex);
+  centerIndexRef.current = centerIndex;
+
+  // Lock background scroll while the modal is open, and restore it on close.
+  useBodyScrollLock();
 
   function handleCenter(index: number) {
     setCenterIndex(index);
-    onUpdateProgress({ selectedGarmentId: items[index]?.garmentId });
   }
+
+  // If insight drops below 2 while the stored preference is the Insight 2
+  // look, that preference no longer qualifies — clear it back to "no
+  // preference" so the character falls back to Base (or re-derives
+  // automatically if insight later climbs back to 2+).
+  useEffect(() => {
+    if (progress.selectedGarmentId === "insight2" && progress.insight < 2) {
+      onUpdateProgress({ selectedGarmentId: undefined });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [progress.insight]);
+
+  // If the stored preference isn't set, keep the live preview in sync as
+  // insight is raised to 2+ within this session (e.g. via the tier buttons
+  // or a quick-fill preset) — same auto-default logic as initialIndex,
+  // applied live instead of just on open.
+  useEffect(() => {
+    if (progress.selectedGarmentId != null) return;
+    if (progress.insight < 2 || !hasCharacterI2Art(character.id)) return;
+    const i2Idx = items.findIndex((it) => it.garmentId === "insight2");
+    if (i2Idx !== -1 && i2Idx !== centerIndexRef.current) {
+      setCenterIndex(i2Idx);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [progress.insight]);
+
+  // Persist the preview as the user's explicit preference — only ever
+  // triggered by the Equip button, never by browsing the carousel or
+  // closing the modal. This is the one action that counts as "choosing"
+  // a look, per the preview-vs-equip distinction.
+  function equip() {
+    const finalGarmentId = items[centerIndexRef.current]?.garmentId;
+    if (finalGarmentId !== progress.selectedGarmentId) {
+      onUpdateProgress({ selectedGarmentId: finalGarmentId });
+    }
+  }
+
+  const isEquipped = (items[centerIndex]?.garmentId ?? undefined) === (progress.selectedGarmentId ?? undefined);
 
   const levelCap = INSIGHT_LEVEL_CAP[progress.insight] ?? MAX_LEVEL;
 
@@ -395,21 +528,39 @@ export function CharacterDetailModal({
       onClick={onClose}
     >
       <div
-        className="flex max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-panel)] shadow-2xl"
+        className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-panel)] shadow-2xl sm:max-h-[90vh] sm:flex-row"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Carousel — left column, base look + garments, replaces the old static portrait */}
-        <div className="relative flex w-64 shrink-0 flex-col justify-center overflow-hidden border-r border-[var(--color-border)] bg-[var(--color-surface)] px-2 py-4">
+        {/* Carousel — left column on desktop, top section on mobile.
+            Base look + garments, replaces the old static portrait */}
+        <div className="relative flex shrink-0 flex-col overflow-hidden border-b border-[var(--color-border)] bg-[var(--color-surface)] px-2 py-3 sm:w-64 sm:border-b-0 sm:border-r sm:py-4">
           <span className="mb-2 block text-center text-[0.65rem] font-semibold uppercase tracking-wide text-[var(--color-text-faint)]">
             Garments
           </span>
-          <GarmentCarousel
-            items={items}
-            centerIndex={centerIndex}
-            onCenter={handleCenter}
-            centerWidth={116}
-            sideWidth={78}
-          />
+          <div className="flex flex-1 flex-col justify-center">
+            <GarmentCarousel
+              items={items}
+              centerIndex={centerIndex}
+              onCenter={handleCenter}
+              centerWidth={116}
+              sideWidth={78}
+            />
+          </div>
+          <div className="flex flex-1 items-center justify-center">
+            <button
+              type="button"
+              onClick={equip}
+              disabled={isEquipped}
+              className={`flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-[0.75rem] font-semibold transition-colors
+                ${
+                  isEquipped
+                    ? "cursor-default bg-[var(--color-surface-hover)] text-[var(--color-text-faint)]"
+                    : "border border-[var(--color-accent)] bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)]"
+                }`}
+            >
+              {isEquipped ? "Equipped" : "Equip"}
+            </button>
+          </div>
         </div>
 
         {/* Content — right column */}
@@ -452,7 +603,7 @@ export function CharacterDetailModal({
               ))}
             </div>
 
-            <div className="mt-3 flex gap-3">
+            <div className="mt-3 flex flex-col gap-3 sm:flex-row">
               <Stepper
                 label="Level"
                 value={progress.level}

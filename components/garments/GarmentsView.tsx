@@ -223,7 +223,7 @@ export function GarmentsView() {
           No garments match your filters.
         </p>
       ) : (
-        <div className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
+        <div className="grid grid-cols-4 gap-2 sm:gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
           {filtered.map((g) => (
             <GarmentCard
               key={g.id}

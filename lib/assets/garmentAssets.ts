@@ -1,18 +1,19 @@
 import type { FlatGarment } from "@/lib/types";
+import { assetUrl } from "./assetUrl";
 
-/** Path to a garment's card art (used in grid/list views), relative to /public. */
+/** Path to a garment's card art (used in grid/list views), relative to /public (or CDN). */
 export function garmentCardPath(garment: FlatGarment): string {
-  return `/garments/cards/${garment.id}.webp`;
+  return assetUrl(`/garments/cards/${garment.id}.webp`);
 }
 
-/** Path to a garment's splash art (used in the detail modal), relative to /public. */
+/** Path to a garment's splash art (used in the detail modal), relative to /public (or CDN). */
 export function garmentSplashPath(garment: FlatGarment): string {
-  return `/garments/splash/${garment.id}.webp`;
+  return assetUrl(`/garments/splash/${garment.id}.webp`);
 }
 
-/** Path to a garment's full-body art (used in the detail modal), relative to /public. */
+/** Path to a garment's full-body art (used in the detail modal), relative to /public (or CDN). */
 export function garmentFullBodyPath(garment: FlatGarment): string {
-  return `/garments/fullbody/${garment.id}.webp`;
+  return assetUrl(`/garments/fullbody/${garment.id}.webp`);
 }
 
 /** Garments always carry an English name in the new backend schema — this is now just a passthrough, kept for a stable import path. */

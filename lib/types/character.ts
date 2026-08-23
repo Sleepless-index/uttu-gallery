@@ -26,8 +26,12 @@ export interface CharacterProgress {
   resonance: number; // 0-15
   insight: number; // 0-3
   level: number; // 0-60 (0 = unset)
-  /** Garment id the user has picked for this character, if any. */
-  selectedGarmentId?: number;
+  /**
+   * The look the user has picked for this character, if any: a real garment
+   * id, or the literal "insight2" for the Insight 2 alternate art. Absent
+   * (undefined) means the base look.
+   */
+  selectedGarmentId?: number | "insight2";
 }
 
 export const emptyProgress = (): CharacterProgress => ({
@@ -64,10 +68,26 @@ export interface TrackerState {
   progress: Record<number, CharacterProgress>;
   upcoming: UpcomingArcanist[];
   profile: UserProfile;
+  teams: Team[];
 }
 
 export const emptyTrackerState = (): TrackerState => ({
   progress: {},
   upcoming: [],
   profile: emptyProfile(),
+  teams: [],
 });
+
+/** Number of character slots in a single team. */
+export const TEAM_SIZE = 4;
+
+/** A user-defined team of up to TEAM_SIZE characters. Slots preserve their
+ * position (empty slots are `null`) so removing a character from the middle
+ * doesn't shift the others around. */
+export interface Team {
+  id: number;
+  name: string;
+  slots: (number | null)[];
+}
+
+export const emptyTeamSlots = (): (number | null)[] => Array(TEAM_SIZE).fill(null);

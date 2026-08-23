@@ -3,11 +3,20 @@
 import { useState } from "react";
 import Image from "next/image";
 import { pfpIds, pfpPath, pfpName } from "@/lib/data/pfp";
+import { useBodyScrollLock } from "@/lib/hooks/useBodyScrollLock";
 
 function IconClose() {
   return (
     <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
       <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IconCheck() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+      <path d="M3.5 8.3l2.8 2.8 6.2-6.6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -19,6 +28,7 @@ interface PfpPickerModalProps {
 }
 
 export function PfpPickerModal({ selectedId, onClose, onSelect }: PfpPickerModalProps) {
+  useBodyScrollLock();
   const [previewId, setPreviewId] = useState<string | undefined>(selectedId);
   const previewName = previewId ? pfpName(previewId) : undefined;
 
@@ -68,6 +78,15 @@ export function PfpPickerModal({ selectedId, onClose, onSelect }: PfpPickerModal
                     ${active ? "border-[var(--color-accent)] ring-2 ring-[var(--color-accent)]" : "border-[var(--color-border)] hover:border-[var(--color-border-strong)]"}`}
                 >
                   <Image src={pfpPath(id)} alt="" fill sizes="64px" className="object-cover" />
+
+                  {active && (
+                    <>
+                      <div className="pointer-events-none absolute inset-0 bg-black/35" />
+                      <span className="pointer-events-none absolute bottom-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-accent)] text-white shadow">
+                        <IconCheck />
+                      </span>
+                    </>
+                  )}
 
                   {/* Custom tooltip — appears instantly, unlike the native title attribute */}
                   <span

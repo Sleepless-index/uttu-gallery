@@ -5,7 +5,9 @@ import {
   emptyProfile,
   emptyProgress,
   emptyTrackerState,
+  emptyTeamSlots,
   type CharacterProgress,
+  type Team,
   type TrackerState,
   type UpcomingArcanist,
   type UserProfile,
@@ -24,6 +26,7 @@ function loadState(): TrackerState {
       progress: parsed.progress ?? {},
       upcoming: parsed.upcoming ?? [],
       profile: { ...emptyProfile(), ...parsed.profile },
+      teams: parsed.teams ?? [],
     };
   } catch {
     return emptyTrackerState();
@@ -109,6 +112,47 @@ export function useTrackerState() {
     setState(incoming);
   }, []);
 
+  const addTeam = useCallback(() => {
+    setState((prev) => {
+      const nextId = Math.max(0, ...prev.teams.map((t) => t.id)) + 1;
+      const newTeam: Team = {
+        id: nextId,
+        name: `Team ${nextId}`,
+        slots: emptyTeamSlots(),
+      };
+      return { ...prev, teams: [...prev.teams, newTeam] };
+    });
+  }, []);
+
+  const renameTeam = useCallback((teamId: number, name: string) => {
+    setState((prev) => ({
+      ...prev,
+      teams: prev.teams.map((t) => (t.id === teamId ? { ...t, name } : t)),
+    }));
+  }, []);
+
+  const deleteTeam = useCallback((teamId: number) => {
+    setState((prev) => ({
+      ...prev,
+      teams: prev.teams.filter((t) => t.id !== teamId),
+    }));
+  }, []);
+
+  const setTeamSlot = useCallback(
+    (teamId: number, slotIndex: number, characterId: number | null) => {
+      setState((prev) => ({
+        ...prev,
+        teams: prev.teams.map((t) => {
+          if (t.id !== teamId) return t;
+          const slots = [...t.slots];
+          slots[slotIndex] = characterId;
+          return { ...t, slots };
+        }),
+      }));
+    },
+    []
+  );
+
   const stats = {
     owned: roster.filter((c) => state.progress[c.id]?.owned).length,
     total: roster.length,
@@ -126,5 +170,9 @@ export function useTrackerState() {
     resetAll,
     importState,
     updateProfile,
+    addTeam,
+    renameTeam,
+    deleteTeam,
+    setTeamSlot,
   };
 }

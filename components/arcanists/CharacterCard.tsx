@@ -59,24 +59,32 @@ export function CharacterCard({
   const [plateErrored, setPlateErrored] = useState(false);
   const hasLevelInfo = progress.level > 0;
 
-  // A selected garment takes priority over base/I2 art — this is what
-  // keeps the roster card in sync with whatever the detail modal's
-  // carousel last centered on.
+  // A selected garment or the Insight 2 look (picked in the detail modal's
+  // carousel) takes priority over the base/I2-toggle art. If the user hasn't
+  // made an explicit choice, characters that have actually reached Insight 2
+  // default to their I2 art automatically — this is what keeps the roster
+  // card in sync with whatever the carousel last centered on, or with the
+  // character's own progress when nothing's been picked yet.
   const selectedGarment =
-    progress.selectedGarmentId != null
+    typeof progress.selectedGarmentId === "number"
       ? garmentsForCharacter(character.id).find((g) => g.id === progress.selectedGarmentId)
       : undefined;
+  const selectedInsight2 = progress.selectedGarmentId === "insight2";
+  const autoInsight2 =
+    progress.selectedGarmentId == null && progress.insight >= 2 && hasCharacterI2Art(character.id);
 
   const artSrc = selectedGarment
     ? garmentCardPath(selectedGarment)
-    : showI2Art && hasCharacterI2Art(character.id)
+    : selectedInsight2 || autoInsight2 || (showI2Art && hasCharacterI2Art(character.id))
       ? characterI2ArtPath(character.id)
       : characterArtPath(character.id);
 
   return (
     <div className="group relative pt-3">
-      {/* Afflatus bookmark — hangs above the card's top edge, left side */}
-      <div className="absolute left-2 top-1.5 z-20 h-11 w-7">
+      {/* Afflatus bookmark — hangs above the card's top edge, left side.
+          Scaled down on mobile but keeps the same overhang ratio as
+          the desktop version relative to the wrapper's pt-3. */}
+      <div className="absolute left-1.5 top-2 z-20 h-7 w-[1.1rem] sm:left-2 sm:top-1.5 sm:h-11 sm:w-7">
         <Image
           src={afflatusIconPath(character.afflatus)}
           alt={character.afflatus}
@@ -162,7 +170,7 @@ export function CharacterCard({
         {hasLevelInfo ? (
           <div className="absolute inset-x-0 bottom-2 z-10 flex flex-col items-center gap-0.5">
             {progress.insight > 0 && (
-              <span className="relative mb-0.5 h-6 w-6 shrink-0">
+              <span className="relative mb-0.5 h-3.5 w-3.5 shrink-0 sm:h-6 sm:w-6">
                 <Image
                   src={insightIconPath(progress.insight as 1 | 2 | 3)}
                   alt={`Insight ${progress.insight}`}
@@ -173,17 +181,18 @@ export function CharacterCard({
               </span>
             )}
             <span
-              className="text-[0.85rem] font-semibold leading-tight text-white/90"
+              className="text-[0.6rem] font-semibold leading-tight text-white/90 sm:text-[0.85rem]"
               style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}
             >
               Lv.{progress.level}
             </span>
             <span
-              className={`block max-w-full px-2 text-center text-[1rem] font-semibold leading-tight text-white ${displayName.italic ? "italic" : ""}`}
+              className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap px-1 text-center text-[0.55rem] font-semibold leading-tight text-white sm:overflow-visible sm:whitespace-normal sm:px-2 sm:text-[0.78rem] ${displayName.italic ? "italic" : ""}`}
               style={{
                 textShadow: "0 1px 4px rgba(0,0,0,0.9)",
                 fontFamily: "var(--font-display)",
               }}
+              title={displayName.text}
             >
               {displayName.text}
             </span>
@@ -192,7 +201,7 @@ export function CharacterCard({
                 {Array.from({ length: 5 }, (_, i) => i + 1).map((n) => (
                   <span
                     key={n}
-                    className={`h-[3px] flex-1 rounded-full ${n <= progress.portrait ? "bg-[var(--color-accent)]" : "bg-white/25"} ${n > 1 ? "ml-1" : ""}`}
+                    className={`h-[3px] flex-1 rounded-full ${n <= progress.portrait ? "bg-[var(--color-portrait-bar)]" : "bg-white/25"} ${n > 1 ? "ml-1" : ""}`}
                   />
                 ))}
               </div>
@@ -201,11 +210,12 @@ export function CharacterCard({
         ) : (
           <div className="absolute inset-x-0 bottom-2 z-10 px-2">
             <span
-              className={`block text-center text-[1.05rem] font-semibold leading-tight text-white ${displayName.italic ? "italic" : ""}`}
+              className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap px-1 text-center text-[0.56rem] font-semibold leading-tight text-white sm:overflow-visible sm:whitespace-normal sm:px-2 sm:text-[0.8rem] ${displayName.italic ? "italic" : ""}`}
               style={{
                 textShadow: "0 1px 4px rgba(0,0,0,0.9)",
                 fontFamily: "var(--font-display)",
               }}
+              title={displayName.text}
             >
               {displayName.text}
             </span>

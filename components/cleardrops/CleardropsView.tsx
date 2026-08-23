@@ -197,7 +197,7 @@ export function CleardropsView() {
                 Set a date range to see your income breakdown.
               </p>
             ) : (
-              <div className="flex items-center gap-5">
+              <div className="flex flex-col items-center gap-5 sm:flex-row">
                 <DonutChart
                   slices={breakdown.sources.map((s) => ({
                     label: s.label,
@@ -208,7 +208,9 @@ export function CleardropsView() {
                   centerLabel="Total Cleardrops"
                   size={140}
                 />
-                <SourceTable sources={breakdown.sources} total={breakdown.cleardropGrandTotal} />
+                <div className="w-full">
+                  <SourceTable sources={breakdown.sources} total={breakdown.cleardropGrandTotal} />
+                </div>
               </div>
             )}
           </div>

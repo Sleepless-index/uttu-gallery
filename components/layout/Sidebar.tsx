@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -100,10 +100,38 @@ function IconMyCharacters() {
   );
 }
 
+function IconMyTeams() {
+  // Two small busts side by side — a squad/team, distinct from a single roster bust
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="5.6" cy="5.1" r="2.3" stroke="currentColor" strokeWidth="1.3" />
+      <path
+        d="M1.6 13.6c0-2.3 1.9-3.7 4-3.7s4 1.4 4 3.7"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+      <circle cx="11.2" cy="4.3" r="1.7" stroke="currentColor" strokeWidth="1.2" />
+      <path
+        d="M9 9.3c.55-.4 1.3-.65 2.2-.65 1.9 0 3.3 1.15 3.3 3.05"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 const MY_CHARACTERS_ITEM = {
   href: "/characters",
   label: "My Characters",
   icon: <IconMyCharacters />,
+};
+
+const MY_TEAMS_ITEM = {
+  href: "/teams",
+  label: "My Teams",
+  icon: <IconMyTeams />,
 };
 
 const NAV_GROUPS: NavGroup[] = [
@@ -148,6 +176,7 @@ function IconMenu() {
 export function Sidebar() {
   const pathname = usePathname();
   const [expanded, setExpanded] = useState(false);
+  const asideRef = useRef<HTMLElement>(null);
   const { state, hydrated, updateProfile } = useTrackerState();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [editingName, setEditingName] = useState(false);
@@ -157,6 +186,20 @@ export function Sidebar() {
 
   const profile = state.profile;
   const displayName = profile.name.trim() || DEFAULT_NAME;
+
+  // Collapse the sidebar on any interaction outside it — but not while the
+  // PFP picker modal is open (that's a separate overlay the person is still
+  // actively using) and not for the click that opened it in the first place.
+  useEffect(() => {
+    if (!expanded || pickerOpen) return;
+    function handlePointerDown(e: PointerEvent) {
+      if (asideRef.current && !asideRef.current.contains(e.target as Node)) {
+        setExpanded(false);
+      }
+    }
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [expanded, pickerOpen]);
 
   function commitName() {
     updateProfile({ name: nameDraft.trim() });
@@ -168,10 +211,135 @@ export function Sidebar() {
     setEditingUid(false);
   }
 
+  const allNavItems = [MY_CHARACTERS_ITEM, MY_TEAMS_ITEM, ...NAV_GROUPS.flatMap((g) => g.items)];
+
   return (
     <>
+      {/* Mobile top bar — same inline tap-to-edit name/UID as the desktop
+          rail's profile card, but plain (no bordered card wrapper) and
+          smaller to keep the bar compact. */}
+      {hydrated && (
+        <div className="sticky top-0 z-40 flex h-11 shrink-0 items-center border-b border-[var(--color-border)] bg-[var(--color-panel)]/95 px-3 backdrop-blur md:hidden">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              aria-label="Change profile icon"
+              className="relative h-7 w-7 shrink-0 overflow-hidden rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] transition-colors hover:border-[var(--color-border-strong)]"
+            >
+              {profile.pfpId ? (
+                <Image src={pfpPath(profile.pfpId)} alt="Profile icon" fill sizes="28px" className="object-cover" />
+              ) : (
+                <span className="flex h-full w-full items-center justify-center text-[var(--color-text-faint)]">
+                  <IconUser />
+                </span>
+              )}
+            </button>
+
+            <div className="flex min-w-0 flex-col justify-center">
+              {editingName ? (
+                <input
+                  autoFocus
+                  value={nameDraft}
+                  onChange={(e) => setNameDraft(e.target.value)}
+                  onBlur={commitName}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") commitName();
+                    if (e.key === "Escape") {
+                      setNameDraft(profile.name);
+                      setEditingName(false);
+                    }
+                  }}
+                  placeholder={DEFAULT_NAME}
+                  className="w-full rounded border border-[var(--color-border)] bg-[var(--color-surface)] px-1.5 py-0.5 text-[0.68rem] font-semibold text-[var(--color-text)] outline-none focus:border-[var(--color-accent)]"
+                />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNameDraft(profile.name);
+                    setEditingName(true);
+                  }}
+                  className="w-fit max-w-[9rem] truncate text-left text-[0.68rem] font-semibold leading-tight text-[var(--color-text)] transition-colors hover:text-[var(--color-accent)]"
+                >
+                  {displayName}
+                </button>
+              )}
+
+              {editingUid ? (
+                <input
+                  autoFocus
+                  value={uidDraft}
+                  onChange={(e) => setUidDraft(e.target.value)}
+                  onBlur={commitUid}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") commitUid();
+                    if (e.key === "Escape") {
+                      setUidDraft(profile.uid);
+                      setEditingUid(false);
+                    }
+                  }}
+                  placeholder="UID"
+                  className="mt-0.5 w-full rounded border border-[var(--color-border)] bg-[var(--color-surface)] px-1.5 py-0.5 text-[0.58rem] text-[var(--color-text-faint)] outline-none focus:border-[var(--color-accent)]"
+                />
+              ) : profile.uid.trim() ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUidDraft(profile.uid);
+                    setEditingUid(true);
+                  }}
+                  className="w-fit max-w-[9rem] truncate text-left text-[0.58rem] leading-tight text-[var(--color-text-faint)] transition-colors hover:text-[var(--color-text-dim)]"
+                >
+                  UID: {profile.uid}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUidDraft("");
+                    setEditingUid(true);
+                  }}
+                  className="w-fit text-left text-[0.58rem] leading-tight text-[var(--color-text-faint)] transition-colors hover:text-[var(--color-text-dim)]"
+                >
+                  + Add UID
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile bottom nav — icons only, always visible, no expand/collapse
+          (that interaction doesn't translate to touch). Desktop keeps the
+          floating rail below untouched. */}
+      <nav
+        aria-label="Primary"
+        className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-around border-t border-[var(--color-border)] bg-[var(--color-panel)]/95 px-1 backdrop-blur md:hidden"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      >
+        {allNavItems.map((item) => {
+          const active = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-label={item.label}
+              aria-current={active ? "page" : undefined}
+              className={`flex h-12 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg text-[0.6rem] font-medium transition-colors
+                ${active ? "text-[var(--color-accent)]" : "text-[var(--color-text-faint)]"}`}
+            >
+              <span className="flex h-5 w-5 items-center justify-center">{item.icon}</span>
+              <span className="truncate">{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Desktop floating rail — unchanged from before, hidden on mobile. */}
       <aside
-        className={`fixed left-3 top-3 bottom-3 z-40 flex flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-panel)]/95 shadow-2xl backdrop-blur transition-[width] duration-200 ease-out
+        ref={asideRef}
+        className={`fixed left-3 top-3 bottom-3 z-40 hidden flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-panel)]/95 shadow-2xl backdrop-blur transition-[width] duration-200 ease-out md:flex
           ${expanded ? "w-56" : "w-14"}`}
       >
         {/* Toggle */}
@@ -205,6 +373,22 @@ export function Sidebar() {
                 {MY_CHARACTERS_ITEM.icon}
               </span>
               {expanded && <span className="truncate">{MY_CHARACTERS_ITEM.label}</span>}
+            </Link>
+            <Link
+              href={MY_TEAMS_ITEM.href}
+              title={expanded ? undefined : MY_TEAMS_ITEM.label}
+              className={`flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[0.8rem] font-medium transition-colors
+                ${expanded ? "" : "justify-center"}
+                ${
+                  pathname === MY_TEAMS_ITEM.href
+                    ? "bg-[var(--color-accent)] text-white"
+                    : "text-[var(--color-text-dim)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+                }`}
+            >
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                {MY_TEAMS_ITEM.icon}
+              </span>
+              {expanded && <span className="truncate">{MY_TEAMS_ITEM.label}</span>}
             </Link>
           </div>
 
@@ -346,8 +530,9 @@ export function Sidebar() {
 
       {/* Spacer so page content isn't tucked under the collapsed rail.
           The sidebar itself floats (fixed) above content; this just
-          reserves layout space matching its collapsed width. */}
-      <div aria-hidden className="w-[4.25rem] shrink-0" />
+          reserves layout space matching its collapsed width. Desktop only —
+          the mobile bottom nav's space is reserved via padding in layout.tsx. */}
+      <div aria-hidden className="hidden w-[4.25rem] shrink-0 md:block" />
 
       {pickerOpen && (
         <PfpPickerModal
