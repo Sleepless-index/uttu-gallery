@@ -187,7 +187,7 @@ export function CharacterCard({
               Lv.{progress.level}
             </span>
             <span
-              className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap px-1 text-center text-[0.55rem] font-semibold leading-tight text-white sm:overflow-visible sm:whitespace-normal sm:px-2 sm:text-[0.78rem] ${displayName.italic ? "italic" : ""}`}
+              className={`block w-full px-1 text-center text-[0.55rem] font-semibold leading-tight text-white sm:px-2 sm:text-[0.95rem] ${displayName.italic ? "italic" : ""}`}
               style={{
                 textShadow: "0 1px 4px rgba(0,0,0,0.9)",
                 fontFamily: "var(--font-display)",
@@ -210,7 +210,7 @@ export function CharacterCard({
         ) : (
           <div className="absolute inset-x-0 bottom-2 z-10 px-2">
             <span
-              className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap px-1 text-center text-[0.56rem] font-semibold leading-tight text-white sm:overflow-visible sm:whitespace-normal sm:px-2 sm:text-[0.8rem] ${displayName.italic ? "italic" : ""}`}
+              className={`block w-full px-1 text-center text-[0.55rem] font-semibold leading-tight text-white sm:px-2 sm:text-[0.95rem] ${displayName.italic ? "italic" : ""}`}
               style={{
                 textShadow: "0 1px 4px rgba(0,0,0,0.9)",
                 fontFamily: "var(--font-display)",

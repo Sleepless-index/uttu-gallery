@@ -129,13 +129,13 @@ function GarmentCard({ garment, charName, rarity }: GarmentCardProps) {
         {/* Name, raised off the bottom edge */}
         <div className="absolute inset-x-0 bottom-5 z-10 flex flex-col gap-0.5 px-2 leading-[1.15]">
           <span
-            className={`block text-center text-[0.68rem] font-medium text-white/60 ${character.italic ? "italic" : ""}`}
+            className={`block text-center text-[0.5rem] font-medium text-white/60 sm:text-[0.68rem] ${character.italic ? "italic" : ""}`}
             style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}
           >
             {character.text}
           </span>
           <span
-            className="block text-balance text-center text-[0.95rem] font-semibold text-white"
+            className="block text-balance text-center text-[0.55rem] font-semibold text-white sm:text-[0.95rem]"
             style={{
               textShadow: "0 1px 4px rgba(0,0,0,0.9)",
               fontFamily: "var(--font-display)",
