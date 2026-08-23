@@ -187,35 +187,39 @@ export function GarmentsView() {
           Showing {filtered.length} garment{filtered.length === 1 ? "" : "s"}
         </h2>
 
-        {/* Filters dropdown, matching the Arcanist page's Filters button */}
-        <Dropdown
-          label="Filters"
-          icon={<IconFilter />}
-          active={categoryFilter !== "all"}
-          panelClassName="right-0 w-56"
-        >
-          {() => (
-            <FilterSection title="Category">
-              <div className="flex flex-col gap-0.5">
-                <MenuItem
-                  active={categoryFilter === "all"}
-                  onClick={() => setCategoryFilter("all")}
-                >
-                  All
-                </MenuItem>
-                {availableCategories.map((c) => (
+        {/* Filters dropdown, matching the Arcanist page's Filters button.
+            Wrapped in ml-auto so it stays pinned to the right edge even if
+            flex-wrap drops it to its own line on narrow screens. */}
+        <div className="ml-auto">
+          <Dropdown
+            label="Filters"
+            icon={<IconFilter />}
+            active={categoryFilter !== "all"}
+            panelClassName="right-0 w-56"
+          >
+            {() => (
+              <FilterSection title="Category">
+                <div className="flex flex-col gap-0.5">
                   <MenuItem
-                    key={c}
-                    active={categoryFilter === c}
-                    onClick={() => setCategoryFilter(c)}
+                    active={categoryFilter === "all"}
+                    onClick={() => setCategoryFilter("all")}
                   >
-                    {CATEGORY_LABEL[c] ?? c}
+                    All
                   </MenuItem>
-                ))}
-              </div>
-            </FilterSection>
-          )}
-        </Dropdown>
+                  {availableCategories.map((c) => (
+                    <MenuItem
+                      key={c}
+                      active={categoryFilter === c}
+                      onClick={() => setCategoryFilter(c)}
+                    >
+                      {CATEGORY_LABEL[c] ?? c}
+                    </MenuItem>
+                  ))}
+                </div>
+              </FilterSection>
+            )}
+          </Dropdown>
+        </div>
       </div>
 
       {filtered.length === 0 ? (

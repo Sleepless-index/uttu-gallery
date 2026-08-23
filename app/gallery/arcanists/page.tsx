@@ -59,18 +59,20 @@ export default function ArcanistsPage() {
             </span>
           </h2>
 
-          <FilterBar
-            rarity={rarity}
-            onRarityChange={setRarity}
-            afflatus={afflatus}
-            onAfflatusChange={setAfflatus}
-            status={owned}
-            onStatusChange={setOwned}
-            sort={sort}
-            onSortChange={setSort}
-            showI2Art={showI2Art}
-            onToggleI2Art={() => setShowI2Art((v) => !v)}
-          />
+          <div className="ml-auto">
+            <FilterBar
+              rarity={rarity}
+              onRarityChange={setRarity}
+              afflatus={afflatus}
+              onAfflatusChange={setAfflatus}
+              status={owned}
+              onStatusChange={setOwned}
+              sort={sort}
+              onSortChange={setSort}
+              showI2Art={showI2Art}
+              onToggleI2Art={() => setShowI2Art((v) => !v)}
+            />
+          </div>
         </div>
 
         {filtered.length === 0 ? (
