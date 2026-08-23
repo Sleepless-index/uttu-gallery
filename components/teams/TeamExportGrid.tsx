@@ -1,7 +1,14 @@
-import { characterArtPath, rarityPlatePath } from "@/lib/assets/characterAssets";
+import {
+  characterArtPath,
+  characterI2ArtPath,
+  hasCharacterI2Art,
+  rarityPlatePath,
+} from "@/lib/assets/characterAssets";
+import { garmentCardPath } from "@/lib/assets/garmentAssets";
+import { garmentsForCharacter } from "@/lib/data/garments";
 import { parseDisplayName } from "@/lib/data/roster";
 import { ExportHeader } from "@/components/export/ExportHeader";
-import type { RosterCharacter, Team, UserProfile } from "@/lib/types";
+import type { RosterCharacter, CharacterProgress, Team, UserProfile } from "@/lib/types";
 
 const RARITY_TINT: Record<number, string> = {
   6: "var(--color-rarity-6)",
@@ -17,9 +24,29 @@ function rarityTint(rarity: number): string {
 
 /** Static, plain-<img> replica of a filled team slot — used only for PNG
  * export, same reasoning as ExportCard: avoids Next's image optimizer proxy
- * so html-to-image can capture every card reliably. */
-function ExportSlot({ character }: { character: RosterCharacter }) {
+ * so html-to-image can capture every card reliably.
+ *
+ * Art selection mirrors ExportCard/CharacterCard exactly: a selected
+ * garment or an explicitly-picked Insight 2 look wins, falling back to
+ * auto-I2 once insight has actually reached tier 2, and finally to base
+ * art. Team exports previously always used base art regardless of what
+ * was set on the Roster page — this keeps the two in sync. */
+function ExportSlot({ character, progress }: { character: RosterCharacter; progress: CharacterProgress }) {
   const displayName = parseDisplayName(character.name);
+
+  const selectedGarment =
+    typeof progress.selectedGarmentId === "number"
+      ? garmentsForCharacter(character.id).find((g) => g.id === progress.selectedGarmentId)
+      : undefined;
+  const selectedInsight2 = progress.selectedGarmentId === "insight2";
+  const autoInsight2 =
+    progress.selectedGarmentId == null && progress.insight >= 2 && hasCharacterI2Art(character.id);
+
+  const artSrc = selectedGarment
+    ? garmentCardPath(selectedGarment)
+    : selectedInsight2 || autoInsight2
+      ? characterI2ArtPath(character.id)
+      : characterArtPath(character.id);
 
   return (
     <div
@@ -30,7 +57,7 @@ function ExportSlot({ character }: { character: RosterCharacter }) {
 
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={characterArtPath(character.id)}
+        src={artSrc}
         alt={displayName.text}
         className="absolute inset-0 h-full w-full origin-top scale-105 object-cover object-top"
       />
@@ -77,9 +104,10 @@ interface TeamExportBlockProps {
   team: Team;
   displayNumber: number;
   resolveCharacter: (id: number) => RosterCharacter | undefined;
+  getProgress: (id: number) => CharacterProgress;
 }
 
-function TeamExportBlock({ team, displayNumber, resolveCharacter }: TeamExportBlockProps) {
+function TeamExportBlock({ team, displayNumber, resolveCharacter, getProgress }: TeamExportBlockProps) {
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-4">
       <div className="mb-3 flex items-center gap-2.5">
@@ -96,7 +124,7 @@ function TeamExportBlock({ team, displayNumber, resolveCharacter }: TeamExportBl
         {team.slots.map((characterId, slotIndex) => {
           const character = characterId != null ? resolveCharacter(characterId) : undefined;
           return character ? (
-            <ExportSlot key={slotIndex} character={character} />
+            <ExportSlot key={slotIndex} character={character} progress={getProgress(character.id)} />
           ) : (
             <ExportEmptySlot key={slotIndex} />
           );
@@ -109,25 +137,51 @@ function TeamExportBlock({ team, displayNumber, resolveCharacter }: TeamExportBl
 interface TeamExportGridProps {
   teams: Team[];
   resolveCharacter: (id: number) => RosterCharacter | undefined;
+  getProgress: (id: number) => CharacterProgress;
   profile: UserProfile;
+  /** How many teams stack per column before starting a new one — must match
+   * TEAMS_PER_COLUMN on the Teams page itself, or the export won't reflect
+   * what the page actually shows. */
+  teamsPerColumn?: number;
 }
 
-/** Fixed-width, non-responsive export target for the Teams page — stacks
- * every team vertically at a consistent size regardless of the viewer's own
- * screen size, so the exported PNG stays sharp and predictable (e.g. when
- * shared in Discord). */
-export function TeamExportGrid({ teams, resolveCharacter, profile }: TeamExportGridProps) {
+const TEAM_BLOCK_WIDTH = 4 * 140 + 3 * 8 + 2 * 16; // 4 slots + gaps + block padding
+
+/** Fixed-width, non-responsive export target for the Teams page. Teams are
+ * chunked into columns of `teamsPerColumn`, laid out side by side — the
+ * same top-to-bottom-then-next-column flow as the live page's CSS grid —
+ * so a roster of 7+ teams exports as multiple columns instead of one very
+ * long single strip. */
+export function TeamExportGrid({
+  teams,
+  resolveCharacter,
+  getProgress,
+  profile,
+  teamsPerColumn = 4,
+}: TeamExportGridProps) {
+  const columns: Team[][] = [];
+  for (let i = 0; i < teams.length; i += teamsPerColumn) {
+    columns.push(teams.slice(i, i + teamsPerColumn));
+  }
+
   return (
-    <div className="flex w-fit flex-col gap-4 bg-[var(--color-bg)] p-6" style={{ width: 4 * 140 + 3 * 8 + 2 * 16 }}>
+    <div className="w-fit bg-[var(--color-bg)] p-6">
       <ExportHeader profile={profile} />
-      {teams.map((team, i) => (
-        <TeamExportBlock
-          key={team.id}
-          team={team}
-          displayNumber={i + 1}
-          resolveCharacter={resolveCharacter}
-        />
-      ))}
+      <div className="flex items-start gap-4">
+        {columns.map((columnTeams, colIndex) => (
+          <div key={colIndex} className="flex flex-col gap-4" style={{ width: TEAM_BLOCK_WIDTH }}>
+            {columnTeams.map((team, i) => (
+              <TeamExportBlock
+                key={team.id}
+                team={team}
+                displayNumber={colIndex * teamsPerColumn + i + 1}
+                resolveCharacter={resolveCharacter}
+                getProgress={getProgress}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
