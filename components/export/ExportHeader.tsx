@@ -1,4 +1,4 @@
-import { pfpPath } from "@/lib/data/pfp";
+import { pfpPath, pfpIds } from "@/lib/data/pfp";
 import type { UserProfile } from "@/lib/types";
 
 const DEFAULT_NAME = "Timekeeper";
@@ -13,11 +13,15 @@ interface ExportHeaderProps {
 export function ExportHeader({ profile }: ExportHeaderProps) {
   const displayName = profile.name.trim() || DEFAULT_NAME;
   const uid = profile.uid.trim();
+  // A pfpId saved before an icon was removed/renamed would 404 — checking
+  // against the current known list here avoids handing toPng() a dead URL,
+  // rather than finding out only when the export itself fails on it.
+  const hasValidPfp = !!profile.pfpId && pfpIds.includes(profile.pfpId);
 
   return (
     <div className="mb-6 flex items-center gap-4">
       <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl border-2 border-[var(--color-border)] bg-[var(--color-surface)]">
-        {profile.pfpId && (
+        {hasValidPfp && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={pfpPath(profile.pfpId)} alt="" className="h-full w-full object-cover" />
         )}
