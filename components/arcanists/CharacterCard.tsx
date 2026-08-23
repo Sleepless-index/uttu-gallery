@@ -20,6 +20,12 @@ interface CharacterCardProps {
   progress: CharacterProgress;
   showI2Art?: boolean;
   priority?: boolean;
+  /** Gallery mode ignores the user's tracked progress entirely — always
+   * shows base art (or the I2 toggle) and just the name, no level/insight/
+   * portrait overlay or selected-garment art. Used on the Arcanists gallery
+   * page, which is meant to browse all characters' default art, not reflect
+   * what's been set on the Roster page. */
+  galleryMode?: boolean;
 }
 
 // Rarity → CSS color var, for the tinted vignette. Falls back to the
@@ -52,26 +58,31 @@ export function CharacterCard({
   progress,
   showI2Art = false,
   priority = false,
+  galleryMode = false,
 }: CharacterCardProps) {
   const displayName = parseDisplayName(character.name);
   const [artLoaded, setArtLoaded] = useState(false);
   const [artErrored, setArtErrored] = useState(false);
   const [plateErrored, setPlateErrored] = useState(false);
-  const hasLevelInfo = progress.level > 0;
+  const hasLevelInfo = !galleryMode && progress.level > 0;
 
   // A selected garment or the Insight 2 look (picked in the detail modal's
   // carousel) takes priority over the base/I2-toggle art. If the user hasn't
   // made an explicit choice, characters that have actually reached Insight 2
   // default to their I2 art automatically — this is what keeps the roster
   // card in sync with whatever the carousel last centered on, or with the
-  // character's own progress when nothing's been picked yet.
+  // character's own progress when nothing's been picked yet. None of this
+  // applies in gallery mode, which always shows base (or I2-toggle) art.
   const selectedGarment =
-    typeof progress.selectedGarmentId === "number"
+    !galleryMode && typeof progress.selectedGarmentId === "number"
       ? garmentsForCharacter(character.id).find((g) => g.id === progress.selectedGarmentId)
       : undefined;
-  const selectedInsight2 = progress.selectedGarmentId === "insight2";
+  const selectedInsight2 = !galleryMode && progress.selectedGarmentId === "insight2";
   const autoInsight2 =
-    progress.selectedGarmentId == null && progress.insight >= 2 && hasCharacterI2Art(character.id);
+    !galleryMode &&
+    progress.selectedGarmentId == null &&
+    progress.insight >= 2 &&
+    hasCharacterI2Art(character.id);
 
   const artSrc = selectedGarment
     ? garmentCardPath(selectedGarment)

@@ -86,6 +86,7 @@ export default function ArcanistsPage() {
                 progress={getProgress(c.id)}
                 showI2Art={showI2Art}
                 priority={i < 12}
+                galleryMode
               />
             ))}
           </div>
