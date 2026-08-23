@@ -143,7 +143,7 @@ export default function MyCharactersPage() {
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-[0.8rem] font-medium text-[var(--color-text-dim)]">
             {myCharacters.length === 0
-              ? "My Characters"
+              ? "Roster"
               : `${myCharacters.length} character${myCharacters.length === 1 ? "" : "s"}`}
           </h2>
 

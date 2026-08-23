@@ -54,8 +54,8 @@ export function PickerCard({ id, name, rarity, afflatus, italic, selected, onTog
       aria-label={`Add ${name} to this slot`}
       className={`group relative pt-3 text-left outline-none ${disabled ? "cursor-not-allowed opacity-35" : ""}`}
     >
-      <div className="absolute left-2 top-1.5 z-20 h-9 w-6">
-        <Image src={afflatusIconPath(afflatus)} alt={afflatus} fill sizes="24px" className="object-contain object-top drop-shadow-md" />
+      <div className="absolute left-1.5 top-2 z-20 h-7 w-[1.1rem] sm:left-2 sm:top-1.5 sm:h-11 sm:w-7">
+        <Image src={afflatusIconPath(afflatus)} alt={afflatus} fill sizes="28px" className="object-contain object-top drop-shadow-md" />
       </div>
 
       <div

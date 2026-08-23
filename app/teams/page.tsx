@@ -1,10 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { toPng } from "html-to-image";
 import { roster } from "@/lib/data/roster";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { TeamCard } from "@/components/teams/TeamCard";
 import { TeamSlotPickerModal } from "@/components/teams/TeamSlotPickerModal";
+import { TeamExportGrid } from "@/components/teams/TeamExportGrid";
 
 /** Teams stack top-to-bottom within a column; once a column holds this many
  * teams, the next team starts a new column to the right, beside the first. */
@@ -14,6 +16,29 @@ function IconPlus() {
   return (
     <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
       <path d="M8 2.5v11M2.5 8h11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IconDownload() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <path
+        d="M8 2v8m0 0L5 7m3 3 3-3M3 12.5v.5a1.5 1.5 0 0 0 1.5 1.5h7a1.5 1.5 0 0 0 1.5-1.5v-.5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function IconSpinner() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" className="animate-spin">
+      <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.6" strokeOpacity="0.25" />
+      <path d="M14 8a6 6 0 0 0-6-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   );
 }
@@ -31,6 +56,8 @@ function IconEmptyTeams() {
 export default function MyTeamsPage() {
   const { state, hydrated, getProgress, addTeam, renameTeam, deleteTeam, setTeamSlot } = useTrackerState();
   const [activeSlot, setActiveSlot] = useState<{ teamId: number; slotIndex: number } | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const exportRef = useRef<HTMLDivElement>(null);
 
   const myCharacters = useMemo(() => {
     return roster
@@ -54,6 +81,44 @@ export default function MyTeamsPage() {
     );
   }, [activeTeam]);
 
+  async function handleExport() {
+    if (!exportRef.current || exporting) return;
+    setExporting(true);
+    try {
+      // Give the off-screen grid's <img> tags a moment to finish loading
+      // before capture — toPng doesn't wait for image decode on its own.
+      const images = Array.from(exportRef.current.querySelectorAll("img"));
+      await Promise.all(
+        images.map((img) =>
+          img.complete
+            ? Promise.resolve()
+            : new Promise<void>((resolve) => {
+                img.onload = () => resolve();
+                img.onerror = () => resolve();
+              })
+        )
+      );
+
+      // pixelRatio 3 keeps card art crisp at typical Discord embed widths
+      // (roughly 400-550px display) even though the underlying art files
+      // are themselves modest resolution — this avoids the soft/blurry
+      // look a 1x or 2x capture gets when Discord scales it back up.
+      const dataUrl = await toPng(exportRef.current, {
+        pixelRatio: 3,
+        backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--color-bg") || "#0a0a0f",
+      });
+
+      const link = document.createElement("a");
+      link.download = "my-teams.png";
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Export failed:", err);
+    } finally {
+      setExporting(false);
+    }
+  }
+
   if (!hydrated) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)]">
@@ -68,17 +133,29 @@ export default function MyTeamsPage() {
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-[0.8rem] font-medium text-[var(--color-text-dim)]">
             {state.teams.length === 0
-              ? "My Teams"
+              ? "Teams"
               : `${state.teams.length} team${state.teams.length === 1 ? "" : "s"}`}
           </h2>
 
-          <button
-            onClick={addTeam}
-            className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
-          >
-            <IconPlus />
-            New team
-          </button>
+          <div className="flex items-center gap-2">
+            {state.teams.length > 0 && (
+              <button
+                onClick={handleExport}
+                disabled={exporting}
+                className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
+              >
+                {exporting ? <IconSpinner /> : <IconDownload />}
+                {exporting ? "Exporting…" : "Export PNG"}
+              </button>
+            )}
+            <button
+              onClick={addTeam}
+              className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
+            >
+              <IconPlus />
+              New team
+            </button>
+          </div>
         </div>
 
         {state.teams.length === 0 ? (
@@ -121,6 +198,18 @@ export default function MyTeamsPage() {
           </div>
         )}
       </main>
+
+      {/* Off-screen, always-mounted export target — same approach as the
+          Roster page's export: positioned far outside the viewport (not
+          display:none) so html-to-image can lay it out and capture it. */}
+      <div
+        aria-hidden
+        style={{ position: "fixed", top: 0, left: "-99999px", pointerEvents: "none" }}
+      >
+        <div ref={exportRef}>
+          <TeamExportGrid teams={state.teams} resolveCharacter={resolveCharacter} />
+        </div>
+      </div>
 
       {activeSlot && (
         <TeamSlotPickerModal

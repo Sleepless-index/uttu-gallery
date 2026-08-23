@@ -6,10 +6,24 @@ import type { RosterCharacter } from "@/lib/types";
  * characters actually named "37" and "6") instead of a string — normalize
  * everything to a string once here so the rest of the app never has to think
  * about it.
+ *
+ * A small number of entries (e.g. The Twins) also carry a dual afflatus as
+ * an array (e.g. ["Mineral", "Star"]) instead of a single string. Every
+ * consumer of RosterCharacter.afflatus (icons, filters, tints) expects one
+ * value, so we flatten to the first element here — the single place that
+ * needs to know this data can be shaped that way — rather than leaving every
+ * downstream component to guess and crash on `.toLowerCase()` of an array.
  */
 export const roster: RosterCharacter[] = (
-  rawRoster as (Omit<RosterCharacter, "name"> & { name: string | number })[]
-).map((c) => ({ ...c, name: String(c.name) }));
+  rawRoster as (Omit<RosterCharacter, "name" | "afflatus"> & {
+    name: string | number;
+    afflatus: RosterCharacter["afflatus"] | RosterCharacter["afflatus"][];
+  })[]
+).map((c) => ({
+  ...c,
+  name: String(c.name),
+  afflatus: Array.isArray(c.afflatus) ? c.afflatus[0] : c.afflatus,
+}));
 
 export const rosterById: Map<number, RosterCharacter> = new Map(
   roster.map((c) => [c.id, c])

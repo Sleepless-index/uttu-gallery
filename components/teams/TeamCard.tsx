@@ -172,7 +172,7 @@ export function TeamCard({
         </button>
       </div>
 
-      <div className="grid grid-cols-4 gap-2 [grid-template-columns:repeat(4,minmax(0,140px))]">
+      <div className="grid gap-2 [grid-template-columns:repeat(4,minmax(0,140px))]">
         {team.slots.map((characterId, slotIndex) => {
           const character = characterId != null ? resolveCharacter(characterId) : undefined;
           if (character) {

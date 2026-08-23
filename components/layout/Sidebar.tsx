@@ -117,13 +117,13 @@ function IconMyTeams() {
 
 const MY_CHARACTERS_ITEM = {
   href: "/characters",
-  label: "My Characters",
+  label: "Roster",
   icon: <IconMyCharacters />,
 };
 
 const MY_TEAMS_ITEM = {
   href: "/teams",
-  label: "My Teams",
+  label: "Teams",
   icon: <IconMyTeams />,
 };
 
