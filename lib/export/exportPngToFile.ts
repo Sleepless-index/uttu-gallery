@@ -29,6 +29,27 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string)
   ]);
 }
 
+/** Normalizes whatever toPng() rejects with into a readable string. Some
+ * rendering failures inside html-to-image reject with a plain object, an
+ * Event, or a string rather than an Error, which is why a generic catch
+ * that only checks `instanceof Error` can end up showing a useless "Export
+ * failed. Please try again." with no clue what actually broke. */
+export function describeExportError(err: unknown): string {
+  if (err instanceof Error && err.message) return err.message;
+  if (typeof err === "string" && err) return err;
+  if (err && typeof err === "object") {
+    const maybeMessage = (err as { message?: unknown }).message;
+    if (typeof maybeMessage === "string" && maybeMessage) return maybeMessage;
+    try {
+      const serialized = JSON.stringify(err);
+      if (serialized && serialized !== "{}") return `Export failed: ${serialized}`;
+    } catch {
+      // fall through to generic message below
+    }
+  }
+  return "Export failed for an unknown reason. Please try again, or try with fewer teams.";
+}
+
 interface ExportPngToFileOptions {
   /** Element to capture. */
   node: HTMLElement;
@@ -42,30 +63,47 @@ interface ExportPngToFileOptions {
   imageWaitMs?: number;
   /** How long to allow the capture itself to run before giving up and
    * reporting a clear timeout error, rather than leaving the button stuck
-   * on "Exporting…" indefinitely. */
+   * on "Exporting…" indefinitely. Note: the underlying toPng() call isn't
+   * actually cancelled when this fires (the browser has no API for that) —
+   * it keeps running in the background and its result is just ignored. So
+   * this should be generous rather than tight: too short and a genuinely
+   * slow-but-successful export gets reported as failed for no reason. */
   captureTimeoutMs?: number;
 }
 
 /** Captures `node` as a PNG and triggers a download, with bounded wait times
  * at every stage so a slow/stalled export always resolves or clearly fails
  * within a predictable window — instead of spinning forever with no
- * feedback, which is what made this feel "broken" on large rosters. */
+ * feedback, which is what made this feel "broken" on large rosters.
+ *
+ * The capture timeout scales with how much is actually being rendered
+ * (more <img> tags under `node` = more canvas work), since a fixed timeout
+ * that's fine for a handful of cards can fire on a large export well before
+ * toPng() would have finished on its own — which looks exactly like a
+ * failure but is really just impatience. */
 export async function exportPngToFile({
   node,
   filename,
   pixelRatio = 2,
   imageWaitMs = 8000,
-  captureTimeoutMs = 20000,
+  captureTimeoutMs,
 }: ExportPngToFileOptions): Promise<void> {
   await waitForImages(node, imageWaitMs);
 
   const backgroundColor =
     getComputedStyle(document.documentElement).getPropertyValue("--color-bg").trim() || "#0a0a0f";
 
+  const imageCount = node.querySelectorAll("img").length;
+  // ~1.5s per image as a base rate at pixelRatio 1, scaled up for higher
+  // pixel ratios (roughly quadratic with pixelRatio, since both dimensions
+  // scale), with a floor so small exports still get a reasonable window.
+  const scaledTimeout = Math.max(20000, imageCount * 1500 * pixelRatio * pixelRatio);
+  const effectiveTimeout = captureTimeoutMs ?? scaledTimeout;
+
   const dataUrl = await withTimeout(
     toPng(node, { pixelRatio, backgroundColor }),
-    captureTimeoutMs,
-    "Export timed out — this can happen with a very large roster or a slow connection. Try again, or export in a smaller batch."
+    effectiveTimeout,
+    "Export timed out — this can happen with a lot of teams/characters or a slow connection. Try again, or export in a smaller batch."
   );
 
   const link = document.createElement("a");

@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { roster } from "@/lib/data/roster";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
-import { exportPngToFile } from "@/lib/export/exportPngToFile";
+import { exportPngToFile, describeExportError } from "@/lib/export/exportPngToFile";
 import { CharacterCard } from "@/components/arcanists/CharacterCard";
 import { CharacterPickerModal } from "@/components/characters/CharacterPickerModal";
 import { CharacterDetailModal } from "@/components/characters/CharacterDetailModal";
@@ -104,7 +104,7 @@ export default function MyCharactersPage() {
       await exportPngToFile({ node: exportRef.current, filename: "my-roster.png", pixelRatio: 2 });
     } catch (err) {
       console.error("Export failed:", err);
-      setExportError(err instanceof Error ? err.message : "Export failed. Please try again.");
+      setExportError(describeExportError(err));
     } finally {
       setExporting(false);
     }

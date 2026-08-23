@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { roster } from "@/lib/data/roster";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
-import { exportPngToFile } from "@/lib/export/exportPngToFile";
+import { exportPngToFile, describeExportError } from "@/lib/export/exportPngToFile";
 import { TeamCard } from "@/components/teams/TeamCard";
 import { TeamSlotPickerModal } from "@/components/teams/TeamSlotPickerModal";
 import { TeamExportGrid } from "@/components/teams/TeamExportGrid";
@@ -94,7 +94,7 @@ export default function MyTeamsPage() {
       await exportPngToFile({ node: exportRef.current, filename: "my-teams.png", pixelRatio: 3 });
     } catch (err) {
       console.error("Export failed:", err);
-      setExportError(err instanceof Error ? err.message : "Export failed. Please try again.");
+      setExportError(describeExportError(err));
     } finally {
       setExporting(false);
     }
