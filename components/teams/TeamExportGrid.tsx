@@ -1,6 +1,7 @@
 import { characterArtPath, rarityPlatePath } from "@/lib/assets/characterAssets";
 import { parseDisplayName } from "@/lib/data/roster";
-import type { RosterCharacter, Team } from "@/lib/types";
+import { ExportHeader } from "@/components/export/ExportHeader";
+import type { RosterCharacter, Team, UserProfile } from "@/lib/types";
 
 const RARITY_TINT: Record<number, string> = {
   6: "var(--color-rarity-6)",
@@ -108,15 +109,17 @@ function TeamExportBlock({ team, displayNumber, resolveCharacter }: TeamExportBl
 interface TeamExportGridProps {
   teams: Team[];
   resolveCharacter: (id: number) => RosterCharacter | undefined;
+  profile: UserProfile;
 }
 
 /** Fixed-width, non-responsive export target for the Teams page — stacks
  * every team vertically at a consistent size regardless of the viewer's own
  * screen size, so the exported PNG stays sharp and predictable (e.g. when
  * shared in Discord). */
-export function TeamExportGrid({ teams, resolveCharacter }: TeamExportGridProps) {
+export function TeamExportGrid({ teams, resolveCharacter, profile }: TeamExportGridProps) {
   return (
     <div className="flex w-fit flex-col gap-4 bg-[var(--color-bg)] p-6" style={{ width: 4 * 140 + 3 * 8 + 2 * 16 }}>
+      <ExportHeader profile={profile} />
       {teams.map((team, i) => (
         <TeamExportBlock
           key={team.id}

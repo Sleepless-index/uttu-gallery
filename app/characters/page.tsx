@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { toPng } from "html-to-image";
 import { roster } from "@/lib/data/roster";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
+import { exportPngToFile } from "@/lib/export/exportPngToFile";
 import { CharacterCard } from "@/components/arcanists/CharacterCard";
 import { CharacterPickerModal } from "@/components/characters/CharacterPickerModal";
 import { CharacterDetailModal } from "@/components/characters/CharacterDetailModal";
@@ -69,6 +69,7 @@ export default function MyCharactersPage() {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [detailCharacterId, setDetailCharacterId] = useState<number | null>(null);
   const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
   const [showI2Art, setShowI2Art] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
 
@@ -98,32 +99,12 @@ export default function MyCharactersPage() {
   async function handleExport() {
     if (!exportRef.current || exporting) return;
     setExporting(true);
+    setExportError(null);
     try {
-      // Give the off-screen grid's <img> tags a moment to finish loading
-      // before capture — toPng doesn't wait for image decode on its own.
-      const images = Array.from(exportRef.current.querySelectorAll("img"));
-      await Promise.all(
-        images.map((img) =>
-          img.complete
-            ? Promise.resolve()
-            : new Promise<void>((resolve) => {
-                img.onload = () => resolve();
-                img.onerror = () => resolve();
-              })
-        )
-      );
-
-      const dataUrl = await toPng(exportRef.current, {
-        pixelRatio: 2,
-        backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--color-bg") || "#0a0a0f",
-      });
-
-      const link = document.createElement("a");
-      link.download = "my-characters.png";
-      link.href = dataUrl;
-      link.click();
+      await exportPngToFile({ node: exportRef.current, filename: "my-roster.png", pixelRatio: 2 });
     } catch (err) {
       console.error("Export failed:", err);
+      setExportError(err instanceof Error ? err.message : "Export failed. Please try again.");
     } finally {
       setExporting(false);
     }
@@ -146,7 +127,6 @@ export default function MyCharactersPage() {
               ? "Roster"
               : `${myCharacters.length} character${myCharacters.length === 1 ? "" : "s"}`}
           </h2>
-
           <div className="flex items-center gap-2">
             {myCharacters.length > 0 && (
               <>
@@ -184,6 +164,12 @@ export default function MyCharactersPage() {
             </button>
           </div>
         </div>
+
+        {exportError && (
+          <p className="mb-3 rounded-lg border border-[var(--color-danger)] bg-[var(--color-danger)]/10 px-3 py-2 text-[0.75rem] text-[var(--color-danger)]">
+            {exportError}
+          </p>
+        )}
 
         {myCharacters.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">

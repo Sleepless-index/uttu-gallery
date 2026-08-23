@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { toPng } from "html-to-image";
 import { roster } from "@/lib/data/roster";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
+import { exportPngToFile } from "@/lib/export/exportPngToFile";
 import { TeamCard } from "@/components/teams/TeamCard";
 import { TeamSlotPickerModal } from "@/components/teams/TeamSlotPickerModal";
 import { TeamExportGrid } from "@/components/teams/TeamExportGrid";
@@ -57,6 +57,7 @@ export default function MyTeamsPage() {
   const { state, hydrated, getProgress, addTeam, renameTeam, deleteTeam, setTeamSlot } = useTrackerState();
   const [activeSlot, setActiveSlot] = useState<{ teamId: number; slotIndex: number } | null>(null);
   const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
   const myCharacters = useMemo(() => {
@@ -84,36 +85,16 @@ export default function MyTeamsPage() {
   async function handleExport() {
     if (!exportRef.current || exporting) return;
     setExporting(true);
+    setExportError(null);
     try {
-      // Give the off-screen grid's <img> tags a moment to finish loading
-      // before capture — toPng doesn't wait for image decode on its own.
-      const images = Array.from(exportRef.current.querySelectorAll("img"));
-      await Promise.all(
-        images.map((img) =>
-          img.complete
-            ? Promise.resolve()
-            : new Promise<void>((resolve) => {
-                img.onload = () => resolve();
-                img.onerror = () => resolve();
-              })
-        )
-      );
-
       // pixelRatio 3 keeps card art crisp at typical Discord embed widths
       // (roughly 400-550px display) even though the underlying art files
       // are themselves modest resolution — this avoids the soft/blurry
       // look a 1x or 2x capture gets when Discord scales it back up.
-      const dataUrl = await toPng(exportRef.current, {
-        pixelRatio: 3,
-        backgroundColor: getComputedStyle(document.documentElement).getPropertyValue("--color-bg") || "#0a0a0f",
-      });
-
-      const link = document.createElement("a");
-      link.download = "my-teams.png";
-      link.href = dataUrl;
-      link.click();
+      await exportPngToFile({ node: exportRef.current, filename: "my-teams.png", pixelRatio: 3 });
     } catch (err) {
       console.error("Export failed:", err);
+      setExportError(err instanceof Error ? err.message : "Export failed. Please try again.");
     } finally {
       setExporting(false);
     }
@@ -157,6 +138,12 @@ export default function MyTeamsPage() {
             </button>
           </div>
         </div>
+
+        {exportError && (
+          <p className="mb-3 rounded-lg border border-[var(--color-danger)] bg-[var(--color-danger)]/10 px-3 py-2 text-[0.75rem] text-[var(--color-danger)]">
+            {exportError}
+          </p>
+        )}
 
         {state.teams.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
@@ -207,7 +194,7 @@ export default function MyTeamsPage() {
         style={{ position: "fixed", top: 0, left: "-99999px", pointerEvents: "none" }}
       >
         <div ref={exportRef}>
-          <TeamExportGrid teams={state.teams} resolveCharacter={resolveCharacter} />
+          <TeamExportGrid teams={state.teams} resolveCharacter={resolveCharacter} profile={state.profile} />
         </div>
       </div>
 

@@ -9,10 +9,8 @@ import {
 import { garmentCardPath } from "@/lib/assets/garmentAssets";
 import { garmentsForCharacter } from "@/lib/data/garments";
 import { parseDisplayName } from "@/lib/data/roster";
-import { pfpPath } from "@/lib/data/pfp";
+import { ExportHeader } from "@/components/export/ExportHeader";
 import type { RosterCharacter, CharacterProgress, UserProfile } from "@/lib/types";
-
-const DEFAULT_NAME = "Timekeeper";
 
 const RARITY_TINT: Record<number, string> = {
   6: "var(--color-rarity-6)",
@@ -140,36 +138,6 @@ function ExportCard({ character, progress, showI2Art = false }: ExportCardProps)
               {displayName.text}
             </span>
           </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-interface ExportHeaderProps {
-  profile: UserProfile;
-}
-
-function ExportHeader({ profile }: ExportHeaderProps) {
-  const displayName = profile.name.trim() || DEFAULT_NAME;
-  const uid = profile.uid.trim();
-
-  return (
-    <div className="mb-6 flex items-center gap-4">
-      <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl border-2 border-[var(--color-border)] bg-[var(--color-surface)]">
-        {profile.pfpId && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={pfpPath(profile.pfpId)} alt="" className="h-full w-full object-cover" />
-        )}
-      </div>
-      <div className="flex flex-col justify-center">
-        <span className="text-[1.9rem] font-semibold leading-tight text-[var(--color-text)]">
-          {displayName}
-        </span>
-        {uid && (
-          <span className="mt-1 text-[1.15rem] leading-tight text-[var(--color-text-faint)]">
-            UID: {uid}
-          </span>
         )}
       </div>
     </div>

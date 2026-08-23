@@ -7,7 +7,7 @@ import type { Afflatus } from "@/lib/types";
 
 function IconCheck() {
   return (
-    <svg width="26" height="26" viewBox="0 0 16 16" fill="none">
+    <svg viewBox="0 0 16 16" fill="none" className="h-full w-full">
       <path d="M3.5 8.3l2.8 2.8 6.2-6.6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
@@ -60,7 +60,7 @@ export function PickerCard({ id, name, rarity, afflatus, italic, selected, onTog
 
       <div
         className={`relative overflow-hidden rounded-md border transition-all duration-150
-          ${selected ? "border-[var(--color-accent)] ring-2 ring-[var(--color-accent)] ring-offset-2 ring-offset-[var(--color-panel)]" : "border-[var(--color-border)] group-hover:border-[var(--color-border-strong)]"}`}
+          ${selected ? "border-[var(--color-accent)]" : "border-[var(--color-border)] group-hover:border-[var(--color-border-strong)]"}`}
         style={{ aspectRatio: "224 / 524" }}
       >
         <div className="absolute inset-0 bg-[var(--color-surface)]" />
@@ -97,7 +97,7 @@ export function PickerCard({ id, name, rarity, afflatus, italic, selected, onTog
 
         <div className="absolute inset-x-0 bottom-1.5 z-10 px-2">
           <span
-            className={`block text-center text-[0.9rem] font-semibold leading-tight text-white ${italic ? "italic" : ""}`}
+            className={`block text-center text-[0.55rem] font-semibold leading-tight text-white sm:text-[0.95rem] ${italic ? "italic" : ""}`}
             style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)", fontFamily: "var(--font-display)" }}
           >
             {name}
@@ -108,7 +108,7 @@ export function PickerCard({ id, name, rarity, afflatus, italic, selected, onTog
           <div
             className={`pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-black/45 transition-opacity duration-150 ${selected ? "opacity-100" : "opacity-0"}`}
           >
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-accent)] text-white shadow-lg">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-accent)] p-1.5 text-white shadow-lg sm:h-11 sm:w-11 sm:p-2.5">
               <IconCheck />
             </span>
           </div>
