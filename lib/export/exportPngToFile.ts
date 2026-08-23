@@ -1,21 +1,30 @@
 import { toPng } from "html-to-image";
 
-/** Resolves once every <img> under `root` has either loaded or errored.
- * toPng() doesn't wait for image decode on its own, so without this the
- * capture can race ahead and grab blank tiles for anything not yet decoded.
- * Guarded by a timeout — a single stalled request (e.g. a flaky network
- * fetch of a large sprite sheet) should never hang the export forever. */
+/** Resolves once every <img> under `root` has either loaded or errored, and
+ * strips the `src` from any that errored. toPng() clones the DOM and
+ * re-fetches every image inside that clone — if one of those fetches 404s,
+ * html-to-image's internal loader rejects with the raw ErrorEvent object
+ * (not a normal Error), which surfaces as something like
+ * `{"isTrusted":true}` with no useful message. Removing the src here means
+ * toPng() sees an empty image slot instead of attempting (and failing) a
+ * second fetch of a URL we already know is broken — the export still
+ * completes, just missing that one picture, instead of failing outright. */
 function waitForImages(root: HTMLElement, timeoutMs: number): Promise<void> {
   const images = Array.from(root.querySelectorAll("img"));
   const loadPromise = Promise.all(
-    images.map((img) =>
-      img.complete
-        ? Promise.resolve()
-        : new Promise<void>((resolve) => {
-            img.onload = () => resolve();
-            img.onerror = () => resolve();
-          })
-    )
+    images.map((img) => {
+      if (img.complete) {
+        if (img.naturalWidth === 0) img.removeAttribute("src");
+        return Promise.resolve();
+      }
+      return new Promise<void>((resolve) => {
+        img.onload = () => resolve();
+        img.onerror = () => {
+          img.removeAttribute("src");
+          resolve();
+        };
+      });
+    })
   ).then(() => undefined);
 
   const timeoutPromise = new Promise<void>((resolve) => setTimeout(resolve, timeoutMs));
