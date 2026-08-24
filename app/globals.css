@@ -3,19 +3,19 @@
 
 @theme {
   /* ---- Neutral dashboard surfaces ---- */
-  --color-bg: #0b0d10;
+  --color-bg: #272932;
   --color-panel: #11151a;
   --color-surface: #181d23;
   --color-surface-hover: #20262d;
   --color-border: #293039;
   --color-border-strong: #3a424d;
 
-  --color-text: #f2f4f7;
+  --color-text: #F4F9E9;
   --color-text-dim: #a3abb6;
   --color-text-faint: #69727e;
 
   /* ---- Single accent ---- */
-  --color-accent: #ff8738;
+  --color-accent: #E58F65;
   --color-accent-dim: #3a2114;
   --color-accent-hover: #ff9b57;
 
