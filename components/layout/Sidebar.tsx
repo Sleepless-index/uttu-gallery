@@ -302,7 +302,7 @@ export function Sidebar() {
             </div>
           </div>
 
-          <div className="flex flex-1 justify-center">
+          <div className="flex h-11 flex-1 items-center justify-center overflow-hidden">
             <DateBadge />
           </div>
 
