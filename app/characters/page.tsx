@@ -227,6 +227,7 @@ export default function MyCharactersPage() {
         if (!detailCharacter) return null;
         return (
           <CharacterDetailModal
+            key={detailCharacterId}
             character={detailCharacter}
             progress={getProgress(detailCharacterId)}
             onClose={() => setDetailCharacterId(null)}
