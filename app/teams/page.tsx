@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { roster } from "@/lib/data/roster";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { exportPngToFile, describeExportError } from "@/lib/export/exportPngToFile";
@@ -43,16 +44,6 @@ function IconSpinner() {
   );
 }
 
-function IconEmptyTeams() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-      <rect x="5" y="9" width="12" height="15" rx="2" stroke="currentColor" strokeWidth="1.6" />
-      <rect x="23" y="9" width="12" height="15" rx="2" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M28 5.5v6M25 8.5h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 export default function MyTeamsPage() {
   const { state, hydrated, getProgress, addTeam, renameTeam, deleteTeam, setTeamSlot } = useTrackerState();
   const [activeSlot, setActiveSlot] = useState<{ teamId: number; slotIndex: number } | null>(null);
@@ -91,7 +82,7 @@ export default function MyTeamsPage() {
       // (roughly 400-550px display) even though the underlying art files
       // are themselves modest resolution — this avoids the soft/blurry
       // look a 1x or 2x capture gets when Discord scales it back up.
-      await exportPngToFile({ node: exportRef.current, filename: "my-teams.png", pixelRatio: 3 });
+      await exportPngToFile({ node: exportRef.current, filename: "my-teams.webp", pixelRatio: 3 });
     } catch (err) {
       console.error("Export failed:", err);
       setExportError(describeExportError(err));
@@ -102,14 +93,14 @@ export default function MyTeamsPage() {
 
   if (!hydrated) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)]">
+      <div className="flex min-h-screen items-center justify-center">
         <span className="text-[0.75rem] text-[var(--color-text-faint)]">Loading…</span>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--color-bg)]">
+    <div className="flex min-h-screen flex-col">
       <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 sm:py-8">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-[0.8rem] font-medium text-[var(--color-text-dim)]">
@@ -126,7 +117,7 @@ export default function MyTeamsPage() {
                 className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
               >
                 {exporting ? <IconSpinner /> : <IconDownload />}
-                {exporting ? "Exporting…" : "Export PNG"}
+                {exporting ? "Exporting…" : "Export"}
               </button>
             )}
             <button
@@ -146,11 +137,16 @@ export default function MyTeamsPage() {
         )}
 
         {state.teams.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
-            <span className="text-[var(--color-text-faint)]">
-              <IconEmptyTeams />
+          <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+            <span className="relative h-40 w-40">
+              <Image
+                src="/icons/bg_xinxiang_wuzhuangtai.webp"
+                alt="Empty"
+                fill
+                sizes="160px"
+                className="object-contain"
+              />
             </span>
-            <p className="text-[0.85rem] font-medium text-[var(--color-text-dim)]">No teams yet</p>
             <p className="max-w-xs text-[0.75rem] text-[var(--color-text-faint)]">
               Build team setups from the arcanists you own.
             </p>

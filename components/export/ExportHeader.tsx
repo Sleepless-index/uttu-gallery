@@ -14,8 +14,8 @@ export function ExportHeader({ profile }: ExportHeaderProps) {
   const displayName = profile.name.trim() || DEFAULT_NAME;
   const uid = profile.uid.trim();
   // A pfpId saved before an icon was removed/renamed would 404 — checking
-  // against the current known list here avoids handing toPng() a dead URL,
-  // rather than finding out only when the export itself fails on it.
+  // against the current known list here avoids handing the export a dead
+  // URL, rather than finding out only when the export itself fails on it.
   const validPfpId = profile.pfpId && pfpIds.includes(profile.pfpId) ? profile.pfpId : undefined;
 
   return (

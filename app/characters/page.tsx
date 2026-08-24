@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { roster } from "@/lib/data/roster";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { exportPngToFile, describeExportError } from "@/lib/export/exportPngToFile";
@@ -40,20 +41,6 @@ function IconSpinner() {
   );
 }
 
-function IconEmptyRoster() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-      <circle cx="20" cy="14.5" r="6.5" stroke="currentColor" strokeWidth="1.6" />
-      <path
-        d="M6.5 34c0-6.6 6-10.5 13.5-10.5S33.5 27.4 33.5 34"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <path d="M28 5.5v6M25 8.5h6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
-}
 
 function IconInsight2() {
   return (
@@ -101,7 +88,7 @@ export default function MyCharactersPage() {
     setExporting(true);
     setExportError(null);
     try {
-      await exportPngToFile({ node: exportRef.current, filename: "my-roster.png", pixelRatio: 2 });
+      await exportPngToFile({ node: exportRef.current, filename: "my-roster.webp", pixelRatio: 2 });
     } catch (err) {
       console.error("Export failed:", err);
       setExportError(describeExportError(err));
@@ -112,14 +99,14 @@ export default function MyCharactersPage() {
 
   if (!hydrated) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)]">
+      <div className="flex min-h-screen items-center justify-center">
         <span className="text-[0.75rem] text-[var(--color-text-faint)]">Loading…</span>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--color-bg)]">
+    <div className="flex min-h-screen flex-col">
       <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 sm:py-8">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-[0.8rem] font-medium text-[var(--color-text-dim)]">
@@ -151,7 +138,7 @@ export default function MyCharactersPage() {
                   className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
                 >
                   {exporting ? <IconSpinner /> : <IconDownload />}
-                  {exporting ? "Exporting…" : "Export PNG"}
+                  {exporting ? "Exporting…" : "Export"}
                 </button>
               </>
             )}
@@ -172,13 +159,16 @@ export default function MyCharactersPage() {
         )}
 
         {myCharacters.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
-            <span className="text-[var(--color-text-faint)]">
-              <IconEmptyRoster />
+          <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+            <span className="relative h-40 w-40">
+              <Image
+                src="/icons/bg_xinxiang_wuzhuangtai.webp"
+                alt="Empty"
+                fill
+                sizes="160px"
+                className="object-contain"
+              />
             </span>
-            <p className="text-[0.85rem] font-medium text-[var(--color-text-dim)]">
-              No characters added yet
-            </p>
             <p className="max-w-xs text-[0.75rem] text-[var(--color-text-faint)]">
               Add the arcanists you own to build your own roster view.
             </p>

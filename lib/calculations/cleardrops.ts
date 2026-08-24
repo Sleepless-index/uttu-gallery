@@ -68,7 +68,7 @@ export function lucidscapeCyclesFromPatchDates(startDate: string, endDate: strin
 }
 
 const SOURCE_COLORS = {
-  daily: "#7c6df2",
+  daily: "#c86029",
   weekly: "#4f8fd9",
   limbo: "#5fb87a",
   lucidscape: "#e0b84f",

@@ -165,7 +165,10 @@ export function TeamExportGrid({
   }
 
   return (
-    <div className="w-fit bg-[var(--color-bg)] p-6">
+    <div
+      className="w-fit bg-cover bg-top bg-no-repeat p-6"
+      style={{ backgroundColor: "var(--color-bg)", backgroundImage: "url(/backgrounds/bg_equipbg.webp)" }}
+    >
       <ExportHeader profile={profile} />
       <div className="flex items-start gap-4">
         {columns.map((columnTeams, colIndex) => (
