@@ -5,14 +5,13 @@ import { roster } from "@/lib/data/roster";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { FilterBar } from "@/components/arcanists/FilterBar";
 import { CharacterCard } from "@/components/arcanists/CharacterCard";
-import type { Afflatus, RarityFilter, OwnedFilter, SortOrder } from "@/lib/types";
+import type { Afflatus, RarityFilter, SortOrder } from "@/lib/types";
 
 export default function ArcanistsPage() {
-  const { state, hydrated, stats, getProgress } = useTrackerState();
+  const { hydrated, getProgress } = useTrackerState();
 
   const [rarity, setRarity] = useState<RarityFilter>("all");
   const [afflatus, setAfflatus] = useState<Afflatus | "all">("all");
-  const [owned, setOwned] = useState<OwnedFilter>("all");
   const [sort, setSort] = useState<SortOrder>("default");
   const [showI2Art, setShowI2Art] = useState(false);
 
@@ -20,11 +19,6 @@ export default function ArcanistsPage() {
     const result = roster.filter((c) => {
       if (rarity !== "all" && c.rarity !== rarity) return false;
       if (afflatus !== "all" && c.afflatus !== afflatus) return false;
-
-      const p = state.progress[c.id];
-      if (owned === "owned" && !p?.owned) return false;
-      if (owned === "unowned" && p?.owned) return false;
-
       return true;
     });
 
@@ -38,7 +32,7 @@ export default function ArcanistsPage() {
       default:
         return [...result].sort((a, b) => b.rarity - a.rarity || b.id - a.id);
     }
-  }, [rarity, afflatus, owned, sort, state]);
+  }, [rarity, afflatus, sort]);
 
   if (!hydrated) {
     return (
@@ -54,9 +48,6 @@ export default function ArcanistsPage() {
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-[0.8rem] font-medium text-[var(--color-text-dim)]">
             Showing {filtered.length} arcanist{filtered.length === 1 ? "" : "s"}
-            <span className="ml-3 text-[var(--color-text-faint)]">
-              {stats.owned}/{stats.total} filed
-            </span>
           </h2>
 
           <div className="ml-auto">
@@ -65,8 +56,6 @@ export default function ArcanistsPage() {
               onRarityChange={setRarity}
               afflatus={afflatus}
               onAfflatusChange={setAfflatus}
-              status={owned}
-              onStatusChange={setOwned}
               sort={sort}
               onSortChange={setSort}
               showI2Art={showI2Art}

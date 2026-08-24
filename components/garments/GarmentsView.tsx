@@ -50,6 +50,15 @@ function initials(name: string): string {
     .join("");
 }
 
+function IconSearch() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+      <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M11 11L14.5 14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 interface GarmentCardProps {
   garment: Garment;
   charName: string;
@@ -152,6 +161,7 @@ function GarmentCard({ garment, charName, rarity }: GarmentCardProps) {
 
 export function GarmentsView() {
   const [categoryFilter, setCategoryFilter] = useState<GarmentCategoryFilter>("all");
+  const [search, setSearch] = useState("");
 
   const characterRarityById = useMemo(() => {
     const map = new Map<number, number>();
@@ -161,7 +171,7 @@ export function GarmentsView() {
 
   const characterNameById = useMemo(() => {
     const map = new Map<number, string>();
-    for (const c of roster) map.set(c.id, c.name);
+    for (const c of roster) map.set(c.id, parseDisplayName(c.name).text);
     return map;
   }, []);
 
@@ -171,14 +181,20 @@ export function GarmentsView() {
   }, []);
 
   const filtered = useMemo(() => {
-    const list =
-      categoryFilter === "all" ? garments : garments.filter((g) => g.category === categoryFilter);
+    const query = search.trim().toLowerCase();
+    const list = garments.filter((g) => {
+      if (categoryFilter !== "all" && g.category !== categoryFilter) return false;
+      if (!query) return true;
+      const charName = characterNameById.get(g.characterId) ?? "";
+      const garmentName = garmentDisplayName(g);
+      return charName.toLowerCase().includes(query) || garmentName.toLowerCase().includes(query);
+    });
     return [...list].sort((a, b) => {
       const rarityA = characterRarityById.get(a.characterId) ?? 0;
       const rarityB = characterRarityById.get(b.characterId) ?? 0;
       return rarityB - rarityA || b.characterId - a.characterId;
     });
-  }, [categoryFilter, characterRarityById]);
+  }, [categoryFilter, search, characterRarityById, characterNameById]);
 
   return (
     <>
@@ -187,10 +203,23 @@ export function GarmentsView() {
           Showing {filtered.length} garment{filtered.length === 1 ? "" : "s"}
         </h2>
 
-        {/* Filters dropdown, matching the Arcanist page's Filters button.
+        {/* Search + Filters, matching the Arcanist page's control row.
             Wrapped in ml-auto so it stays pinned to the right edge even if
             flex-wrap drops it to its own line on narrow screens. */}
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-2">
+          <div className="relative">
+            <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--color-text-faint)]">
+              <IconSearch />
+            </span>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by character…"
+              className="w-40 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] py-2 pl-8 pr-3 text-[0.75rem] text-[var(--color-text)] placeholder:text-[var(--color-text-faint)] transition-colors focus:border-[var(--color-border-strong)] focus:outline-none sm:w-52"
+            />
+          </div>
+
           <Dropdown
             label="Filters"
             icon={<IconFilter />}
@@ -224,7 +253,7 @@ export function GarmentsView() {
 
       {filtered.length === 0 ? (
         <p className="py-16 text-center text-[0.8rem] text-[var(--color-text-faint)]">
-          No garments match your filters.
+          No garments match your search or filters.
         </p>
       ) : (
         <div className="grid grid-cols-4 gap-2 sm:gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">

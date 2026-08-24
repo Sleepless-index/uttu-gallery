@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { afflatusFilterIconPath } from "@/lib/afflatus";
-import type { Afflatus, RarityFilter, OwnedFilter, SortOrder } from "@/lib/types";
+import type { Afflatus, RarityFilter, SortOrder } from "@/lib/types";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { FilterSection } from "@/components/ui/FilterSection";
 import { MenuItem } from "@/components/ui/MenuItem";
@@ -13,8 +13,6 @@ interface FilterBarProps {
   onRarityChange: (r: RarityFilter) => void;
   afflatus: Afflatus | "all";
   onAfflatusChange: (a: Afflatus | "all") => void;
-  status: OwnedFilter;
-  onStatusChange: (o: OwnedFilter) => void;
   sort: SortOrder;
   onSortChange: (s: SortOrder) => void;
   showI2Art: boolean;
@@ -29,12 +27,6 @@ const AFFLATUS_ORDER: Afflatus[] = [
   "Spirit",
   "Intelligence",
 ];
-
-const STATUS_LABEL: Record<OwnedFilter, string> = {
-  all: "All arcanists",
-  owned: "Owned",
-  unowned: "Not owned",
-};
 
 const RARITY_LABEL: Record<string, string> = {
   all: "All rarities",
@@ -57,8 +49,6 @@ export function FilterBar({
   onRarityChange,
   afflatus,
   onAfflatusChange,
-  status,
-  onStatusChange,
   sort,
   onSortChange,
   showI2Art,
@@ -90,27 +80,11 @@ export function FilterBar({
       <Dropdown
         label="Filters"
         icon={<IconFilter />}
-        active={status !== "all" || rarity !== "all" || afflatus !== "all" || sort !== "default"}
+        active={rarity !== "all" || afflatus !== "all" || sort !== "default"}
         panelClassName="right-0 w-72"
       >
         {(close) => (
           <div>
-            <FilterSection title="Status">
-              <div className="flex flex-col gap-0.5">
-                {(Object.keys(STATUS_LABEL) as OwnedFilter[])
-                  .filter((key) => key !== "unowned")
-                  .map((key) => (
-                    <MenuItem
-                      key={key}
-                      active={status === key}
-                      onClick={() => onStatusChange(key)}
-                    >
-                      {STATUS_LABEL[key]}
-                    </MenuItem>
-                  ))}
-              </div>
-            </FilterSection>
-
             <FilterSection title="Rarity">
               <div className="flex flex-wrap gap-1">
                 {(["all", 6, 5, 4, 3, 2] as RarityFilter[]).map((key) => (
@@ -183,7 +157,6 @@ export function FilterBar({
             <div className="p-2">
               <button
                 onClick={() => {
-                  onStatusChange("all");
                   onRarityChange("all");
                   onAfflatusChange("all");
                   onSortChange("default");
