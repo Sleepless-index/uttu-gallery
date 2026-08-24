@@ -3,38 +3,38 @@
 
 @theme {
   /* ---- Neutral dashboard surfaces ---- */
-  --color-bg: #121110;
-  --color-panel: #171615;
-  --color-surface: #21201e;
-  --color-surface-hover: #292725;
-  --color-border: #2f2c29;
-  --color-border-strong: #413d3a;
+  --color-bg: #0b0d10;
+  --color-panel: #11151a;
+  --color-surface: #181d23;
+  --color-surface-hover: #20262d;
+  --color-border: #293039;
+  --color-border-strong: #3a424d;
 
-  --color-text: #efe9df;
-  --color-text-dim: #9a9fab;
-  --color-text-faint: #5f6470;
+  --color-text: #f2f4f7;
+  --color-text-dim: #a3abb6;
+  --color-text-faint: #69727e;
 
   /* ---- Single accent ---- */
-  --color-accent: #c86029;
-  --color-accent-dim: #422110;
-  --color-accent-hover: #ca7040;
+  --color-accent: #ff8738;
+  --color-accent-dim: #3a2114;
+  --color-accent-hover: #ff9b57;
 
   --color-success: #4fb87a;
   --color-danger: #e15b5b;
 
   /* ---- Roster portrait progress bar (distinct from the main accent) ---- */
-  --color-portrait-bar: #f4bd70;
+  --color-portrait-bar: #ffb15c;
 
   /* ---- Afflatus (identity dots only, not thematic) ---- */
-  --color-afl-star: #e0b84f;
+  --color-afl-star: #e5bb4f;
   --color-afl-plant: #5fb87a;
   --color-afl-mineral: #4fa3b8;
-  --color-afl-beast: #d97b4f;
+  --color-afl-beast: #e07b52;
   --color-afl-spirit: #a37bd9;
   --color-afl-intellect: #4f8fd9;
 
-  --color-rarity-6: #e0b84f;
-  --color-rarity-5: #9a9fab;
+  --color-rarity-6: #e5bb4f;
+  --color-rarity-5: #a3abb6;
   --color-rarity-4: #a37bd9;
   --color-rarity-3: #4f8fd9;
   --color-rarity-2: #5fb87a;
