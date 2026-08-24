@@ -3,12 +3,12 @@
 
 @theme {
   /* ---- Neutral dashboard surfaces ---- */
-  --color-bg: #11100E;
-  --color-panel: #171615;
-  --color-surface: #21201e;
-  --color-surface-hover: #292725;
-  --color-border: #2f2c29;
-  --color-border-strong: #413d3a;
+  --color-bg: #151617;
+  --color-panel: #1B1C1E;
+  --color-surface: #242629;
+  --color-surface-hover: #2B2D30;
+  --color-border: #36383B;
+  --color-border-strong: #4A4C50;
 
   --color-text: #F0E9DF;
   --color-text-dim: #9a9fab;
