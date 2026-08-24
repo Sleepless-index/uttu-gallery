@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { pfpPath } from "@/lib/data/pfp";
+import { DateBadge } from "@/components/layout/DateBadge";
 import { PfpPickerModal } from "@/components/characters/PfpPickerModal";
 
 const DEFAULT_NAME = "Timekeeper";
@@ -300,6 +301,12 @@ export function Sidebar() {
               )}
             </div>
           </div>
+
+          <div className="flex flex-1 justify-center">
+            <DateBadge />
+          </div>
+
+          <div className="w-7 shrink-0" aria-hidden />
         </div>
       )}
 
