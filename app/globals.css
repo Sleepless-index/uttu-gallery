@@ -10,7 +10,7 @@
   --color-border: #262a32;
   --color-border-strong: #363b45;
 
-  --color-text: #e6ddce;
+  --color-text: #efe9df;
   --color-text-dim: #9a9fab;
   --color-text-faint: #5f6470;
 
@@ -49,12 +49,7 @@ html {
 }
 
 body {
-  background-color: var(--color-bg);
-  background-image: url("/backgrounds/bg_equipbg.webp");
-  background-size: cover;
-  background-position: top center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
   min-height: 100vh;

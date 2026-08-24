@@ -155,10 +155,7 @@ interface ExportGridProps {
  * consistent layout regardless of the viewer's own screen size. */
 export function ExportGrid({ characters, getProgress, profile, showI2Art = false }: ExportGridProps) {
   return (
-    <div
-      className="w-fit bg-cover bg-top bg-no-repeat p-6"
-      style={{ backgroundColor: "var(--color-bg)", backgroundImage: "url(/backgrounds/bg_equipbg.webp)" }}
-    >
+    <div className="w-fit bg-[var(--color-bg)] p-6">
       <ExportHeader profile={profile} />
       <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(8, 140px)" }}>
         {characters.map((c) => (
