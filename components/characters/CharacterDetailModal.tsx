@@ -411,7 +411,10 @@ export function CharacterDetailModal({
   onUpdateProgress,
 }: CharacterDetailModalProps) {
   const displayName = parseDisplayName(character.name);
-  const characterGarments = garmentsForCharacter(character.id);
+  const characterGarments = useMemo(
+    () => garmentsForCharacter(character.id),
+    [character.id]
+  );
 
   // Base look is always the first carousel entry, followed by the Insight 2
   // alternate art (when the character has one) and then real garments.
@@ -471,16 +474,14 @@ export function CharacterDetailModal({
     setCenterIndex(index);
   }
 
-  // If insight drops below 2 while the stored preference is the Insight 2
-  // look, that preference no longer qualifies — clear it back to "no
-  // preference" so the character falls back to Base (or re-derives
-  // automatically if insight later climbs back to 2+).
-  useEffect(() => {
-    if (progress.selectedGarmentId === "insight2" && progress.insight < 2) {
-      onUpdateProgress({ selectedGarmentId: undefined });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [progress.insight]);
+  // Note: equipping the Insight 2 look is intentionally independent of the
+  // tracked insight level — a user can pick I2 art from the carousel any
+  // time, whether or not their character has actually reached insight 2 in
+  // game. There is deliberately no effect here that clears the selection
+  // when insight is below 2; an earlier version of this component did that
+  // and it silently un-equipped I2 art on every reopen for anyone who
+  // equipped it before leveling insight, which looked like the equip button
+  // was broken.
 
   // If the stored preference isn't set, keep the live preview in sync as
   // insight is raised to 2+ within this session (e.g. via the tier buttons
