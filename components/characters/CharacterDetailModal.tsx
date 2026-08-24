@@ -552,11 +552,11 @@ export function CharacterDetailModal({
               type="button"
               onClick={equip}
               disabled={isEquipped}
-              className={`flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-[0.75rem] font-semibold transition-colors
+              className={`flex items-center gap-1.5 rounded-lg border px-4 py-1.5 text-[0.75rem] font-semibold transition-colors
                 ${
                   isEquipped
-                    ? "cursor-default bg-[var(--color-surface-hover)] text-[var(--color-text-faint)]"
-                    : "border border-[var(--color-accent)] bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)]"
+                    ? "cursor-default border-transparent bg-[var(--color-surface-hover)] text-[var(--color-text-faint)]"
+                    : "border-[var(--color-accent)] bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)]"
                 }`}
             >
               {isEquipped ? "Equipped" : "Equip"}
