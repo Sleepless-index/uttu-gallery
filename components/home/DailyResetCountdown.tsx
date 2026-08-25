@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-/** Reverse:1999's daily reset is 4:00 AM server time (UTC+8), which is a
- * fixed 20:00 UTC the previous day — using UTC directly here means this is
+/** Reverse:1999's daily reset is 18:00 server time (UTC+8), which is a
+ * fixed 10:00 UTC every day — using UTC directly here means this is
  * correct for every viewer regardless of their own timezone, with no
  * per-timezone conversion needed. */
-const RESET_HOUR_UTC = 20;
+const RESET_HOUR_UTC = 10;
 
 function msUntilNextReset(from: Date): number {
   const next = new Date(
@@ -31,8 +31,12 @@ function formatDuration(ms: number): { h: string; m: string; s: string } {
 }
 
 /** "HH:MM:SS until daily reset" — ticks every second, always counting down
- * to the next 20:00 UTC boundary. Renders nothing until mounted so the
- * server-rendered markup never disagrees with the client's own clock. */
+ * to the next reset boundary. Renders nothing until mounted so the
+ * server-rendered markup never disagrees with the client's own clock.
+ *
+ * Styled to match the date badge's editorial-serif language: a delicate
+ * italic label above oversized high-contrast serif numerals, rather than a
+ * generic monospace timer readout. */
 export function DailyResetCountdown() {
   const [remaining, setRemaining] = useState<number | null>(null);
 
@@ -49,15 +53,21 @@ export function DailyResetCountdown() {
   const { h, m, s } = formatDuration(remaining);
 
   return (
-    <div className="flex flex-col items-center gap-1.5">
-      <span className="text-[0.65rem] font-medium uppercase tracking-wide text-[var(--color-text-faint)]">
+    <div className="flex flex-col items-center gap-1">
+      <span
+        className="text-[0.8rem] italic tracking-[0.25em] text-[var(--color-text-faint)]"
+        style={{ fontFamily: "var(--font-date-badge)", fontWeight: 300 }}
+      >
         Daily reset in
       </span>
-      <div className="flex items-baseline gap-1 font-mono text-[1.6rem] font-semibold tabular-nums text-[var(--color-text)]">
+      <div
+        className="flex items-baseline gap-[2px] font-extrabold tabular-nums text-[var(--color-text)]"
+        style={{ fontFamily: "var(--font-date-badge)", fontSize: "2.1rem", lineHeight: 1 }}
+      >
         <span>{h}</span>
-        <span className="text-[var(--color-text-faint)]">:</span>
+        <span className="mx-0.5 text-[var(--color-accent)]">:</span>
         <span>{m}</span>
-        <span className="text-[var(--color-text-faint)]">:</span>
+        <span className="mx-0.5 text-[var(--color-accent)]">:</span>
         <span>{s}</span>
       </div>
     </div>
