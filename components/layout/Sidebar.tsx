@@ -341,7 +341,7 @@ export function Sidebar() {
           ${expanded ? "w-56" : "w-14"}`}
       >
         {/* Toggle */}
-        <div className="flex h-14 shrink-0 items-center border-b border-[var(--color-border)] px-2.5">
+        <div className="flex h-14 shrink-0 items-center justify-between border-b border-[var(--color-border)] px-2.5">
           <button
             onClick={() => setExpanded((v) => !v)}
             aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
@@ -350,6 +350,11 @@ export function Sidebar() {
           >
             <IconMenu />
           </button>
+          {expanded && (
+            <div className="flex items-center overflow-hidden pr-1">
+              <DateBadge scale={1.5} />
+            </div>
+          )}
         </div>
 
         {/* Nav groups */}
@@ -521,11 +526,6 @@ export function Sidebar() {
                 </div>
               )}
               </div>
-              {expanded && (
-                <div className="mt-2 flex justify-end overflow-hidden border-t border-[var(--color-border)] pt-2">
-                  <DateBadge />
-                </div>
-              )}
             </div>
           </div>
         )}
