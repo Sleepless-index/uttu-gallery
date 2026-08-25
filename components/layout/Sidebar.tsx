@@ -302,11 +302,9 @@ export function Sidebar() {
             </div>
           </div>
 
-          <div className="flex h-11 flex-1 items-center justify-center overflow-hidden">
+          <div className="flex h-11 flex-1 items-center justify-end overflow-hidden">
             <DateBadge />
           </div>
-
-          <div className="w-7 shrink-0" aria-hidden />
         </div>
       )}
 
@@ -523,6 +521,11 @@ export function Sidebar() {
                 </div>
               )}
               </div>
+              {expanded && (
+                <div className="mt-2 flex justify-end overflow-hidden border-t border-[var(--color-border)] pt-2">
+                  <DateBadge />
+                </div>
+              )}
             </div>
           </div>
         )}
