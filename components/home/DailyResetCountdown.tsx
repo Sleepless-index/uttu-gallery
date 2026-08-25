@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FlipNumber } from "@/components/home/FlipNumber";
 
 /** Reverse:1999's daily reset is 18:00 server time (UTC+8), which is a
  * fixed 10:00 UTC every day — using UTC directly here means this is
@@ -34,9 +35,8 @@ function formatDuration(ms: number): { h: string; m: string; s: string } {
  * to the next reset boundary. Renders nothing until mounted so the
  * server-rendered markup never disagrees with the client's own clock.
  *
- * Styled to match the date badge's editorial-serif language: a delicate
- * italic label above oversized high-contrast serif numerals, rather than a
- * generic monospace timer readout. */
+ * Each pair of digits renders as a boxed flip-clock style FlipNumber, using
+ * the app's normal sans-serif font (not the date badge's display serif). */
 export function DailyResetCountdown() {
   const [remaining, setRemaining] = useState<number | null>(null);
 
@@ -53,22 +53,16 @@ export function DailyResetCountdown() {
   const { h, m, s } = formatDuration(remaining);
 
   return (
-    <div className="flex flex-col items-center gap-1">
-      <span
-        className="text-[0.8rem] italic tracking-[0.25em] text-[var(--color-text-faint)]"
-        style={{ fontFamily: "var(--font-date-badge)", fontWeight: 300 }}
-      >
+    <div className="flex flex-col items-center gap-2">
+      <span className="text-[0.7rem] font-medium uppercase tracking-wide text-[var(--color-text-faint)]">
         Daily reset in
       </span>
-      <div
-        className="flex items-baseline gap-[2px] font-extrabold tabular-nums text-[var(--color-text)]"
-        style={{ fontFamily: "var(--font-date-badge)", fontSize: "2.1rem", lineHeight: 1 }}
-      >
-        <span>{h}</span>
-        <span className="mx-0.5 text-[var(--color-accent)]">:</span>
-        <span>{m}</span>
-        <span className="mx-0.5 text-[var(--color-accent)]">:</span>
-        <span>{s}</span>
+      <div className="flex items-center gap-2">
+        <FlipNumber value={h} />
+        <span className="pb-1 text-[1.3rem] font-semibold text-[var(--color-text-faint)]">:</span>
+        <FlipNumber value={m} />
+        <span className="pb-1 text-[1.3rem] font-semibold text-[var(--color-text-faint)]">:</span>
+        <FlipNumber value={s} />
       </div>
     </div>
   );
