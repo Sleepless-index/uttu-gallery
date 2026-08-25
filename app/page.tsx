@@ -50,9 +50,6 @@ export default function HomePage() {
             <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-text-dim)]">
               Quick access
             </h2>
-            <span className="text-[0.68rem] text-[var(--color-text-dim)]">
-              {HOME_LINKS.length} modules
-            </span>
           </div>
 
           <nav className="grid w-full grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-3.5">
