@@ -40,9 +40,6 @@ export default function HomePage() {
             </h1>
           </div>
 
-          <span className="hidden rounded-full border border-[var(--color-border)] bg-[var(--color-panel)] px-3 py-1.5 text-[0.65rem] font-semibold uppercase tracking-wider text-[var(--color-text-dim)] sm:inline-flex">
-            Terminal
-          </span>
         </header>
 
         <section aria-label="Quick access">
@@ -50,9 +47,6 @@ export default function HomePage() {
             <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-text-dim)]">
               Quick access
             </h2>
-            <span className="text-[0.68rem] text-[var(--color-text-dim)]">
-              {HOME_LINKS.length} modules
-            </span>
           </div>
 
           <nav className="grid w-full grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-3.5">
@@ -84,32 +78,17 @@ export default function HomePage() {
           </nav>
         </section>
 
-        <section aria-label="Daily status" className="mb-9 flex flex-col gap-4 sm:mb-10">
-          <div className="flex items-center justify-between px-1">
-            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-dim)]">
-              Daily status
-            </span>
-            <span className="ml-4 h-px flex-1 bg-[var(--color-border)]" />
-          </div>
+        <section
+          aria-label="Daily status"
+          className="mb-9 flex flex-col items-center gap-4 border-y border-[var(--color-border)] py-5 sm:mb-10 sm:flex-row sm:justify-between sm:border-y-0 sm:py-0 sm:pl-1"
+        >
+          <DateBadge scale={1.8} />
 
-          <div className="flex flex-col items-center justify-center gap-4 px-1 sm:flex-row sm:justify-between sm:px-2">
-            <DateBadge scale={1.8} />
-
-            <div className="flex min-w-0 flex-1 flex-col items-center sm:items-end">
-              <span className="mb-1 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[var(--color-text-dim)]">
-                Next reset
-              </span>
-              <div className="text-center sm:text-right">
-                <DailyResetCountdown />
-              </div>
-            </div>
+          <div className="flex min-w-0 items-center justify-center sm:justify-end">
+            <DailyResetCountdown />
           </div>
         </section>
 
-        <footer className="mt-8 flex items-center justify-between border-t border-[var(--color-border)] px-1 pt-4 text-[0.62rem] uppercase tracking-wider text-[var(--color-text-dim)]">
-          <span>Archive interface</span>
-          <span>v1.0</span>
-        </footer>
       </div>
     </main>
   );
