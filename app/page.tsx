@@ -36,7 +36,7 @@ export default function HomePage() {
               Reverse: 1999
             </p>
             <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-text)] sm:text-3xl">
-              UTTU Archive
+              UTTU Gallery
             </h1>
           </div>
 
@@ -50,6 +50,9 @@ export default function HomePage() {
             <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-text-dim)]">
               Quick access
             </h2>
+            <span className="text-[0.68rem] text-[var(--color-text-dim)]">
+              {HOME_LINKS.length} modules
+            </span>
           </div>
 
           <nav className="grid w-full grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-3.5">
@@ -93,6 +96,9 @@ export default function HomePage() {
             <DateBadge scale={1.8} />
 
             <div className="flex min-w-0 flex-1 flex-col items-center sm:items-end">
+              <span className="mb-1 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[var(--color-text-dim)]">
+                Next reset
+              </span>
               <div className="text-center sm:text-right">
                 <DailyResetCountdown />
               </div>
@@ -101,7 +107,8 @@ export default function HomePage() {
         </section>
 
         <footer className="mt-8 flex items-center justify-between border-t border-[var(--color-border)] px-1 pt-4 text-[0.62rem] uppercase tracking-wider text-[var(--color-text-dim)]">
-          <span>Archive interface</span>
+          <span>Gallery interface</span>
+          <span>v1.0</span>
         </footer>
       </div>
     </main>
