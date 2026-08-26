@@ -25,7 +25,6 @@ interface NavGroup {
 import {
   IconArcanists,
   IconGarments,
-  IconCleardrops,
   IconPlanner,
   IconMyCharacters,
   IconMyTeams,
@@ -54,7 +53,6 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Tools",
     items: [
-      { href: "/tools/cleardrops", label: "Cleardrops", icon: <IconCleardrops /> },
       { href: "/tools/planner", label: "Planner", icon: <IconPlanner /> },
     ],
   },

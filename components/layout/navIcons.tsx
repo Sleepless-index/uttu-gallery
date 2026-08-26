@@ -28,20 +28,6 @@ export function IconGarments() {
   );
 }
 
-export function IconCleardrops() {
-  // Droplet — currency/resource icon
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path
-        d="M8 2.2s4 4.32 4 7.1a4 4 0 1 1-8 0c0-2.78 4-7.1 4-7.1Z"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 export function IconPlanner() {
   // Checklist — planning tool
   return (

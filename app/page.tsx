@@ -6,7 +6,6 @@ import { DailyResetCountdown } from "@/components/home/DailyResetCountdown";
 import {
   IconArcanists,
   IconGarments,
-  IconCleardrops,
   IconPlanner,
   IconMyCharacters,
   IconMyTeams,
@@ -17,7 +16,6 @@ const HOME_LINKS = [
   { href: "/teams", label: "Teams", icon: <IconMyTeams /> },
   { href: "/gallery/arcanists", label: "Arcanists", icon: <IconArcanists /> },
   { href: "/gallery/garments", label: "Garments", icon: <IconGarments /> },
-  { href: "/tools/cleardrops", label: "Cleardrops", icon: <IconCleardrops /> },
   { href: "/tools/planner", label: "Planner", icon: <IconPlanner /> },
 ];
 
