@@ -31,11 +31,9 @@ const nextConfig: NextConfig = {
     };
 
     return [
-      { source: "/art/:path*", headers: [immutableCache] },
-      { source: "/garments/:path*", headers: [immutableCache] },
-      { source: "/icons/:path*", headers: [immutableCache] },
-      { source: "/currency/:path*", headers: [immutableCache] },
-      { source: "/insight/:path*", headers: [immutableCache] },
+      { source: "/Characters/:path*", headers: [immutableCache] },
+      { source: "/Icons/:path*", headers: [immutableCache] },
+      { source: "/ProfileIcon/:path*", headers: [immutableCache] },
     ];
   },
 };

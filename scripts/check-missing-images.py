@@ -2,16 +2,16 @@
 """
 check-missing-images.py
 
-Cross-checks data/roster.json and data/garments.json against the actual
-image files on disk and reports anything missing.
+Cross-checks data/roster.json (characters, each with a nested `garments`
+array) against the actual image files on disk and reports anything missing.
 
 Checks:
-  - Base art:       public/art/{id}01.webp        (one per roster entry)
-  - Insight-2 art:   public/art/{id}02.webp        (only for ids listed in
+  - Base art:       public/Characters/Base/{id}01.webp   (one per roster entry)
+  - Insight-2 art:   public/Characters/Base/{id}02.webp   (only for ids listed in
                      I2_ART_IDS inside lib/assets/characterAssets.ts)
-  - Afflatus icons:  public/icons/afl_{afflatus}.webp
-  - Rarity plates:   public/icons/bg-rare-{rarity}.webp   (rarity clamped 2-6)
-  - Garment cards:   public/garments/cards/{garment.id}.webp
+  - Afflatus icons:  public/Icons/Afflatus/afl_{afflatus}.webp
+  - Rarity plates:   public/Icons/RarityBg/bg-rare-{rarity}.webp   (rarity clamped 2-6)
+  - Garment cards:   public/Characters/Garments/{garment.id}.webp
 
 Also flags the reverse problem: an {id}02.webp file that exists on disk but
 whose id isn't listed in I2_ART_IDS. When that happens, the app silently
@@ -90,30 +90,30 @@ def check_roster(roster: list[dict], i2_ids: set[int]) -> dict[str, list[str]]:
         cid = c["id"]
         name = c.get("name", f"id {cid}")
 
-        base_path = PUBLIC_DIR / "art" / f"{cid}01.webp"
+        base_path = PUBLIC_DIR / "Characters" / "Base" / f"{cid}01.webp"
         if not base_path.exists():
-            missing["base_art"].append(f"{name} (id {cid}) -> art/{cid}01.webp")
+            missing["base_art"].append(f"{name} (id {cid}) -> Characters/Base/{cid}01.webp")
 
         if cid in i2_ids:
-            i2_path = PUBLIC_DIR / "art" / f"{cid}02.webp"
+            i2_path = PUBLIC_DIR / "Characters" / "Base" / f"{cid}02.webp"
             if not i2_path.exists():
-                missing["i2_art"].append(f"{name} (id {cid}) -> art/{cid}02.webp")
+                missing["i2_art"].append(f"{name} (id {cid}) -> Characters/Base/{cid}02.webp")
 
         for afl in flatten_afflatus(c.get("afflatus")):
             key = "intellect" if str(afl).lower() == "intelligence" else str(afl).lower()
             if key in seen_afflatus_icons:
                 continue
             seen_afflatus_icons.add(key)
-            icon_path = PUBLIC_DIR / "icons" / f"afl_{key}.webp"
+            icon_path = PUBLIC_DIR / "Icons" / "Afflatus" / f"afl_{key}.webp"
             if not icon_path.exists():
-                missing["afflatus_icon"].append(f"{afl} -> icons/afl_{key}.webp")
+                missing["afflatus_icon"].append(f"{afl} -> Icons/Afflatus/afl_{key}.webp")
 
         rarity = clamp_rarity(c.get("rarity", 2))
         if rarity not in seen_rarity_plates:
             seen_rarity_plates.add(rarity)
-            plate_path = PUBLIC_DIR / "icons" / f"bg-rare-{rarity}.webp"
+            plate_path = PUBLIC_DIR / "Icons" / "RarityBg" / f"bg-rare-{rarity}.webp"
             if not plate_path.exists():
-                missing["rarity_plate"].append(f"rarity {rarity} -> icons/bg-rare-{rarity}.webp")
+                missing["rarity_plate"].append(f"rarity {rarity} -> Icons/RarityBg/bg-rare-{rarity}.webp")
 
     return missing
 
@@ -128,14 +128,14 @@ def find_unregistered_i2_art(
     Also flags a narrower, easy-to-miss case: some garment ids happen to be
     numerically identical to a character's-id-plus-"02" (e.g. garment 301202
     looks exactly like character 3012's I2 art filename). That's harmless
-    while garment cards stay in public/garments/cards/, but if one is ever
-    misfiled into public/art/ instead, it would otherwise be silently
+    while garment cards stay in public/Characters/Garments/, but if one is ever
+    misfiled into public/Characters/Base/ instead, it would otherwise be silently
     misread as that character's I2 portrait. Reported separately so a real
     "you forgot to register this" doesn't get lost among coincidental ids
     that were never meant to be I2 art at all.
     """
     roster_ids = {c["id"] for c in roster}
-    art_dir = PUBLIC_DIR / "art"
+    art_dir = PUBLIC_DIR / "Characters" / "Base"
     if not art_dir.exists():
         return [], []
 
@@ -152,26 +152,26 @@ def find_unregistered_i2_art(
         full_id = int(match.group(1) + "02")
         if full_id in garment_ids:
             possible_misfiled_garments.append(
-                f"art/{path.name} — id {full_id} matches a garment id, not {id_to_name[cid]}'s "
+                f"Characters/Base/{path.name} — id {full_id} matches a garment id, not {id_to_name[cid]}'s "
                 f"(id {cid}) I2 art; likely a garment card in the wrong folder, not missing I2 art"
             )
         else:
             unregistered.append(
-                f"{id_to_name[cid]} (id {cid}) -> art/{path.name} exists but {cid} is not in I2_ART_IDS"
+                f"{id_to_name[cid]} (id {cid}) -> Characters/Base/{path.name} exists but {cid} is not in I2_ART_IDS"
             )
     return unregistered, possible_misfiled_garments
 
 
-def check_garments(garments_data: list[dict]) -> list[str]:
+def check_garments(roster_data: list[dict]) -> list[str]:
     missing = []
-    for entry in garments_data:
+    for entry in roster_data:
         char_name = entry.get("name", f"id {entry.get('id')}")
         for g in entry.get("garments", []):
             gid = g["id"]
             gname = g.get("name", f"garment {gid}")
-            card_path = PUBLIC_DIR / "garments" / "cards" / f"{gid}.webp"
+            card_path = PUBLIC_DIR / "Characters" / "Garments" / f"{gid}.webp"
             if not card_path.exists():
-                missing.append(f"{char_name} — {gname} (id {gid}) -> garments/cards/{gid}.webp")
+                missing.append(f"{char_name} — {gname} (id {gid}) -> Characters/Garments/{gid}.webp")
     return missing
 
 
@@ -182,16 +182,15 @@ def print_section(title: str, items: list[str]):
 
 
 def main():
-    print(f"Checking images referenced by roster.json and garments.json")
+    print(f"Checking images referenced by roster.json (characters + nested garments)")
     print(f"Project root: {ROOT}\n")
 
     roster = load_json(DATA_DIR / "roster.json")
-    garments_data = load_json(DATA_DIR / "garments.json")
     i2_ids = load_i2_art_ids()
-    garment_ids = {g["id"] for entry in garments_data for g in entry.get("garments", [])}
+    garment_ids = {g["id"] for entry in roster for g in entry.get("garments", [])}
 
     roster_missing = check_roster(roster, i2_ids)
-    garment_missing = check_garments(garments_data)
+    garment_missing = check_garments(roster)
     unregistered_i2, misfiled_garments = find_unregistered_i2_art(roster, i2_ids, garment_ids)
 
     print_section("Missing base character art", roster_missing["base_art"])
@@ -204,7 +203,7 @@ def main():
         unregistered_i2,
     )
     print_section(
-        "Garment cards possibly misfiled into public/art/ (id coincides with a character+02 pattern)",
+        "Garment cards possibly misfiled into public/Characters/Base/ (id coincides with a character+02 pattern)",
         misfiled_garments,
     )
 

@@ -140,7 +140,7 @@ export default function MyTeamsPage() {
           <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
             <span className="relative h-40 w-40">
               <Image
-                src="/icons/bg_xinxiang_wuzhuangtai.webp"
+                src="/Icons/bg_xinxiang_wuzhuangtai.webp"
                 alt="Empty"
                 fill
                 sizes="160px"

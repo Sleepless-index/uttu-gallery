@@ -17,7 +17,7 @@
  */
 const ASSET_BASE_URL = (process.env.NEXT_PUBLIC_ASSET_BASE_URL ?? "").replace(/\/+$/, "");
 
-/** Resolves a root-relative asset path (e.g. "/art/300301.webp") against
+/** Resolves a root-relative asset path (e.g. "/Characters/Base/300301.webp") against
  * the configured asset base. Returns the path unchanged when no external
  * base is set, so local /public assets keep working with zero config. */
 export function assetUrl(path: string): string {

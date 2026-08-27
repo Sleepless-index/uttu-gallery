@@ -9,6 +9,7 @@ import { CharacterCard } from "@/components/arcanists/CharacterCard";
 import { CharacterPickerModal } from "@/components/characters/CharacterPickerModal";
 import { CharacterDetailModal } from "@/components/characters/CharacterDetailModal";
 import { ExportGrid } from "@/components/characters/ExportGrid";
+import { insightIconPath } from "@/lib/assets/characterAssets";
 
 function IconPlus() {
   return (
@@ -46,7 +47,7 @@ function IconInsight2() {
   return (
     <span className="relative h-[15px] w-[15px]">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/insight/insight-2.webp" alt="" className="h-full w-full object-contain" />
+      <img src={insightIconPath(2)} alt="" className="h-full w-full object-contain" />
     </span>
   );
 }
@@ -162,7 +163,7 @@ export default function MyCharactersPage() {
           <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
             <span className="relative h-40 w-40">
               <Image
-                src="/icons/bg_xinxiang_wuzhuangtai.webp"
+                src="/Icons/bg_xinxiang_wuzhuangtai.webp"
                 alt="Empty"
                 fill
                 sizes="160px"

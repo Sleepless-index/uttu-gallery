@@ -13,13 +13,13 @@ import { assetUrl } from "./assetUrl";
 /** Path to a character's base portrait art, relative to /public (or the
  * configured asset CDN — see assetUrl.ts). */
 export function characterArtPath(id: number): string {
-  return assetUrl(`/art/${id}01.webp`);
+  return assetUrl(`/Characters/Base/${id}01.webp`);
 }
 
 /**
  * Roster ids that have an Insight 2 alternate portrait on disk. There's no
  * explicit flag for this in roster.json, so this manifest is generated from
- * the actual contents of public/art — regenerate it if new i2 art is added.
+ * the actual contents of public/Characters/Base — regenerate it if new i2 art is added.
  */
 const I2_ART_IDS = new Set([
   3003, 3004, 3005, 3006, 3007, 3009, 3010, 3011, 3012, 3013, 3014, 3015,
@@ -43,23 +43,23 @@ export function hasCharacterI2Art(id: number): boolean {
 /** Path to a character's Insight 2 alternate portrait, relative to /public (or CDN). Falls back to the base art if none exists. */
 export function characterI2ArtPath(id: number): string {
   if (!hasCharacterI2Art(id)) return characterArtPath(id);
-  return assetUrl(`/art/${id}02.webp`);
+  return assetUrl(`/Characters/Base/${id}02.webp`);
 }
 
 /** Path to an afflatus icon, relative to /public (or CDN). */
 export function afflatusIconPath(afflatus: string): string {
   // The "Intelligence" affinity's icon file is still named "afl_intellect.webp" on disk.
   const key = afflatus.toLowerCase() === "intelligence" ? "intellect" : afflatus.toLowerCase();
-  return assetUrl(`/icons/afl_${key}.webp`);
+  return assetUrl(`/Icons/Afflatus/afl_${key}.webp`);
 }
 
 /** Path to the rarity-colored bottom plate, relative to /public (or CDN). Falls back to the lowest available plate (2★) since no 1★ asset exists. */
 export function rarityPlatePath(rarity: number): string {
   const clamped = Math.max(2, Math.min(6, rarity));
-  return assetUrl(`/icons/bg-rare-${clamped}.webp`);
+  return assetUrl(`/Icons/RarityBg/bg-rare-${clamped}.webp`);
 }
 
 /** Path to an Insight tier badge icon (1, 2, or 3), relative to /public (or CDN). */
 export function insightIconPath(tier: 1 | 2 | 3): string {
-  return assetUrl(`/insight/insight-${tier}.webp`);
+  return assetUrl(`/Icons/Insight/insight-${tier}.webp`);
 }

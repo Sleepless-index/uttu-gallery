@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { afflatusFilterIconPath } from "@/lib/afflatus";
+import { insightIconPath } from "@/lib/assets/characterAssets";
 import type { Afflatus, RarityFilter, SortOrder } from "@/lib/types";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { FilterSection } from "@/components/ui/FilterSection";
@@ -72,7 +73,7 @@ export function FilterBar({
           }`}
       >
         <span className="relative h-5 w-5">
-          <Image src="/insight/insight-2.webp" alt="Insight 2" fill sizes="20px" className="object-contain" />
+          <Image src={insightIconPath(2)} alt="Insight 2" fill sizes="20px" className="object-contain" />
         </span>
       </button>
 
