@@ -5,7 +5,9 @@
     "name": "Narcissus",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.9",
+    "garments": []
   },
   {
     "id": 3156,
@@ -13,7 +15,9 @@
     "name": "Hedone",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.9",
+    "garments": []
   },
   {
     "id": 3154,
@@ -21,7 +25,9 @@
     "name": "Silverwing Eagle",
     "rarity": 5,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.7",
+    "garments": []
   },
   {
     "id": 3151,
@@ -29,7 +35,9 @@
     "name": "NORA",
     "rarity": 4,
     "afflatus": "Spirit",
-    "race": "Unclassified"
+    "race": "Unclassified",
+    "version": "s02",
+    "garments": []
   },
   {
     "id": 3149,
@@ -40,7 +48,18 @@
       "Mineral",
       "Star"
     ],
-    "race": "Unclassified"
+    "race": "Unclassified",
+    "version": "s02",
+    "garments": [
+      {
+        "id": 314903,
+        "name": "Programmed Eulogy",
+        "category": "advanced",
+        "series_id": 22004,
+        "version": "s02",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3147,
@@ -48,7 +67,18 @@
     "name": "Ms. Stranger",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.7",
+    "garments": [
+      {
+        "id": 314704,
+        "name": "Waltz of the Depths",
+        "category": "advanced",
+        "series_id": 20027,
+        "version": "3.9",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3146,
@@ -56,7 +86,9 @@
     "name": "Rhiannon",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.7",
+    "garments": []
   },
   {
     "id": 3145,
@@ -64,7 +96,9 @@
     "name": "Everecho",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.8",
+    "garments": []
   },
   {
     "id": 3144,
@@ -72,7 +106,18 @@
     "name": "Coppélia",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.7",
+    "garments": [
+      {
+        "id": 314403,
+        "name": "Sounds that Wake Her",
+        "category": "unique",
+        "series_id": 20025,
+        "version": "3.7",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3143,
@@ -80,7 +125,18 @@
     "name": "Enigma",
     "rarity": 6,
     "afflatus": "Intelligence",
-    "race": "Human"
+    "race": "Human",
+    "version": "3.6",
+    "garments": [
+      {
+        "id": 314303,
+        "name": "To Fathom the Depths",
+        "category": "advanced",
+        "series_id": 20027,
+        "version": "3.9",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3142,
@@ -88,7 +144,9 @@
     "name": "Ramona",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.5",
+    "garments": []
   },
   {
     "id": 3141,
@@ -96,7 +154,9 @@
     "name": "Paper Heron",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.4",
+    "garments": []
   },
   {
     "id": 3140,
@@ -104,7 +164,9 @@
     "name": "Cornerstone",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.8",
+    "garments": []
   },
   {
     "id": 3139,
@@ -112,7 +174,18 @@
     "name": "Lorentz Butterfly",
     "rarity": 6,
     "afflatus": "Intelligence",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.5",
+    "garments": [
+      {
+        "id": 313903,
+        "name": "Finale in Silver",
+        "category": "advanced",
+        "series_id": 20026,
+        "version": "3.8",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3138,
@@ -120,7 +193,9 @@
     "name": "Reed",
     "rarity": 4,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.4",
+    "garments": []
   },
   {
     "id": 3137,
@@ -128,7 +203,9 @@
     "name": "Cheng Heguang",
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.4",
+    "garments": []
   },
   {
     "id": 3136,
@@ -136,7 +213,9 @@
     "name": "<i>Lady by the Lake</i>",
     "rarity": 4,
     "afflatus": "Plant",
-    "race": "Awakened"
+    "race": "Awakened",
+    "version": "3.5",
+    "garments": []
   },
   {
     "id": 3135,
@@ -144,7 +223,18 @@
     "name": "Brume",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.2",
+    "garments": [
+      {
+        "id": 313503,
+        "name": "Full Quack Ahead",
+        "category": "advanced",
+        "series_id": 22001,
+        "version": "3.9",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3134,
@@ -152,7 +242,9 @@
     "name": "Beryl",
     "rarity": 6,
     "afflatus": "Intelligence",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.2",
+    "garments": []
   },
   {
     "id": 3132,
@@ -160,7 +252,18 @@
     "name": "Corvus",
     "rarity": 6,
     "afflatus": "Intelligence",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.1",
+    "garments": [
+      {
+        "id": 313203,
+        "name": "Burning Away Tears",
+        "category": "advanced",
+        "series_id": 20024,
+        "version": "3.5",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3128,
@@ -168,7 +271,18 @@
     "name": "Charon",
     "rarity": 6,
     "afflatus": "Spirit",
-    "race": "Awakened"
+    "race": "Awakened",
+    "version": "3.0",
+    "garments": [
+      {
+        "id": 312803,
+        "name": "Gift of the Dead",
+        "category": "basic",
+        "series_id": 21001,
+        "version": "3.7",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3127,
@@ -176,7 +290,18 @@
     "name": "Marsha",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.3",
+    "garments": [
+      {
+        "id": 312703,
+        "name": "The Ever-Burning Embrace",
+        "category": "advanced",
+        "series_id": 21001,
+        "version": "3.6",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3126,
@@ -184,7 +309,26 @@
     "name": "Sentinel",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.0",
+    "garments": [
+      {
+        "id": 312603,
+        "name": "By Reflections Witnessed",
+        "category": "advanced",
+        "series_id": 20022,
+        "version": "3.3",
+        "index": 2
+      },
+      {
+        "id": 312606,
+        "name": "Weighing Sin and Justice",
+        "category": "advanced",
+        "series_id": 21001,
+        "version": "s02",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3125,
@@ -192,7 +336,18 @@
     "name": "Rubuska",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "3.1",
+    "garments": [
+      {
+        "id": 312503,
+        "name": "Song of the Shadow Dancer",
+        "category": "advanced",
+        "series_id": 20023,
+        "version": "3.4",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3124,
@@ -200,7 +355,9 @@
     "name": "Kassandra",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Human"
+    "race": "Human",
+    "version": "s01",
+    "garments": []
   },
   {
     "id": 3123,
@@ -208,7 +365,9 @@
     "name": "Ezio Auditore",
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Human"
+    "race": "Human",
+    "version": "s01",
+    "garments": []
   },
   {
     "id": 3122,
@@ -216,7 +375,9 @@
     "name": "Alexios",
     "rarity": 5,
     "afflatus": "Beast",
-    "race": "Human"
+    "race": "Human",
+    "version": "s01",
+    "garments": []
   },
   {
     "id": 3121,
@@ -224,7 +385,26 @@
     "name": "Moldir",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Mixed"
+    "race": "Mixed",
+    "version": "2.8",
+    "garments": [
+      {
+        "id": 312103,
+        "name": "Idyll of the Luberon",
+        "category": "advanced",
+        "series_id": 20022,
+        "version": "3.3",
+        "index": 2
+      },
+      {
+        "id": 312104,
+        "name": "Repose Amidst the Roses",
+        "category": "roar_jukebox",
+        "series_id": 21002,
+        "version": "3.9",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3120,
@@ -232,7 +412,18 @@
     "name": "Nautika",
     "rarity": 6,
     "afflatus": "Spirit",
-    "race": "Infected"
+    "race": "Infected",
+    "version": "2.8",
+    "garments": [
+      {
+        "id": 312003,
+        "name": "From Darkness, Light",
+        "category": "unique",
+        "series_id": 20025,
+        "version": "3.7",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3118,
@@ -240,7 +431,18 @@
     "name": "Name Day",
     "rarity": 5,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.7",
+    "garments": [
+      {
+        "id": 311803,
+        "name": "The Deathless Quiet",
+        "category": "free",
+        "series_id": 20025,
+        "version": "3.7",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3117,
@@ -248,7 +450,26 @@
     "name": "Kiperina",
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.7",
+    "garments": [
+      {
+        "id": 311703,
+        "name": "The Universe in the Rook's Shell",
+        "category": "basic",
+        "series_id": 20018,
+        "version": "2.8",
+        "index": 2
+      },
+      {
+        "id": 311704,
+        "name": "A Utopia in Painted Glass",
+        "category": "advanced",
+        "series_id": 20024,
+        "version": "3.5",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3116,
@@ -256,7 +477,26 @@
     "name": "Hissabeth",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.7",
+    "garments": [
+      {
+        "id": 311603,
+        "name": "Serpentine Primavera",
+        "category": "advanced",
+        "series_id": 22003,
+        "version": "s01",
+        "index": 2
+      },
+      {
+        "id": 311604,
+        "name": "Verses to Heaven",
+        "category": "roar_jukebox",
+        "series_id": 21002,
+        "version": "3.8",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3115,
@@ -264,7 +504,9 @@
     "name": "Buddy Fairchild",
     "rarity": 5,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.8",
+    "garments": []
   },
   {
     "id": 3114,
@@ -272,7 +514,26 @@
     "name": "Recoleta",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.6",
+    "garments": [
+      {
+        "id": 311403,
+        "name": "The Knight of La Mancha",
+        "category": "advanced",
+        "series_id": 20018,
+        "version": "2.8",
+        "index": 2
+      },
+      {
+        "id": 311404,
+        "name": "The Weight of Words",
+        "category": "roar_jukebox",
+        "series_id": 21002,
+        "version": "3.6",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3113,
@@ -280,7 +541,18 @@
     "name": "Aleph",
     "rarity": 6,
     "afflatus": "Intelligence",
-    "race": "Human"
+    "race": "Human",
+    "version": "2.6",
+    "garments": [
+      {
+        "id": 311303,
+        "name": "A Feast of Imagery",
+        "category": "advanced",
+        "series_id": 20020,
+        "version": "3.1",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3112,
@@ -288,7 +560,9 @@
     "name": "Loggerhead",
     "rarity": 5,
     "afflatus": "Plant",
-    "race": "Awakened"
+    "race": "Awakened",
+    "version": "2.5",
+    "garments": []
   },
   {
     "id": 3111,
@@ -296,7 +570,18 @@
     "name": "Noire",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.5",
+    "garments": [
+      {
+        "id": 311103,
+        "name": "The Trapped Trapmaster",
+        "category": "free",
+        "series_id": 20023,
+        "version": "3.4",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3110,
@@ -304,7 +589,18 @@
     "name": "Liang Yue",
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Mixed"
+    "race": "Mixed",
+    "version": "2.5",
+    "garments": [
+      {
+        "id": 311003,
+        "name": "The Moon's Reflection",
+        "category": "unique",
+        "series_id": 20023,
+        "version": "3.4",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3109,
@@ -312,7 +608,26 @@
     "name": "Fatutu",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.4",
+    "garments": [
+      {
+        "id": 310903,
+        "name": "Casa of the Curved Lines",
+        "category": "basic",
+        "series_id": 22002,
+        "version": "2.7",
+        "index": 2
+      },
+      {
+        "id": 310905,
+        "name": "Fragments of An Old Dream",
+        "category": "advanced",
+        "series_id": 20025,
+        "version": "3.7",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3108,
@@ -320,7 +635,18 @@
     "name": "Barcarola",
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.4",
+    "garments": [
+      {
+        "id": 310803,
+        "name": "Asteroid Allegro",
+        "category": "advanced",
+        "series_id": 20017,
+        "version": "2.7",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3107,
@@ -328,7 +654,18 @@
     "name": "Ulrich",
     "rarity": 6,
     "afflatus": "Intelligence",
-    "race": "Awakened"
+    "race": "Awakened",
+    "version": "2.8",
+    "garments": [
+      {
+        "id": 310703,
+        "name": "A Glimpse of the Cosmos",
+        "category": "advanced",
+        "series_id": 21001,
+        "version": "2.8",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3106,
@@ -336,7 +673,18 @@
     "name": "Brimley",
     "rarity": 5,
     "afflatus": "Mineral",
-    "race": "Awakened"
+    "race": "Awakened",
+    "version": "2.3",
+    "garments": [
+      {
+        "id": 310604,
+        "name": "THOUGHT Ranger",
+        "category": "basic",
+        "series_id": 22004,
+        "version": "s02",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3105,
@@ -344,7 +692,26 @@
     "name": "Flutterpage",
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Mixed"
+    "race": "Mixed",
+    "version": "2.3",
+    "garments": [
+      {
+        "id": 310503,
+        "name": "Gently Comes the Thawing Breeze",
+        "category": "advanced",
+        "series_id": 20019,
+        "version": "3.0",
+        "index": 2
+      },
+      {
+        "id": 310504,
+        "name": "Atomic Alarm",
+        "category": "unique",
+        "series_id": 22004,
+        "version": "s02",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3104,
@@ -352,7 +719,26 @@
     "name": "Willow",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.3",
+    "garments": [
+      {
+        "id": 310403,
+        "name": "The Last Portent",
+        "category": "advanced",
+        "series_id": 20016,
+        "version": "2.6",
+        "index": 2
+      },
+      {
+        "id": 310404,
+        "name": "Reborn and Restored",
+        "category": "roar_jukebox",
+        "series_id": 21002,
+        "version": "3.4",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3103,
@@ -360,7 +746,9 @@
     "name": "Mr. Duncan",
     "rarity": 5,
     "afflatus": "Beast",
-    "race": "Human"
+    "race": "Human",
+    "version": "2.2",
+    "garments": []
   },
   {
     "id": 3102,
@@ -368,7 +756,18 @@
     "name": "Lopera",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.2",
+    "garments": [
+      {
+        "id": 310203,
+        "name": "Friend of the Splintercat",
+        "category": "basic",
+        "series_id": 20016,
+        "version": "2.6",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3101,
@@ -376,7 +775,18 @@
     "name": "White Rum",
     "rarity": 4,
     "afflatus": "Intelligence",
-    "race": "Awakened"
+    "race": "Awakened",
+    "version": "2.2",
+    "garments": [
+      {
+        "id": 310103,
+        "name": "Sailing Around the World",
+        "category": "free",
+        "series_id": 20009,
+        "version": "3.6",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3100,
@@ -384,7 +794,18 @@
     "name": "Anjo Nala",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Beyond"
+    "race": "Beyond",
+    "version": "2.2",
+    "garments": [
+      {
+        "id": 310003,
+        "name": "Forbidden Fruit",
+        "category": "unique",
+        "series_id": 21001,
+        "version": "3.2",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3099,
@@ -392,7 +813,9 @@
     "name": "Barbara",
     "rarity": 5,
     "afflatus": "Spirit",
-    "race": "Mixed"
+    "race": "Mixed",
+    "version": "2.1",
+    "garments": []
   },
   {
     "id": 3098,
@@ -400,7 +823,26 @@
     "name": "Tuesday",
     "rarity": 6,
     "afflatus": "Spirit",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.1",
+    "garments": [
+      {
+        "id": 309803,
+        "name": "Story of the Jade Vase",
+        "category": "advanced",
+        "series_id": 20015,
+        "version": "2.5",
+        "index": 2
+      },
+      {
+        "id": 309804,
+        "name": "Cold Cradle",
+        "category": "roar_jukebox",
+        "series_id": 21002,
+        "version": "3.5",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3097,
@@ -408,7 +850,18 @@
     "name": "Argus",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.1",
+    "garments": [
+      {
+        "id": 309703,
+        "name": "Starbound Bounty Hunter",
+        "category": "basic",
+        "series_id": 20017,
+        "version": "2.7",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3096,
@@ -416,7 +869,18 @@
     "name": "Pioneer",
     "rarity": 3,
     "afflatus": "Spirit",
-    "race": "Awakened"
+    "race": "Awakened",
+    "version": "2.0",
+    "garments": [
+      {
+        "id": 309602,
+        "name": "Idol Fascinations",
+        "category": "free",
+        "series_id": 20021,
+        "version": "3.2",
+        "index": 1
+      }
+    ]
   },
   {
     "id": 3095,
@@ -424,7 +888,26 @@
     "name": "Mercuria",
     "rarity": 6,
     "afflatus": "Spirit",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "2.0",
+    "garments": [
+      {
+        "id": 309503,
+        "name": "Midnight Mistmancer",
+        "category": "roar_jukebox",
+        "series_id": 20014,
+        "version": "2.4",
+        "index": 2
+      },
+      {
+        "id": 309504,
+        "name": "The Nightmare's Carol",
+        "category": "advanced",
+        "series_id": 21002,
+        "version": "3.3",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3094,
@@ -432,7 +915,18 @@
     "name": "J",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Mixed"
+    "race": "Mixed",
+    "version": "2.0",
+    "garments": [
+      {
+        "id": 309403,
+        "name": "The Lone Wolf's Howl",
+        "category": "advanced",
+        "series_id": 20019,
+        "version": "3.0",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3092,
@@ -440,7 +934,18 @@
     "name": "Igor",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Mixed"
+    "race": "Mixed",
+    "version": "3.3",
+    "garments": [
+      {
+        "id": 309203,
+        "name": "Returning Nevermore",
+        "category": "advanced",
+        "series_id": 21001,
+        "version": "3.8",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3091,
@@ -448,7 +953,9 @@
     "name": "Lorelei",
     "rarity": 5,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.9",
+    "garments": []
   },
   {
     "id": 3088,
@@ -456,7 +963,26 @@
     "name": "Semmelweis",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Infected"
+    "race": "Infected",
+    "version": "1.9",
+    "garments": [
+      {
+        "id": 308803,
+        "name": "A Knock on the Door",
+        "category": "basic",
+        "series_id": 20013,
+        "version": "2.3",
+        "index": 2
+      },
+      {
+        "id": 308804,
+        "name": "The Wax and Wane of the Heart",
+        "category": "roar_jukebox",
+        "series_id": 21001,
+        "version": "3.0",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3087,
@@ -464,7 +990,26 @@
     "name": "Vila",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.8",
+    "garments": [
+      {
+        "id": 308703,
+        "name": "By the Painted City",
+        "category": "advanced",
+        "series_id": 20012,
+        "version": "2.2",
+        "index": 2
+      },
+      {
+        "id": 308704,
+        "name": "Daughter of the Wine-Dark Sea",
+        "category": "advanced",
+        "series_id": 22003,
+        "version": "s01",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3086,
@@ -472,7 +1017,18 @@
     "name": "Lucy",
     "rarity": 6,
     "afflatus": "Intelligence",
-    "race": "Awakened"
+    "race": "Awakened",
+    "version": "1.9",
+    "garments": [
+      {
+        "id": 308603,
+        "name": "The Queen's Game",
+        "category": "unique",
+        "series_id": 20018,
+        "version": "2.8",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3084,
@@ -480,7 +1036,18 @@
     "name": "Getian",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.6",
+    "garments": [
+      {
+        "id": 308404,
+        "name": "Herald of Horus",
+        "category": "basic",
+        "series_id": 22002,
+        "version": "2.3",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3083,
@@ -488,7 +1055,18 @@
     "name": "Jiu Niangzi",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Mixed"
+    "race": "Mixed",
+    "version": "1.6",
+    "garments": [
+      {
+        "id": 308303,
+        "name": "Blossom Spring Fairy",
+        "category": "unique",
+        "series_id": 20015,
+        "version": "2.5",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3082,
@@ -496,7 +1074,18 @@
     "name": "Yenisei",
     "rarity": 5,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.6",
+    "garments": [
+      {
+        "id": 308203,
+        "name": "Around the Riverbend",
+        "category": "roar_jukebox",
+        "series_id": 20012,
+        "version": "2.2",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3081,
@@ -504,7 +1093,26 @@
     "name": "Isolde",
     "rarity": 6,
     "afflatus": "Spirit",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.7",
+    "garments": [
+      {
+        "id": 308103,
+        "name": "And All That Jazz",
+        "category": "advanced",
+        "series_id": 20011,
+        "version": "2.1",
+        "index": 2
+      },
+      {
+        "id": 308104,
+        "name": "The Last Fluttering Beat",
+        "category": "advanced",
+        "series_id": 20021,
+        "version": "3.2",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3080,
@@ -512,7 +1120,26 @@
     "name": "Kakania",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.9",
+    "garments": [
+      {
+        "id": 308003,
+        "name": "Seminars on Serenity",
+        "category": "advanced",
+        "series_id": 20014,
+        "version": "2.4",
+        "index": 2
+      },
+      {
+        "id": 308004,
+        "name": "Guardian of the Broken",
+        "category": "roar_jukebox",
+        "series_id": 21001,
+        "version": "3.2",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3079,
@@ -520,7 +1147,34 @@
     "name": 6,
     "rarity": 6,
     "afflatus": "Intelligence",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.4",
+    "garments": [
+      {
+        "id": 307903,
+        "name": "Time and Location",
+        "category": "basic",
+        "series_id": 20010,
+        "version": "2.0",
+        "index": 2
+      },
+      {
+        "id": 307904,
+        "name": "By the Razed Polis",
+        "category": "advanced",
+        "series_id": 22002,
+        "version": "2.7",
+        "index": 3
+      },
+      {
+        "id": 307905,
+        "name": "A Hymn to Seclusion",
+        "category": "advanced",
+        "series_id": 21001,
+        "version": "3.4",
+        "index": 4
+      }
+    ]
   },
   {
     "id": 3078,
@@ -528,7 +1182,9 @@
     "name": "Avgust",
     "rarity": 5,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.8",
+    "garments": []
   },
   {
     "id": 3077,
@@ -536,7 +1192,34 @@
     "name": "Windsong",
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.8",
+    "garments": [
+      {
+        "id": 307703,
+        "name": "Records from the Jade Hunt",
+        "category": "free",
+        "series_id": 20015,
+        "version": "2.5",
+        "index": 2
+      },
+      {
+        "id": 307704,
+        "name": "The Nightmare's Trespasser",
+        "category": "advanced",
+        "series_id": 20020,
+        "version": "3.1",
+        "index": 3
+      },
+      {
+        "id": 307705,
+        "name": "Silver Isoheight",
+        "category": "roar_jukebox",
+        "series_id": 21002,
+        "version": "s02",
+        "index": 4
+      }
+    ]
   },
   {
     "id": 3076,
@@ -544,7 +1227,9 @@
     "name": "Ulu",
     "rarity": 5,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.5",
+    "garments": []
   },
   {
     "id": 3075,
@@ -552,7 +1237,18 @@
     "name": "Desert Flannel",
     "rarity": 5,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.5",
+    "garments": [
+      {
+        "id": 307503,
+        "name": "Call of the Wild",
+        "category": "roar_jukebox",
+        "series_id": 20009,
+        "version": "1.9",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3074,
@@ -560,7 +1256,18 @@
     "name": "Ezra Theodore",
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Human"
+    "race": "Human",
+    "version": "1.5",
+    "garments": [
+      {
+        "id": 307403,
+        "name": "Yee-Haw!",
+        "category": "basic",
+        "series_id": 20011,
+        "version": "2.1",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3073,
@@ -568,7 +1275,26 @@
     "name": "Spathodea",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.5",
+    "garments": [
+      {
+        "id": 307303,
+        "name": "Onwards, To Victory!",
+        "category": "advanced",
+        "series_id": 20010,
+        "version": "2.0",
+        "index": 2
+      },
+      {
+        "id": 307304,
+        "name": "Fire Lotus",
+        "category": "basic",
+        "series_id": 20015,
+        "version": "3.7",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3072,
@@ -576,7 +1302,18 @@
     "name": "Shamane",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.3",
+    "garments": [
+      {
+        "id": 307203,
+        "name": "Beneath the Jungle Canopy",
+        "category": "basic",
+        "series_id": 20012,
+        "version": "2.2",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3071,
@@ -584,7 +1321,18 @@
     "name": "Kanjira",
     "rarity": 5,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.3",
+    "garments": [
+      {
+        "id": 307103,
+        "name": "The Night Visitor",
+        "category": "roar_jukebox",
+        "series_id": 20010,
+        "version": "2.0",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3070,
@@ -592,7 +1340,26 @@
     "name": "Kaalaa Baunaa",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.3",
+    "garments": [
+      {
+        "id": 307003,
+        "name": "Swing, Rise, Suspend",
+        "category": "advanced",
+        "series_id": 20005,
+        "version": "2.0",
+        "index": 2
+      },
+      {
+        "id": 307004,
+        "name": "Till the Sun Falls",
+        "category": "basic",
+        "series_id": 20021,
+        "version": "3.2",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3066,
@@ -600,7 +1367,34 @@
     "name": 37,
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.4",
+    "garments": [
+      {
+        "id": 306603,
+        "name": "Happy Bird Catcher",
+        "category": "basic",
+        "series_id": 20007,
+        "version": "1.7",
+        "index": 2
+      },
+      {
+        "id": 306604,
+        "name": "Down in the Grotto",
+        "category": "unique",
+        "series_id": 20012,
+        "version": "2.2",
+        "index": 3
+      },
+      {
+        "id": 306605,
+        "name": "A Gift of Nourishment",
+        "category": "roar_jukebox",
+        "series_id": 21002,
+        "version": "3.7",
+        "index": 4
+      }
+    ]
   },
   {
     "id": 3065,
@@ -608,7 +1402,26 @@
     "name": "Marcus",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.7",
+    "garments": [
+      {
+        "id": 306503,
+        "name": "On the White Sand",
+        "category": "advanced",
+        "series_id": 20012,
+        "version": "2.2",
+        "index": 2
+      },
+      {
+        "id": 306504,
+        "name": "To the Gates of the Underworld",
+        "category": "advanced",
+        "series_id": 22003,
+        "version": "s01",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3064,
@@ -616,7 +1429,18 @@
     "name": "Diggers",
     "rarity": 5,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.1",
+    "garments": [
+      {
+        "id": 306403,
+        "name": "Another Assumption",
+        "category": "basic",
+        "series_id": 20021,
+        "version": "1.4",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3063,
@@ -624,7 +1448,18 @@
     "name": "Pickles",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.1",
+    "garments": [
+      {
+        "id": 306303,
+        "name": "The Young Dog and The Sea",
+        "category": "basic",
+        "series_id": 20003,
+        "version": "1.3",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3062,
@@ -632,7 +1467,26 @@
     "name": "Melania",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.1",
+    "garments": [
+      {
+        "id": 306203,
+        "name": "A Peaceful Night",
+        "category": "basic",
+        "series_id": 20007,
+        "version": "1.7",
+        "index": 2
+      },
+      {
+        "id": 306204,
+        "name": "Red and White",
+        "category": "roar_jukebox",
+        "series_id": 21001,
+        "version": "2.6",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3061,
@@ -640,7 +1494,18 @@
     "name": "Horropedia",
     "rarity": 5,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.2",
+    "garments": [
+      {
+        "id": 306103,
+        "name": "A Daoist's Madness",
+        "category": "free",
+        "series_id": 20023,
+        "version": "3.4",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3060,
@@ -648,7 +1513,18 @@
     "name": "Blonney",
     "rarity": 5,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.2",
+    "garments": [
+      {
+        "id": 306003,
+        "name": "The Giallo Grind",
+        "category": "roar_jukebox",
+        "series_id": 20011,
+        "version": "2.1",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3059,
@@ -656,7 +1532,9 @@
     "name": "Door",
     "rarity": 2,
     "afflatus": "Intelligence",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": []
   },
   {
     "id": 3058,
@@ -664,7 +1542,18 @@
     "name": "Erick",
     "rarity": 4,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 305803,
+        "name": "Oaths and Bonuses",
+        "category": "free",
+        "series_id": 20016,
+        "version": "2.6",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3057,
@@ -672,7 +1561,18 @@
     "name": "Mesmer Jr.",
     "rarity": 4,
     "afflatus": "Intelligence",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 305703,
+        "name": "A Day to Rest",
+        "category": "basic",
+        "series_id": 20009,
+        "version": "1.9",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3056,
@@ -680,7 +1580,26 @@
     "name": "Jessica",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Beyond"
+    "race": "Beyond",
+    "version": "1.2",
+    "garments": [
+      {
+        "id": 305603,
+        "name": "Voyage from Your Bed",
+        "category": "advanced",
+        "series_id": 20009,
+        "version": "1.9",
+        "index": 2
+      },
+      {
+        "id": 305604,
+        "name": "The Sound of Paradise",
+        "category": "roar_jukebox",
+        "series_id": 21001,
+        "version": "2.8",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3055,
@@ -688,7 +1607,18 @@
     "name": "Sputnik",
     "rarity": 3,
     "afflatus": "Star",
-    "race": "Awakened"
+    "race": "Awakened",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 305502,
+        "name": "Eek, Eek!",
+        "category": "free",
+        "series_id": 20010,
+        "version": "2.0",
+        "index": 1
+      }
+    ]
   },
   {
     "id": 3054,
@@ -696,7 +1626,18 @@
     "name": "ONiON",
     "rarity": 3,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 305403,
+        "name": "Front Page Exclusive",
+        "category": "free",
+        "series_id": 22001,
+        "version": "3.9",
+        "index": 1
+      }
+    ]
   },
   {
     "id": 3053,
@@ -704,7 +1645,34 @@
     "name": "Tooth Fairy",
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.2",
+    "garments": [
+      {
+        "id": 305303,
+        "name": "Ace Through the Bagel",
+        "category": "basic",
+        "series_id": 20005,
+        "version": "1.5",
+        "index": 2
+      },
+      {
+        "id": 305304,
+        "name": "Fairies Dancing at Dawn",
+        "category": "advanced",
+        "series_id": 22002,
+        "version": "2.3",
+        "index": 3
+      },
+      {
+        "id": 305305,
+        "name": "The Woven Legend",
+        "category": "unique",
+        "series_id": 20023,
+        "version": "3.4",
+        "index": 4
+      }
+    ]
   },
   {
     "id": 3052,
@@ -712,7 +1680,18 @@
     "name": "Ms. Newbabel",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 305203,
+        "name": "Raise the Bid",
+        "category": "free",
+        "series_id": 20014,
+        "version": "2.4",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3051,
@@ -720,7 +1699,26 @@
     "name": "Eternity",
     "rarity": 6,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 305103,
+        "name": "A Visit to the Arctic",
+        "category": "basic",
+        "series_id": 20008,
+        "version": "1.8",
+        "index": 2
+      },
+      {
+        "id": 305104,
+        "name": "The Golden Nurturer",
+        "category": "roar_jukebox",
+        "series_id": 21001,
+        "version": "s01",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3050,
@@ -728,7 +1726,18 @@
     "name": "Darley Clatter",
     "rarity": 3,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 305002,
+        "name": "Dressage",
+        "category": "free",
+        "series_id": 20005,
+        "version": "1.5",
+        "index": 1
+      }
+    ]
   },
   {
     "id": 3049,
@@ -736,7 +1745,9 @@
     "name": "Click",
     "rarity": 5,
     "afflatus": "Spirit",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": []
   },
   {
     "id": 3048,
@@ -744,7 +1755,26 @@
     "name": "Voyager",
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Beyond"
+    "race": "Beyond",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 304803,
+        "name": "New Journey",
+        "category": "basic",
+        "series_id": 20009,
+        "version": "1.9",
+        "index": 2
+      },
+      {
+        "id": 304804,
+        "name": "Choir of the Stars",
+        "category": "roar_jukebox",
+        "series_id": 21001,
+        "version": "2.7",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3047,
@@ -752,7 +1782,26 @@
     "name": "Medicine Pocket",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 304703,
+        "name": "The Cosmos Photographer",
+        "category": "basic",
+        "series_id": 20008,
+        "version": "1.8",
+        "index": 2
+      },
+      {
+        "id": 304704,
+        "name": "Forever Is Too Short",
+        "category": "roar_jukebox",
+        "series_id": 21001,
+        "version": "3.3",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3046,
@@ -760,7 +1809,18 @@
     "name": "Poltergeist",
     "rarity": 4,
     "afflatus": "Spirit",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 304603,
+        "name": "Under a Different Sea",
+        "category": "free",
+        "series_id": 20012,
+        "version": "2.2",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3045,
@@ -768,7 +1828,18 @@
     "name": "Bette",
     "rarity": 3,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 304504,
+        "name": "A Life in Frames",
+        "category": "free",
+        "series_id": 20026,
+        "version": "3.8",
+        "index": 1
+      }
+    ]
   },
   {
     "id": 3044,
@@ -776,7 +1847,18 @@
     "name": "Ms. Moissan",
     "rarity": 4,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 304403,
+        "name": "Outside the Church",
+        "category": "basic",
+        "series_id": 20007,
+        "version": "1.7",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3043,
@@ -784,7 +1866,26 @@
     "name": "Tennant",
     "rarity": 5,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 304303,
+        "name": "Roaming in Delhi",
+        "category": "basic",
+        "series_id": 20003,
+        "version": "1.3",
+        "index": 2
+      },
+      {
+        "id": 304304,
+        "name": "Dueling Connoisseurs",
+        "category": "roar_jukebox",
+        "series_id": 20013,
+        "version": "2.3",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3042,
@@ -792,7 +1893,18 @@
     "name": "Rabies",
     "rarity": 4,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 304203,
+        "name": "Space Traveler",
+        "category": "free",
+        "series_id": 20017,
+        "version": "2.7",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3041,
@@ -800,7 +1912,26 @@
     "name": "Matilda",
     "rarity": 5,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 304103,
+        "name": "The Genius's Holiday",
+        "category": "roar_jukebox",
+        "series_id": 20003,
+        "version": "1.3",
+        "index": 2
+      },
+      {
+        "id": 304104,
+        "name": "The Great Taste Investigator",
+        "category": "free",
+        "series_id": 22001,
+        "version": "1.8",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3040,
@@ -808,7 +1939,18 @@
     "name": "Twins Sleep",
     "rarity": 3,
     "afflatus": "Spirit",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 304002,
+        "name": "The Pawn's Promotional Waltz",
+        "category": "free",
+        "series_id": 20018,
+        "version": "2.8",
+        "index": 1
+      }
+    ]
   },
   {
     "id": 3039,
@@ -816,7 +1958,26 @@
     "name": "An-an Lee",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 303903,
+        "name": "Between Clouds and Pine Trees",
+        "category": "basic",
+        "series_id": 20006,
+        "version": "1.6",
+        "index": 2
+      },
+      {
+        "id": 303904,
+        "name": "Symbiotic Lee-ly",
+        "category": "basic",
+        "series_id": 22004,
+        "version": "s02",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3038,
@@ -824,7 +1985,18 @@
     "name": "Satsuki",
     "rarity": 5,
     "afflatus": "Plant",
-    "race": "Mixed"
+    "race": "Mixed",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 303803,
+        "name": "Silver Rose",
+        "category": "roar_jukebox",
+        "series_id": 20007,
+        "version": "1.7",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3037,
@@ -832,7 +2004,18 @@
     "name": "Necrologist",
     "rarity": 5,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 303703,
+        "name": "A Voyage with No Return",
+        "category": "basic",
+        "series_id": 20014,
+        "version": "2.4",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3036,
@@ -840,7 +2023,18 @@
     "name": "John Titor",
     "rarity": 3,
     "afflatus": "Intelligence",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 303602,
+        "name": "Race to the Finish Line",
+        "category": "free",
+        "series_id": 20013,
+        "version": "2.3",
+        "index": 1
+      }
+    ]
   },
   {
     "id": 3035,
@@ -848,7 +2042,18 @@
     "name": "Leilani",
     "rarity": 3,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 303502,
+        "name": "The Adventure on the Mountains",
+        "category": "free",
+        "series_id": 20003,
+        "version": "1.3",
+        "index": 1
+      }
+    ]
   },
   {
     "id": 3034,
@@ -856,7 +2061,9 @@
     "name": "aliEn T",
     "rarity": 3,
     "afflatus": "Star",
-    "race": "Beyond"
+    "race": "Beyond",
+    "version": "1.0",
+    "garments": []
   },
   {
     "id": 3033,
@@ -864,7 +2071,18 @@
     "name": "TTT",
     "rarity": 4,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 303303,
+        "name": "Saturday Special",
+        "category": "free",
+        "series_id": 20011,
+        "version": "2.1",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3032,
@@ -872,7 +2090,18 @@
     "name": "Centurion",
     "rarity": 6,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 303203,
+        "name": "The Universal Star",
+        "category": "basic",
+        "series_id": 20001,
+        "version": "1.1",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3031,
@@ -880,7 +2109,18 @@
     "name": "Cristallo",
     "rarity": 4,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 303103,
+        "name": "A Dream in Stained Glass",
+        "category": "free",
+        "series_id": 20020,
+        "version": "3.1",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3030,
@@ -888,7 +2128,18 @@
     "name": "La Source",
     "rarity": 3,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 303002,
+        "name": "Antinomies",
+        "category": "free",
+        "series_id": 20004,
+        "version": "1.4",
+        "index": 1
+      }
+    ]
   },
   {
     "id": 3028,
@@ -896,7 +2147,26 @@
     "name": "APPLe",
     "rarity": 4,
     "afflatus": "Star",
-    "race": "Awakened"
+    "race": "Awakened",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 302803,
+        "name": "Echoing to Woodstock",
+        "category": "basic",
+        "series_id": 20001,
+        "version": "1.1",
+        "index": 2
+      },
+      {
+        "id": 302804,
+        "name": "The Fruit of Wisdom",
+        "category": "basic",
+        "series_id": 22003,
+        "version": "s01",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3027,
@@ -904,7 +2174,18 @@
     "name": "Ms. Radio",
     "rarity": 2,
     "afflatus": "Spirit",
-    "race": "Awakened"
+    "race": "Awakened",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 302702,
+        "name": "Lifeline of the Battlefield",
+        "category": "free",
+        "series_id": 20019,
+        "version": "3.0",
+        "index": 1
+      }
+    ]
   },
   {
     "id": 3026,
@@ -912,7 +2193,18 @@
     "name": "Mondlicht",
     "rarity": 4,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 302603,
+        "name": "Silver Schirm",
+        "category": "free",
+        "series_id": 20014,
+        "version": "2.4",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3025,
@@ -920,7 +2212,26 @@
     "name": "Regulus",
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 302503,
+        "name": "The Fierce Fan",
+        "category": "basic",
+        "series_id": 20001,
+        "version": "1.1",
+        "index": 2
+      },
+      {
+        "id": 302504,
+        "name": "Take Off! To the Future",
+        "category": "unique",
+        "series_id": 20009,
+        "version": "1.9",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3024,
@@ -928,7 +2239,18 @@
     "name": "Balloon Party",
     "rarity": 5,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 302403,
+        "name": "Folk Song of the Silver Butterfly",
+        "category": "roar_jukebox",
+        "series_id": 20006,
+        "version": "1.6",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3023,
@@ -936,7 +2258,34 @@
     "name": "Sonetto",
     "rarity": 5,
     "afflatus": "Mineral",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 302303,
+        "name": "Parade Anthem",
+        "category": "basic",
+        "series_id": 20019,
+        "version": null,
+        "index": 2
+      },
+      {
+        "id": 302304,
+        "name": "Emotion in Tranquility",
+        "category": "basic",
+        "series_id": null,
+        "version": "1.9",
+        "index": 3
+      },
+      {
+        "id": 302306,
+        "name": "In Praise of Poetry",
+        "category": "free",
+        "series_id": null,
+        "version": "3.8",
+        "index": 4
+      }
+    ]
   },
   {
     "id": 3022,
@@ -944,7 +2293,18 @@
     "name": "Dikke",
     "rarity": 5,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 302203,
+        "name": "The Pointy End Up",
+        "category": "roar_jukebox",
+        "series_id": 20005,
+        "version": "1.5",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3020,
@@ -952,7 +2312,18 @@
     "name": "Bkornblume",
     "rarity": 5,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 302003,
+        "name": "Truth Behind the Deep Red",
+        "category": "roar_jukebox",
+        "series_id": 20002,
+        "version": "1.2",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3018,
@@ -960,7 +2331,18 @@
     "name": "Oliver Fog",
     "rarity": 4,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 301803,
+        "name": "See You at the Workers' Club",
+        "category": "basic",
+        "series_id": 20008,
+        "version": "1.8",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3017,
@@ -968,7 +2350,18 @@
     "name": "Charlie",
     "rarity": 5,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 301703,
+        "name": "Through Mirrors and Curtains",
+        "category": "basic",
+        "series_id": 20001,
+        "version": "1.1",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3016,
@@ -976,7 +2369,18 @@
     "name": "Baby Blue",
     "rarity": 5,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 301603,
+        "name": "On the Sparrow Hills",
+        "category": "roar_jukebox",
+        "series_id": 20008,
+        "version": "1.8",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3015,
@@ -984,7 +2388,18 @@
     "name": "Pavia",
     "rarity": 4,
     "afflatus": "Beast",
-    "race": "Mixed"
+    "race": "Mixed",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 301503,
+        "name": "The Leap of a Wolf",
+        "category": "basic",
+        "series_id": 20005,
+        "version": "1.5",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3014,
@@ -992,7 +2407,18 @@
     "name": "Bunny Bunny",
     "rarity": 4,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 301403,
+        "name": "Service Fit for Royalty",
+        "category": "free",
+        "series_id": 20022,
+        "version": "3.3",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3013,
@@ -1000,7 +2426,18 @@
     "name": "Зима",
     "rarity": 4,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 301303,
+        "name": "A Day in the Mountains",
+        "category": "basic",
+        "series_id": 20006,
+        "version": "1.6",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3012,
@@ -1008,7 +2445,18 @@
     "name": "The Fool",
     "rarity": 3,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 301202,
+        "name": "The Shadow Play Master",
+        "category": "free",
+        "series_id": 20015,
+        "version": "2.5",
+        "index": 1
+      }
+    ]
   },
   {
     "id": 3011,
@@ -1016,7 +2464,18 @@
     "name": "Sweetheart",
     "rarity": 5,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 301103,
+        "name": "The Preaching of Venus",
+        "category": "roar_jukebox",
+        "series_id": 20004,
+        "version": "1.4",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3010,
@@ -1024,7 +2483,18 @@
     "name": "X",
     "rarity": 5,
     "afflatus": "Intelligence",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 301003,
+        "name": "Breathing in Silence",
+        "category": "basic",
+        "series_id": 20002,
+        "version": "1.2",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3009,
@@ -1032,7 +2502,26 @@
     "name": "Sotheby",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 300903,
+        "name": "Deep in the Curtains",
+        "category": "basic",
+        "series_id": 20002,
+        "version": "1.2",
+        "index": 2
+      },
+      {
+        "id": 300904,
+        "name": "The Red Thread of Fate",
+        "category": "advanced",
+        "series_id": 20015,
+        "version": "2.5",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3007,
@@ -1040,7 +2529,26 @@
     "name": "A Knight",
     "rarity": 6,
     "afflatus": "Spirit",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 300703,
+        "name": "Galloping Across Time",
+        "category": "advanced",
+        "series_id": 20006,
+        "version": "1.6",
+        "index": 2
+      },
+      {
+        "id": 300731,
+        "name": "The Evergreen Soul",
+        "category": "roar_jukebox",
+        "series_id": 21001,
+        "version": "3.1",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3006,
@@ -1048,7 +2556,26 @@
     "name": "Eagle",
     "rarity": 4,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 300603,
+        "name": "The Sixth Sense",
+        "category": "basic",
+        "series_id": 20002,
+        "version": "1.2",
+        "index": 2
+      },
+      {
+        "id": 300604,
+        "name": "Weekend Excursion",
+        "category": "free",
+        "series_id": 22001,
+        "version": "1.9",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3005,
@@ -1056,7 +2583,18 @@
     "name": "Nick Bottom",
     "rarity": 4,
     "afflatus": "Beast",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 300503,
+        "name": "\"Bottom's Dream\"",
+        "category": "free",
+        "series_id": 20024,
+        "version": "3.5",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3004,
@@ -1064,7 +2602,26 @@
     "name": "Lilya",
     "rarity": 6,
     "afflatus": "Star",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 300403,
+        "name": "The Art of Destreza",
+        "category": "basic",
+        "series_id": 20004,
+        "version": "1.4",
+        "index": 2
+      },
+      {
+        "id": 300404,
+        "name": "Justice Cannot Be Delayed",
+        "category": "advanced",
+        "series_id": 20013,
+        "version": "2.3",
+        "index": 3
+      }
+    ]
   },
   {
     "id": 3003,
@@ -1072,6 +2629,25 @@
     "name": "Druvis III",
     "rarity": 6,
     "afflatus": "Plant",
-    "race": "Arcanist"
+    "race": "Arcanist",
+    "version": "1.0",
+    "garments": [
+      {
+        "id": 300305,
+        "name": "Lady With Nao'E",
+        "category": "advanced",
+        "series_id": 20006,
+        "version": "1.6",
+        "index": 2
+      },
+      {
+        "id": 300306,
+        "name": "Shrouded in Thorns",
+        "category": "roar_jukebox",
+        "series_id": 21001,
+        "version": "2.5",
+        "index": 3
+      }
+    ]
   }
 ]

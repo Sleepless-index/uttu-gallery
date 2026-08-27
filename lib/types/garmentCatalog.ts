@@ -1,4 +1,4 @@
-/** A garment entry as it appears nested inside garments.json. */
+
 export interface CatalogGarment {
   id: number;
   name: string;
@@ -11,7 +11,6 @@ export interface CatalogGarment {
   index: number;
 }
 
-/** One character's garment catalog entry, as it appears in data/garments.json. */
 export interface CharacterGarmentGroup {
   /** Truncated character id, matches RosterCharacter.id. */
   id: number;

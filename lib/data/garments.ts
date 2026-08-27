@@ -1,10 +1,17 @@
-import rawGarmentCatalog from "@/data/garments.json";
+import rawData from "@/data/roster.json";
 import type { CharacterGarmentGroup, FlatGarment } from "@/lib/types";
 
-export const garmentCatalog: CharacterGarmentGroup[] =
-  rawGarmentCatalog as CharacterGarmentGroup[];
+export const garmentCatalog: CharacterGarmentGroup[] = (
+  rawData as { id: number; name: string; slug: string; version: string; garments: CharacterGarmentGroup["garments"] }[]
+).map((c) => ({
+  id: c.id,
+  name: c.name,
+  slug: c.slug,
+  version: c.version,
+  garments: c.garments,
+}));
 
-/** Flattened view — one row per garment, with its parent character id attached. This is what most UI components consume. */
+
 export const garments: FlatGarment[] = garmentCatalog.flatMap((group) =>
   group.garments.map((g) => ({
     id: g.id,
