@@ -73,7 +73,7 @@ export function TeamSlotPickerModal({
         </div>
 
         <div className="flex shrink-0 items-center gap-2 px-5 py-3">
-          <div className="relative w-full">
+          <div className="relative w-40 shrink-0 sm:w-56">
             <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--color-text-faint)]">
               <IconSearch />
             </span>
@@ -82,7 +82,7 @@ export function TeamSlotPickerModal({
               onChange={(e) => setSearch(e.target.value)}
               type="text"
               placeholder="Search your characters…"
-              className="w-full min-w-0 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] py-2 pl-8 pr-3 text-[0.78rem] text-[var(--color-text)] outline-none transition-colors focus:border-[var(--color-accent)] placeholder:text-[var(--color-text-faint)] sm:w-56"
+              className="w-full min-w-0 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] py-2 pl-8 pr-3 text-[0.78rem] text-[var(--color-text)] outline-none transition-colors focus:border-[var(--color-accent)] placeholder:text-[var(--color-text-faint)]"
             />
           </div>
         </div>

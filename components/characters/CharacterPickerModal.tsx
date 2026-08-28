@@ -1,9 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { roster } from "@/lib/data/roster";
 import { parseDisplayName } from "@/lib/data/roster";
-import { AFFLATUS_META } from "@/lib/afflatus";
+import { afflatusFilterIconPath } from "@/lib/afflatus";
 import type { Afflatus, RarityFilter } from "@/lib/types";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { FilterSection } from "@/components/ui/FilterSection";
@@ -97,7 +98,7 @@ export function CharacterPickerModal({ selectedIds, onClose, onDone }: Character
 
         {/* Filters */}
         <div className="flex shrink-0 flex-wrap items-center gap-2 px-5 py-3">
-          <div className="relative w-full sm:w-auto sm:flex-none">
+          <div className="relative w-40 shrink-0 sm:w-44">
             <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--color-text-faint)]">
               <IconSearch />
             </span>
@@ -106,7 +107,7 @@ export function CharacterPickerModal({ selectedIds, onClose, onDone }: Character
               onChange={(e) => setSearch(e.target.value)}
               type="text"
               placeholder="Search arcanists…"
-              className="w-full min-w-0 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] py-2 pl-8 pr-3 text-[0.78rem] text-[var(--color-text)] outline-none transition-colors focus:border-[var(--color-accent)] placeholder:text-[var(--color-text-faint)] sm:w-44"
+              className="w-full min-w-0 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] py-2 pl-8 pr-3 text-[0.78rem] text-[var(--color-text)] outline-none transition-colors focus:border-[var(--color-accent)] placeholder:text-[var(--color-text-faint)]"
             />
           </div>
 
@@ -149,10 +150,16 @@ export function CharacterPickerModal({ selectedIds, onClose, onDone }: Character
                         className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[0.72rem] font-medium transition-colors
                           ${afflatus === a ? "bg-[var(--color-accent)] text-white" : "bg-[var(--color-surface)] text-[var(--color-text-dim)] hover:text-[var(--color-text)]"}`}
                       >
-                        <span
-                          className="inline-block h-2 w-2 rounded-full"
-                          style={{ background: afflatus === a ? "white" : AFFLATUS_META[a].colorVar }}
-                        />
+                        <span className="relative h-4 w-4 shrink-0">
+                          <Image
+                            src={afflatusFilterIconPath(a)}
+                            alt=""
+                            fill
+                            sizes="16px"
+                            className="object-contain"
+                            style={{ filter: afflatus === a ? "brightness(0) invert(1)" : undefined }}
+                          />
+                        </span>
                         {a}
                       </button>
                     ))}
@@ -166,7 +173,7 @@ export function CharacterPickerModal({ selectedIds, onClose, onDone }: Character
                       setAfflatus("all");
                       close();
                     }}
-                    className="w-full rounded-lg px-3 py-1.5 text-center text-[0.72rem] font-medium text-[var(--color-text-faint)] transition-colors hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+                    className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-center text-[0.72rem] font-medium text-[var(--color-text-faint)] transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
                   >
                     Clear all filters
                   </button>

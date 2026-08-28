@@ -84,6 +84,26 @@ function ExportCard({ character, progress, showI2Art = false }: ExportCardProps)
           }}
         />
 
+        {progress.resonance > 0 && (
+          <div className="absolute right-2 top-2 z-20 flex items-center gap-0.5 rounded-md bg-black/45 px-1.5 py-1 text-[var(--color-text)]">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4.222 21.995v-3.55c0-1.271-.333-1.932-.987-3.037A8.888 8.888 0 0 1 10.889 2a8.89 8.89 0 0 1 8.889 8.887c0 .58 0 .87.024 1.032.058.388.24.722.417 1.068L22 16.441l-1.4.7c-.405.202-.608.303-.749.49s-.181.399-.26.82l-.008.042c-.183.968-.384 2.036-.95 2.71-.2.237-.448.43-.727.567-.461.225-1.028.225-2.162.225-.525 0-1.051.012-1.576 0-1.243-.031-2.168-1.077-2.168-2.29" />
+              <path d="M14.388 10.532c-.426 0-.815-.162-1.11-.427m1.11.426c0 1.146-.664 2.235-1.942 2.235s-1.942 1.088-1.942 2.234m3.884-4.469c2.15 0 2.15-3.35 0-3.35q-.294.001-.557.095c.105-2.498-3.496-3.176-4.312-.836m.985 1.857c0-.774-.39-1.456-.985-1.857m0 0c-1.852-1.25-4.32.993-3.146 2.993-1.97.295-1.76 3.333.247 3.333a1.66 1.66 0 0 0 1.362-.712" />
+            </svg>
+            <span className="text-[0.68rem] font-bold leading-none">{progress.resonance}</span>
+          </div>
+        )}
+
         <div className="absolute inset-x-0 bottom-0 h-[55%]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

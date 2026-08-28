@@ -153,6 +153,13 @@ export default function MyCharactersPage() {
           </div>
         </div>
 
+        {exporting && (
+          <p className="mb-3 flex items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] text-[var(--color-text-dim)]">
+            <IconSpinner />
+            Preparing your export — this can take a moment for a large roster…
+          </p>
+        )}
+
         {exportError && (
           <p className="mb-3 rounded-lg border border-[var(--color-danger)] bg-[var(--color-danger)]/10 px-3 py-2 text-[0.75rem] text-[var(--color-danger)]">
             {exportError}
