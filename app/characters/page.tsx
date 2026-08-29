@@ -57,6 +57,7 @@ export default function MyCharactersPage() {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [detailCharacterId, setDetailCharacterId] = useState<number | null>(null);
   const [exporting, setExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState<{ loaded: number; total: number } | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
   const [showI2Art, setShowI2Art] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
@@ -88,13 +89,20 @@ export default function MyCharactersPage() {
     if (!exportRef.current || exporting) return;
     setExporting(true);
     setExportError(null);
+    setExportProgress(null);
     try {
-      await exportPngToFile({ node: exportRef.current, filename: "my-roster.webp", pixelRatio: 2 });
+      await exportPngToFile({
+        node: exportRef.current,
+        filename: "my-roster.webp",
+        pixelRatio: 2,
+        onProgress: (loaded, total) => setExportProgress({ loaded, total }),
+      });
     } catch (err) {
       console.error("Export failed:", err);
       setExportError(describeExportError(err));
     } finally {
       setExporting(false);
+      setExportProgress(null);
     }
   }
 
@@ -139,7 +147,11 @@ export default function MyCharactersPage() {
                   className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
                 >
                   {exporting ? <IconSpinner /> : <IconDownload />}
-                  {exporting ? "Exporting…" : "Export"}
+                  {exporting
+                    ? exportProgress && exportProgress.total > 0
+                      ? `Exporting… ${exportProgress.loaded}/${exportProgress.total}`
+                      : "Exporting…"
+                    : "Export"}
                 </button>
               </>
             )}
@@ -152,13 +164,6 @@ export default function MyCharactersPage() {
             </button>
           </div>
         </div>
-
-        {exporting && (
-          <p className="mb-3 flex items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] text-[var(--color-text-dim)]">
-            <IconSpinner />
-            Preparing your export — this can take a moment for a large roster…
-          </p>
-        )}
 
         {exportError && (
           <p className="mb-3 rounded-lg border border-[var(--color-danger)] bg-[var(--color-danger)]/10 px-3 py-2 text-[0.75rem] text-[var(--color-danger)]">

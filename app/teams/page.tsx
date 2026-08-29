@@ -49,6 +49,7 @@ export default function MyTeamsPage() {
   const [activeSlot, setActiveSlot] = useState<{ teamId: number; slotIndex: number } | null>(null);
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [exportProgress, setExportProgress] = useState<{ loaded: number; total: number } | null>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
   const myCharacters = useMemo(() => {
@@ -77,17 +78,24 @@ export default function MyTeamsPage() {
     if (!exportRef.current || exporting) return;
     setExporting(true);
     setExportError(null);
+    setExportProgress(null);
     try {
       // pixelRatio 3 keeps card art crisp at typical Discord embed widths
       // (roughly 400-550px display) even though the underlying art files
       // are themselves modest resolution — this avoids the soft/blurry
       // look a 1x or 2x capture gets when Discord scales it back up.
-      await exportPngToFile({ node: exportRef.current, filename: "my-teams.webp", pixelRatio: 3 });
+      await exportPngToFile({
+        node: exportRef.current,
+        filename: "my-teams.webp",
+        pixelRatio: 3,
+        onProgress: (loaded, total) => setExportProgress({ loaded, total }),
+      });
     } catch (err) {
       console.error("Export failed:", err);
       setExportError(describeExportError(err));
     } finally {
       setExporting(false);
+      setExportProgress(null);
     }
   }
 
@@ -117,7 +125,11 @@ export default function MyTeamsPage() {
                 className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
               >
                 {exporting ? <IconSpinner /> : <IconDownload />}
-                {exporting ? "Exporting…" : "Export"}
+                {exporting
+                  ? exportProgress && exportProgress.total > 0
+                    ? `Exporting… ${exportProgress.loaded}/${exportProgress.total}`
+                    : "Exporting…"
+                  : "Export"}
               </button>
             )}
             <button
@@ -129,13 +141,6 @@ export default function MyTeamsPage() {
             </button>
           </div>
         </div>
-
-        {exporting && (
-          <p className="mb-3 flex items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] text-[var(--color-text-dim)]">
-            <IconSpinner />
-            Preparing your export — this can take a moment for a lot of teams…
-          </p>
-        )}
 
         {exportError && (
           <p className="mb-3 rounded-lg border border-[var(--color-danger)] bg-[var(--color-danger)]/10 px-3 py-2 text-[0.75rem] text-[var(--color-danger)]">
