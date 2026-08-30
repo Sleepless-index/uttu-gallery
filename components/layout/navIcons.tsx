@@ -77,3 +77,18 @@ export function IconMyTeams() {
     </svg>
   );
 }
+
+export function IconMyPsychubes() {
+  // Diamond/gem shape — matches the in-game Psychube icon motif
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path
+        d="M8 2.2 13.5 6.5 8 13.8 2.5 6.5Z"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinejoin="round"
+      />
+      <path d="M2.5 6.5h11M8 2.2v11.6" stroke="currentColor" strokeWidth="1" strokeOpacity="0.6" />
+    </svg>
+  );
+}

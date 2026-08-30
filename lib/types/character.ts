@@ -1,3 +1,5 @@
+import type { PsychubeProgress } from "./psychube";
+
 export type Afflatus =
   | "Star"
   | "Plant"
@@ -69,6 +71,8 @@ export interface TrackerState {
   upcoming: UpcomingArcanist[];
   profile: UserProfile;
   teams: Team[];
+  /** Keyed by Psychube id. Presence of a key means owned. */
+  ownedPsychubes: Record<number, PsychubeProgress>;
 }
 
 export const emptyTrackerState = (): TrackerState => ({
@@ -76,18 +80,27 @@ export const emptyTrackerState = (): TrackerState => ({
   upcoming: [],
   profile: emptyProfile(),
   teams: [],
+  ownedPsychubes: {},
 });
 
 /** Number of character slots in a single team. */
 export const TEAM_SIZE = 4;
 
-/** A user-defined team of up to TEAM_SIZE characters. Slots preserve their
+/** A filled team slot: a character plus an optional equipped Psychube.
+ * The Psychube equip is scoped to this slot, not the character globally —
+ * the same character can hold a different Psychube in a different team. */
+export interface TeamSlot {
+  characterId: number;
+  psychubeId?: number;
+}
+
+/** A user-defined team of up to TEAM_SIZE slots. Slots preserve their
  * position (empty slots are `null`) so removing a character from the middle
  * doesn't shift the others around. */
 export interface Team {
   id: number;
   name: string;
-  slots: (number | null)[];
+  slots: (TeamSlot | null)[];
 }
 
-export const emptyTeamSlots = (): (number | null)[] => Array(TEAM_SIZE).fill(null);
+export const emptyTeamSlots = (): (TeamSlot | null)[] => Array(TEAM_SIZE).fill(null);

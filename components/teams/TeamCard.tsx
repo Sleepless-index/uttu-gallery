@@ -1,8 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { CharacterCard } from "@/components/arcanists/CharacterCard";
-import type { CharacterProgress, RosterCharacter, Team } from "@/lib/types";
+import { PsychubeDetailedRow } from "@/components/psychubes/PsychubeDetailedRow";
+import { psychubeArtPath } from "@/lib/assets/psychubeAssets";
+import { getPsychube } from "@/lib/data/psychubes";
+import type { CharacterProgress, PsychubeProgress, RosterCharacter, Team } from "@/lib/types";
+
+export type PsychubeDisplayMode = "compact" | "detailed";
 
 interface TeamCardProps {
   team: Team;
@@ -11,10 +17,13 @@ interface TeamCardProps {
   /** Resolves a slot's stored character id to its roster entry, if still owned. */
   resolveCharacter: (id: number) => RosterCharacter | undefined;
   getProgress: (id: number) => CharacterProgress;
+  getPsychubeProgress: (id: number) => PsychubeProgress;
+  psychubeDisplayMode: PsychubeDisplayMode;
   onRename: (name: string) => void;
   onDelete: () => void;
   onSlotClick: (slotIndex: number) => void;
   onSlotClear: (slotIndex: number) => void;
+  onPsychubeClick: (slotIndex: number) => void;
 }
 
 function IconClose() {
@@ -47,6 +56,14 @@ function IconTrash() {
   );
 }
 
+function IconPsychubeSlot() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M8 2.5v11M2.5 8h11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 /** Empty slot placeholder — same 224:524 aspect ratio as a filled CharacterCard
  * so the row stays aligned regardless of how many slots are filled. */
 function EmptySlot({ onClick }: { onClick: () => void }) {
@@ -65,33 +82,96 @@ function EmptySlot({ onClick }: { onClick: () => void }) {
   );
 }
 
+/** Compact-mode badge sitting in the bottom-right corner of a filled slot —
+ * sized to be clearly legible (not a tiny corner icon), matching the size
+ * shown in the in-game reference. No rarity plate under the art. */
+function PsychubeCompactBadge({ psychubeId, onClick }: { psychubeId?: number; onClick: () => void }) {
+  const psychube = psychubeId != null ? getPsychube(psychubeId) : undefined;
+
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      aria-label={psychube ? `Change equipped psychube (${psychube.name})` : "Equip a psychube"}
+      title={psychube?.name ?? "Equip a psychube"}
+      className="absolute bottom-1.5 right-1.5 z-30 flex h-12 w-12 items-center justify-center overflow-hidden rounded-md border border-[var(--color-border-strong)] bg-black/60 text-[var(--color-text-faint)] shadow-md backdrop-blur-sm transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-text)] sm:h-14 sm:w-14"
+    >
+      {psychube ? (
+        <Image
+          src={psychubeArtPath(psychube.id)}
+          alt={psychube.name}
+          fill
+          sizes="56px"
+          className="scale-125 object-cover"
+        />
+      ) : (
+        <IconPsychubeSlot />
+      )}
+    </button>
+  );
+}
+
 function FilledSlot({
   character,
   progress,
+  psychubeId,
+  psychubeProgress,
+  psychubeDisplayMode,
   onClick,
   onClear,
+  onPsychubeClick,
 }: {
   character: RosterCharacter;
   progress: CharacterProgress;
+  psychubeId?: number;
+  psychubeProgress: PsychubeProgress;
+  psychubeDisplayMode: PsychubeDisplayMode;
   onClick: () => void;
   onClear: () => void;
+  onPsychubeClick: () => void;
 }) {
+  const psychube = psychubeId != null ? getPsychube(psychubeId) : undefined;
+
   return (
-    <div className="group/slot relative">
-      <button type="button" onClick={onClick} className="block w-full text-left outline-none">
-        <CharacterCard character={character} progress={progress} />
-      </button>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onClear();
-        }}
-        aria-label={`Remove ${character.name} from this slot`}
-        className="absolute right-1.5 top-4 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white opacity-100 backdrop-blur-sm transition-opacity hover:bg-black/80 sm:opacity-0 sm:group-hover/slot:opacity-100"
-      >
-        <IconClose />
-      </button>
+    <div className="flex flex-col gap-1.5">
+      <div className="group/slot relative">
+        <button type="button" onClick={onClick} className="block w-full text-left outline-none">
+          <CharacterCard
+            character={character}
+            progress={progress}
+            nameAlign="left"
+            reserveRightForBadge={psychubeDisplayMode === "compact"}
+          />
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClear();
+          }}
+          aria-label={`Remove ${character.name} from this slot`}
+          className="absolute right-1.5 top-4 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white opacity-100 backdrop-blur-sm transition-opacity hover:bg-black/80 sm:opacity-0 sm:group-hover/slot:opacity-100"
+        >
+          <IconClose />
+        </button>
+        {psychubeDisplayMode === "compact" && <PsychubeCompactBadge psychubeId={psychubeId} onClick={onPsychubeClick} />}
+      </div>
+
+      {psychubeDisplayMode === "detailed" && (
+        <button type="button" onClick={onPsychubeClick} className="block w-full text-left outline-none">
+          {psychube ? (
+            <PsychubeDetailedRow psychube={psychube} progress={psychubeProgress} />
+          ) : (
+            <div className="flex items-center justify-center gap-1.5 rounded-md border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] px-2 py-2 text-[0.68rem] text-[var(--color-text-faint)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text-dim)]">
+              <IconPlus />
+              Equip psychube
+            </div>
+          )}
+        </button>
+      )}
     </div>
   );
 }
@@ -101,10 +181,13 @@ export function TeamCard({
   displayNumber,
   resolveCharacter,
   getProgress,
+  getPsychubeProgress,
+  psychubeDisplayMode,
   onRename,
   onDelete,
   onSlotClick,
   onSlotClear,
+  onPsychubeClick,
 }: TeamCardProps) {
   const [editingName, setEditingName] = useState(false);
   const [nameDraft, setNameDraft] = useState(team.name);
@@ -172,17 +255,21 @@ export function TeamCard({
         </button>
       </div>
 
-      <div className="grid gap-2 [grid-template-columns:repeat(4,minmax(0,140px))]">
-        {team.slots.map((characterId, slotIndex) => {
-          const character = characterId != null ? resolveCharacter(characterId) : undefined;
-          if (character) {
+      <div className="grid gap-2 [grid-template-columns:repeat(4,minmax(0,1fr))]">
+        {team.slots.map((slot, slotIndex) => {
+          const character = slot != null ? resolveCharacter(slot.characterId) : undefined;
+          if (character && slot) {
             return (
               <FilledSlot
                 key={slotIndex}
                 character={character}
                 progress={getProgress(character.id)}
+                psychubeId={slot.psychubeId}
+                psychubeProgress={slot.psychubeId != null ? getPsychubeProgress(slot.psychubeId) : { level: 0, amp: 0 }}
+                psychubeDisplayMode={psychubeDisplayMode}
                 onClick={() => onSlotClick(slotIndex)}
                 onClear={() => onSlotClear(slotIndex)}
+                onPsychubeClick={() => onPsychubeClick(slotIndex)}
               />
             );
           }

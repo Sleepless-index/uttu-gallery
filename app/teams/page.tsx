@@ -5,9 +5,11 @@ import Image from "next/image";
 import { roster } from "@/lib/data/roster";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { exportPngToFile, describeExportError } from "@/lib/export/exportPngToFile";
-import { TeamCard } from "@/components/teams/TeamCard";
+import { TeamCard, type PsychubeDisplayMode } from "@/components/teams/TeamCard";
 import { TeamSlotPickerModal } from "@/components/teams/TeamSlotPickerModal";
+import { TeamSlotPsychubePickerModal } from "@/components/teams/TeamSlotPsychubePickerModal";
 import { TeamExportGrid } from "@/components/teams/TeamExportGrid";
+import { emptyPsychubeProgress } from "@/lib/types";
 
 /** Teams stack top-to-bottom within a column; once a column holds this many
  * teams, the next team starts a new column to the right, beside the first. */
@@ -44,9 +46,45 @@ function IconSpinner() {
   );
 }
 
+/** Compact / Detailed segmented toggle for how equipped Psychubes are shown,
+ * on both the live page and the exported image. */
+function PsychubeModeToggle({ mode, onChange }: { mode: PsychubeDisplayMode; onChange: (next: PsychubeDisplayMode) => void }) {
+  return (
+    <div className="flex items-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-0.5 text-[0.72rem] font-medium">
+      {(["compact", "detailed"] as PsychubeDisplayMode[]).map((option) => (
+        <button
+          key={option}
+          type="button"
+          onClick={() => onChange(option)}
+          aria-pressed={mode === option}
+          className={`rounded-md px-2.5 py-1.5 capitalize transition-colors ${
+            mode === option
+              ? "bg-[var(--color-accent)] text-white"
+              : "text-[var(--color-text-dim)] hover:text-[var(--color-text)]"
+          }`}
+        >
+          {option}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function MyTeamsPage() {
-  const { state, hydrated, getProgress, addTeam, renameTeam, deleteTeam, setTeamSlot } = useTrackerState();
+  const {
+    state,
+    hydrated,
+    getProgress,
+    getOwnedPsychube,
+    addTeam,
+    renameTeam,
+    deleteTeam,
+    setTeamSlot,
+    setSlotPsychube,
+  } = useTrackerState();
   const [activeSlot, setActiveSlot] = useState<{ teamId: number; slotIndex: number } | null>(null);
+  const [activePsychubeSlot, setActivePsychubeSlot] = useState<{ teamId: number; slotIndex: number } | null>(null);
+  const [psychubeDisplayMode, setPsychubeDisplayMode] = useState<PsychubeDisplayMode>("compact");
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [exportProgress, setExportProgress] = useState<{ loaded: number; total: number } | null>(null);
@@ -60,6 +98,7 @@ export default function MyTeamsPage() {
 
   const rosterById = useMemo(() => new Map(roster.map((c) => [c.id, c])), []);
   const resolveCharacter = (id: number) => rosterById.get(id);
+  const getPsychubeProgress = (id: number) => getOwnedPsychube(id) ?? emptyPsychubeProgress();
 
   // grid-auto-flow: column fills each column top-to-bottom before starting
   // the next one — exactly "descending until the 5th team, then a 2nd
@@ -70,9 +109,23 @@ export default function MyTeamsPage() {
   const disabledIdsForActiveSlot = useMemo(() => {
     if (!activeTeam) return new Set<number>();
     return new Set(
-      activeTeam.slots.filter((id): id is number => id != null)
+      activeTeam.slots
+        .filter((s): s is NonNullable<typeof s> => s != null)
+        .map((s) => s.characterId)
     );
   }, [activeTeam]);
+
+  const activePsychubeTeam = activePsychubeSlot ? state.teams.find((t) => t.id === activePsychubeSlot.teamId) : undefined;
+  const activePsychubeCharacterSlot =
+    activePsychubeTeam && activePsychubeSlot ? activePsychubeTeam.slots[activePsychubeSlot.slotIndex] : undefined;
+  const disabledPsychubeIdsInTeam = useMemo(() => {
+    if (!activePsychubeTeam || !activePsychubeSlot) return new Set<number>();
+    return new Set(
+      activePsychubeTeam.slots
+        .filter((s, i) => s != null && s.psychubeId != null && i !== activePsychubeSlot.slotIndex)
+        .map((s) => s!.psychubeId!)
+    );
+  }, [activePsychubeTeam, activePsychubeSlot]);
 
   async function handleExport() {
     if (!exportRef.current || exporting) return;
@@ -118,6 +171,7 @@ export default function MyTeamsPage() {
           </h2>
 
           <div className="flex items-center gap-2">
+            <PsychubeModeToggle mode={psychubeDisplayMode} onChange={setPsychubeDisplayMode} />
             {state.teams.length > 0 && (
               <button
                 onClick={handleExport}
@@ -184,10 +238,13 @@ export default function MyTeamsPage() {
                 displayNumber={i + 1}
                 resolveCharacter={resolveCharacter}
                 getProgress={getProgress}
+                getPsychubeProgress={getPsychubeProgress}
+                psychubeDisplayMode={psychubeDisplayMode}
                 onRename={(name) => renameTeam(team.id, name)}
                 onDelete={() => deleteTeam(team.id)}
                 onSlotClick={(slotIndex) => setActiveSlot({ teamId: team.id, slotIndex })}
                 onSlotClear={(slotIndex) => setTeamSlot(team.id, slotIndex, null)}
+                onPsychubeClick={(slotIndex) => setActivePsychubeSlot({ teamId: team.id, slotIndex })}
               />
             ))}
           </div>
@@ -206,6 +263,8 @@ export default function MyTeamsPage() {
             teams={state.teams}
             resolveCharacter={resolveCharacter}
             getProgress={getProgress}
+            getPsychubeProgress={getPsychubeProgress}
+            psychubeDisplayMode={psychubeDisplayMode}
             profile={state.profile}
             teamsPerColumn={TEAMS_PER_COLUMN}
           />
@@ -220,6 +279,20 @@ export default function MyTeamsPage() {
           onPick={(characterId) => {
             setTeamSlot(activeSlot.teamId, activeSlot.slotIndex, characterId);
             setActiveSlot(null);
+          }}
+        />
+      )}
+
+      {activePsychubeSlot && activePsychubeCharacterSlot && (
+        <TeamSlotPsychubePickerModal
+          characterId={activePsychubeCharacterSlot.characterId}
+          ownedPsychubes={state.ownedPsychubes}
+          disabledIds={disabledPsychubeIdsInTeam}
+          currentPsychubeId={activePsychubeCharacterSlot.psychubeId}
+          onClose={() => setActivePsychubeSlot(null)}
+          onPick={(psychubeId) => {
+            setSlotPsychube(activePsychubeSlot.teamId, activePsychubeSlot.slotIndex, psychubeId);
+            setActivePsychubeSlot(null);
           }}
         />
       )}

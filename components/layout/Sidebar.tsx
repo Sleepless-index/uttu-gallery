@@ -28,6 +28,7 @@ import {
   IconPlanner,
   IconMyCharacters,
   IconMyTeams,
+  IconMyPsychubes,
 } from "@/components/layout/navIcons";
 
 const MY_CHARACTERS_ITEM = {
@@ -40,6 +41,12 @@ const MY_TEAMS_ITEM = {
   href: "/teams",
   label: "Teams",
   icon: <IconMyTeams />,
+};
+
+const MY_PSYCHUBES_ITEM = {
+  href: "/psychubes",
+  label: "Psychubes",
+  icon: <IconMyPsychubes />,
 };
 
 const NAV_GROUPS: NavGroup[] = [
@@ -118,7 +125,7 @@ export function Sidebar() {
     setEditingUid(false);
   }
 
-  const allNavItems = [MY_CHARACTERS_ITEM, MY_TEAMS_ITEM, ...NAV_GROUPS.flatMap((g) => g.items)];
+  const allNavItems = [MY_CHARACTERS_ITEM, MY_TEAMS_ITEM, MY_PSYCHUBES_ITEM, ...NAV_GROUPS.flatMap((g) => g.items)];
 
   return (
     <>
@@ -305,6 +312,22 @@ export function Sidebar() {
                 {MY_TEAMS_ITEM.icon}
               </span>
               {expanded && <span className="truncate">{MY_TEAMS_ITEM.label}</span>}
+            </Link>
+            <Link
+              href={MY_PSYCHUBES_ITEM.href}
+              title={expanded ? undefined : MY_PSYCHUBES_ITEM.label}
+              className={`flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[0.8rem] font-medium transition-colors
+                ${expanded ? "" : "justify-center"}
+                ${
+                  pathname === MY_PSYCHUBES_ITEM.href
+                    ? "bg-[var(--color-accent)] text-white"
+                    : "text-[var(--color-text-dim)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+                }`}
+            >
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                {MY_PSYCHUBES_ITEM.icon}
+              </span>
+              {expanded && <span className="truncate">{MY_PSYCHUBES_ITEM.label}</span>}
             </Link>
           </div>
 

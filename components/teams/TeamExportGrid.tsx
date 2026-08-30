@@ -7,8 +7,12 @@ import {
 import { garmentCardPath } from "@/lib/assets/garmentAssets";
 import { garmentsForCharacter } from "@/lib/data/garments";
 import { parseDisplayName } from "@/lib/data/roster";
+import { psychubeArtPath } from "@/lib/assets/psychubeAssets";
+import { getPsychube } from "@/lib/data/psychubes";
+import { canAmplify } from "@/lib/types";
 import { ExportHeader } from "@/components/export/ExportHeader";
-import type { RosterCharacter, CharacterProgress, Team, UserProfile } from "@/lib/types";
+import type { RosterCharacter, CharacterProgress, PsychubeProgress, Team, UserProfile } from "@/lib/types";
+import type { PsychubeDisplayMode } from "@/components/teams/TeamCard";
 
 const RARITY_TINT: Record<number, string> = {
   6: "var(--color-rarity-6)",
@@ -22,6 +26,30 @@ function rarityTint(rarity: number): string {
   return RARITY_TINT[rarity] ?? RARITY_TINT[2];
 }
 
+/** Detailed-mode Psychube sub-card for export — plain <img>, mirrors
+ * PsychubeDetailedRow but without Next's Image component. */
+function ExportPsychubeDetailedRow({ psychubeId, progress }: { psychubeId: number; progress: PsychubeProgress }) {
+  const psychube = getPsychube(psychubeId);
+  if (!psychube) return null;
+  const amplifiable = canAmplify(psychube.rarity);
+
+  return (
+    <div className="flex items-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-1.5" style={{ width: 140 }}>
+      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={psychubeArtPath(psychube.id)} alt={psychube.name} className="h-full w-full scale-125 object-cover" />
+      </div>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <span className="truncate text-[0.68rem] font-medium leading-tight text-[var(--color-text)]">{psychube.name}</span>
+        <span className="text-[0.62rem] leading-tight text-white">
+          Lv.{progress.level}
+          {amplifiable && <span className="ml-1.5 text-[var(--color-accent)]">A{progress.amp}</span>}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 /** Static, plain-<img> replica of a filled team slot — used only for PNG
  * export, same reasoning as ExportCard: avoids Next's image optimizer proxy
  * so html-to-image can capture every card reliably.
@@ -31,8 +59,19 @@ function rarityTint(rarity: number): string {
  * auto-I2 once insight has actually reached tier 2, and finally to base
  * art. Team exports previously always used base art regardless of what
  * was set on the Roster page — this keeps the two in sync. */
-function ExportSlot({ character, progress }: { character: RosterCharacter; progress: CharacterProgress }) {
+function ExportSlot({
+  character,
+  progress,
+  psychubeId,
+  psychubeDisplayMode,
+}: {
+  character: RosterCharacter;
+  progress: CharacterProgress;
+  psychubeId?: number;
+  psychubeDisplayMode: PsychubeDisplayMode;
+}) {
   const displayName = parseDisplayName(character.name);
+  const psychube = psychubeId != null ? getPsychube(psychubeId) : undefined;
 
   const selectedGarment =
     typeof progress.selectedGarmentId === "number"
@@ -78,9 +117,18 @@ function ExportSlot({ character, progress }: { character: RosterCharacter; progr
         />
       </div>
 
+      {psychubeDisplayMode === "compact" && psychube && (
+        <div className="absolute bottom-2 right-2 z-10 h-14 w-14 overflow-hidden rounded-md border border-[var(--color-border-strong)] bg-black/60 shadow-md">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={psychubeArtPath(psychube.id)} alt={psychube.name} className="h-full w-full scale-125 object-cover" />
+        </div>
+      )}
+
       <div className="absolute inset-x-0 bottom-2 z-10 px-2">
         <span
-          className={`block text-center text-[1.05rem] font-semibold leading-tight text-white ${displayName.italic ? "italic" : ""}`}
+          className={`block truncate text-[1.05rem] font-semibold leading-tight text-white ${
+            psychubeDisplayMode === "compact" && psychube ? "w-[calc(100%-4rem)]" : "w-full"
+          } text-left ${displayName.italic ? "italic" : ""}`}
           style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)", fontFamily: "var(--font-display)" }}
         >
           {displayName.text}
@@ -105,9 +153,18 @@ interface TeamExportBlockProps {
   displayNumber: number;
   resolveCharacter: (id: number) => RosterCharacter | undefined;
   getProgress: (id: number) => CharacterProgress;
+  getPsychubeProgress: (id: number) => PsychubeProgress;
+  psychubeDisplayMode: PsychubeDisplayMode;
 }
 
-function TeamExportBlock({ team, displayNumber, resolveCharacter, getProgress }: TeamExportBlockProps) {
+function TeamExportBlock({
+  team,
+  displayNumber,
+  resolveCharacter,
+  getProgress,
+  getPsychubeProgress,
+  psychubeDisplayMode,
+}: TeamExportBlockProps) {
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-4">
       <div className="mb-3 flex items-center gap-2.5">
@@ -121,12 +178,16 @@ function TeamExportBlock({ team, displayNumber, resolveCharacter, getProgress }:
       </div>
 
       <div className="flex gap-2">
-        {team.slots.map((characterId, slotIndex) => {
-          const character = characterId != null ? resolveCharacter(characterId) : undefined;
-          return character ? (
-            <ExportSlot key={slotIndex} character={character} progress={getProgress(character.id)} />
-          ) : (
-            <ExportEmptySlot key={slotIndex} />
+        {team.slots.map((slot, slotIndex) => {
+          const character = slot != null ? resolveCharacter(slot.characterId) : undefined;
+          if (!(character && slot)) return <ExportEmptySlot key={slotIndex} />;
+          return (
+            <div key={slotIndex} className="flex flex-col gap-1.5">
+              <ExportSlot character={character} progress={getProgress(character.id)} psychubeId={slot.psychubeId} psychubeDisplayMode={psychubeDisplayMode} />
+              {psychubeDisplayMode === "detailed" && slot.psychubeId != null && (
+                <ExportPsychubeDetailedRow psychubeId={slot.psychubeId} progress={getPsychubeProgress(slot.psychubeId)} />
+              )}
+            </div>
           );
         })}
       </div>
@@ -138,6 +199,8 @@ interface TeamExportGridProps {
   teams: Team[];
   resolveCharacter: (id: number) => RosterCharacter | undefined;
   getProgress: (id: number) => CharacterProgress;
+  getPsychubeProgress: (id: number) => PsychubeProgress;
+  psychubeDisplayMode: PsychubeDisplayMode;
   profile: UserProfile;
   /** How many teams stack per column before starting a new one — must match
    * TEAMS_PER_COLUMN on the Teams page itself, or the export won't reflect
@@ -156,6 +219,8 @@ export function TeamExportGrid({
   teams,
   resolveCharacter,
   getProgress,
+  getPsychubeProgress,
+  psychubeDisplayMode,
   profile,
   teamsPerColumn = 4,
 }: TeamExportGridProps) {
@@ -177,6 +242,8 @@ export function TeamExportGrid({
                 displayNumber={colIndex * teamsPerColumn + i + 1}
                 resolveCharacter={resolveCharacter}
                 getProgress={getProgress}
+                getPsychubeProgress={getPsychubeProgress}
+                psychubeDisplayMode={psychubeDisplayMode}
               />
             ))}
           </div>

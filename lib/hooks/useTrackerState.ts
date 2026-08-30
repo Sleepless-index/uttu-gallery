@@ -4,10 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import {
   emptyProfile,
   emptyProgress,
+  emptyPsychubeProgress,
   emptyTrackerState,
   emptyTeamSlots,
   type CharacterProgress,
+  type PsychubeProgress,
   type Team,
+  type TeamSlot,
   type TrackerState,
   type UpcomingArcanist,
   type UserProfile,
@@ -27,6 +30,7 @@ function loadState(): TrackerState {
       upcoming: parsed.upcoming ?? [],
       profile: { ...emptyProfile(), ...parsed.profile },
       teams: parsed.teams ?? [],
+      ownedPsychubes: parsed.ownedPsychubes ?? {},
     };
   } catch {
     return emptyTrackerState();
@@ -145,9 +149,70 @@ export function useTrackerState() {
         teams: prev.teams.map((t) => {
           if (t.id !== teamId) return t;
           const slots = [...t.slots];
-          slots[slotIndex] = characterId;
+          // Changing the character in a slot clears any equipped Psychube —
+          // the equip was scoped to the previous character in this slot.
+          slots[slotIndex] = characterId == null ? null : { characterId };
           return { ...t, slots };
         }),
+      }));
+    },
+    []
+  );
+
+  /** Equip (or clear, with psychubeId null) a Psychube on one team slot.
+   * Enforces the one-Psychube-per-team rule: if another slot in the SAME
+   * team already has this Psychube equipped, it's cleared from that slot. */
+  const setSlotPsychube = useCallback(
+    (teamId: number, slotIndex: number, psychubeId: number | null) => {
+      setState((prev) => ({
+        ...prev,
+        teams: prev.teams.map((t) => {
+          if (t.id !== teamId) return t;
+          const slots: (TeamSlot | null)[] = t.slots.map((slot, i) => {
+            if (!slot) return slot;
+            if (i === slotIndex) {
+              return psychubeId == null
+                ? { characterId: slot.characterId }
+                : { ...slot, psychubeId };
+            }
+            // Clear this Psychube from any other slot in the same team.
+            if (psychubeId != null && slot.psychubeId === psychubeId) {
+              return { characterId: slot.characterId };
+            }
+            return slot;
+          });
+          return { ...t, slots };
+        }),
+      }));
+    },
+    []
+  );
+
+  const getOwnedPsychube = useCallback(
+    (id: number): PsychubeProgress | undefined => state.ownedPsychubes[id],
+    [state.ownedPsychubes]
+  );
+
+  const togglePsychubeOwned = useCallback((id: number) => {
+    setState((prev) => {
+      const owned = { ...prev.ownedPsychubes };
+      if (owned[id]) {
+        delete owned[id];
+      } else {
+        owned[id] = emptyPsychubeProgress();
+      }
+      return { ...prev, ownedPsychubes: owned };
+    });
+  }, []);
+
+  const updatePsychubeProgress = useCallback(
+    (id: number, patch: Partial<PsychubeProgress>) => {
+      setState((prev) => ({
+        ...prev,
+        ownedPsychubes: {
+          ...prev.ownedPsychubes,
+          [id]: { ...emptyPsychubeProgress(), ...prev.ownedPsychubes[id], ...patch },
+        },
       }));
     },
     []
@@ -174,5 +239,9 @@ export function useTrackerState() {
     renameTeam,
     deleteTeam,
     setTeamSlot,
+    setSlotPsychube,
+    getOwnedPsychube,
+    togglePsychubeOwned,
+    updatePsychubeProgress,
   };
 }

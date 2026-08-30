@@ -1,0 +1,683 @@
+[
+  {
+    "name": "Brave New World",
+    "id": 1501,
+    "rarity": 5
+  },
+  {
+    "name": "Hopscotch",
+    "id": 1502,
+    "rarity": 5
+  },
+  {
+    "name": "Her Second Life",
+    "id": 1503,
+    "rarity": 5
+  },
+  {
+    "name": "Blasphemer of Night",
+    "id": 1504,
+    "rarity": 5
+  },
+  {
+    "name": "Thunderous Applause",
+    "id": 1507,
+    "rarity": 5
+  },
+  {
+    "name": "That Inquisitive Dear",
+    "id": 1508,
+    "rarity": 5
+  },
+  {
+    "name": "His Bounden Duty",
+    "id": 1510,
+    "rarity": 5
+  },
+  {
+    "name": "Luxurious Leisure",
+    "id": 1509,
+    "rarity": 5,
+    "characterid": "3062"
+  },
+  {
+    "name": "Beyond Wonderland",
+    "id": 1511,
+    "rarity": 5,
+    "characterid": "3053"
+  },
+  {
+    "name": "Yearning Desire",
+    "id": 1401,
+    "rarity": 4
+  },
+  {
+    "name": "Tomorrow Also",
+    "id": 1402,
+    "rarity": 4
+  },
+  {
+    "name": "The Footloose",
+    "id": 1404,
+    "rarity": 4
+  },
+  {
+    "name": "Decode",
+    "id": 1405,
+    "rarity": 4
+  },
+  {
+    "name": "An Afternoon Nap",
+    "id": 1407,
+    "rarity": 4
+  },
+  {
+    "name": "Her Bright Future",
+    "id": 1411,
+    "rarity": 4
+  },
+  {
+    "name": "A Free Heart",
+    "id": 4103,
+    "rarity": 4
+  },
+  {
+    "name": "Laughter and Laughter",
+    "id": 4104,
+    "rarity": 4
+  },
+  {
+    "name": "Navigating",
+    "id": 1306,
+    "rarity": 3
+  },
+  {
+    "name": "Bow",
+    "id": 1307,
+    "rarity": 3
+  },
+  {
+    "name": "Covet",
+    "id": 1308,
+    "rarity": 3
+  },
+  {
+    "name": "Venomous",
+    "id": 1309,
+    "rarity": 3
+  },
+  {
+    "name": "Meek",
+    "id": 1310,
+    "rarity": 3
+  },
+  {
+    "name": "Slighted",
+    "id": 1201,
+    "rarity": 2
+  },
+  {
+    "name": "Flourishing",
+    "id": 1202,
+    "rarity": 2
+  },
+  {
+    "name": "Loss",
+    "id": 1203,
+    "rarity": 2
+  },
+  {
+    "name": "Cheering",
+    "id": 1204,
+    "rarity": 2
+  },
+  {
+    "name": "Numb",
+    "id": 1205,
+    "rarity": 2
+  },
+  {
+    "name": "Fatuous",
+    "id": 1206,
+    "rarity": 2
+  },
+  {
+    "name": "The Carat of A Heart",
+    "id": 1512,
+    "rarity": 5,
+    "characterid": "3072"
+  },
+  {
+    "name": "Silent and Adoring",
+    "id": 1513,
+    "rarity": 5,
+    "characterid": "3066#3070#3052#3004"
+  },
+  {
+    "name": "Balance, Please",
+    "id": 1514,
+    "rarity": 5,
+    "characterid": "3079#3007"
+  },
+  {
+    "name": "A Satisfied Eater",
+    "id": 1413,
+    "rarity": 4,
+    "characterid": "3051#3017#3015"
+  },
+  {
+    "name": "Remaining Absurdity",
+    "id": 1414,
+    "rarity": 4,
+    "characterid": "3052#3043#3018"
+  },
+  {
+    "name": "Long Night Talk",
+    "id": 1515,
+    "rarity": 5,
+    "characterid": "3073#3039"
+  },
+  {
+    "name": "Take the Hard Journey",
+    "id": 1420,
+    "rarity": 4
+  },
+  {
+    "name": "Let's Set Sail ",
+    "id": 1421,
+    "rarity": 4
+  },
+  {
+    "name": "Outside the City",
+    "id": 1521,
+    "rarity": 5,
+    "characterid": "3083#3004"
+  },
+  {
+    "name": "Same Old Story",
+    "id": 1522,
+    "rarity": 5,
+    "characterid": "3084"
+  },
+  {
+    "name": "Tea Break",
+    "id": 1422,
+    "rarity": 4
+  },
+  {
+    "name": "A New Leaf",
+    "id": 1423,
+    "rarity": 4
+  },
+  {
+    "name": "Knock on the Door",
+    "id": 1523,
+    "rarity": 5,
+    "characterid": "3081"
+  },
+  {
+    "name": "Another Story",
+    "id": 1524,
+    "rarity": 5,
+    "characterid": "3065"
+  },
+  {
+    "name": "His Tail",
+    "id": 1424,
+    "rarity": 4
+  },
+  {
+    "name": "Beyond the Gears",
+    "id": 1425,
+    "rarity": 4
+  },
+  {
+    "name": "Dawn Is Coming",
+    "id": 1525,
+    "rarity": 5,
+    "characterid": "3087"
+  },
+  {
+    "name": "For Rehabilitation",
+    "id": 1526,
+    "rarity": 5,
+    "characterid": "3077#3004"
+  },
+  {
+    "name": "Night After Night",
+    "id": 1426,
+    "rarity": 4,
+    "characterid": "3051"
+  },
+  {
+    "name": "Silent Gaze",
+    "id": 1427,
+    "rarity": 4
+  },
+  {
+    "name": "Steps Forward",
+    "id": 1527,
+    "rarity": 5,
+    "characterid": "3086"
+  },
+  {
+    "name": "The Fighter's Best Wishes",
+    "id": 1528,
+    "rarity": 5,
+    "characterid": "3080"
+  },
+  {
+    "name": "Approaching Rain",
+    "id": 1529,
+    "rarity": 5
+  },
+  {
+    "name": "In the Shadow",
+    "id": 1428,
+    "rarity": 4,
+    "characterid": "3088"
+  },
+  {
+    "name": "Going Along Alone",
+    "id": 1429,
+    "rarity": 4,
+    "characterid": "3006"
+  },
+  {
+    "name": "From the Depths",
+    "id": 1530,
+    "rarity": 5,
+    "characterid": "3088"
+  },
+  {
+    "name": "The Unbearable Lightness",
+    "id": 1531,
+    "rarity": 5,
+    "characterid": "3094"
+  },
+  {
+    "name": "Starlight Wellspring",
+    "id": 1532,
+    "rarity": 5,
+    "characterid": "3095"
+  },
+  {
+    "name": "Her Mournful Face",
+    "id": 1430,
+    "rarity": 4,
+    "characterid": "3009"
+  },
+  {
+    "name": "You Deserve It",
+    "id": 1431,
+    "rarity": 4,
+    "characterid": "3047#3030"
+  },
+  {
+    "name": "And the Maid Says",
+    "id": 1533,
+    "rarity": 5,
+    "characterid": "3098"
+  },
+  {
+    "name": "Stray Off the Path",
+    "id": 1534,
+    "rarity": 5,
+    "characterid": "3097"
+  },
+  {
+    "name": "Spinning Yarns",
+    "id": 1432,
+    "rarity": 4,
+    "characterid": "3060"
+  },
+  {
+    "name": "The Unknown Artist",
+    "id": 1433,
+    "rarity": 4,
+    "characterid": "3064"
+  },
+  {
+    "name": "Transcendent Love",
+    "id": 1536,
+    "rarity": 5,
+    "characterid": "3100"
+  },
+  {
+    "name": "The Third Commitment",
+    "id": 1537,
+    "rarity": 5,
+    "characterid": "3102"
+  },
+  {
+    "name": "Falling for a Sweet Phenomenon",
+    "id": 1434,
+    "rarity": 4,
+    "characterid": "3066"
+  },
+  {
+    "name": "The Severed and the Rest",
+    "id": 1435,
+    "rarity": 4,
+    "characterid": "3057"
+  },
+  {
+    "name": "Tiny Wish",
+    "id": 1535,
+    "rarity": 5
+  },
+  {
+    "name": "Offbeat Strides",
+    "id": 1538,
+    "rarity": 5,
+    "characterid": "3104"
+  },
+  {
+    "name": "On the Hand of Time",
+    "id": 1539,
+    "rarity": 5,
+    "characterid": "3105"
+  },
+  {
+    "name": "One with the Flow",
+    "id": 1436,
+    "rarity": 4,
+    "characterid": "3095"
+  },
+  {
+    "name": "Addio Coda",
+    "id": 1540,
+    "rarity": 5,
+    "characterid": "3108"
+  },
+  {
+    "name": "Cracks in the Shell",
+    "id": 1541,
+    "rarity": 5,
+    "characterid": "3109"
+  },
+  {
+    "name": "Belt It Out",
+    "id": 1437,
+    "rarity": 4,
+    "characterid": "3025"
+  },
+  {
+    "name": "Ready on Call",
+    "id": 1542,
+    "rarity": 5,
+    "characterid": "3110"
+  },
+  {
+    "name": "Rehearsal of Dreams",
+    "id": 1543,
+    "rarity": 5,
+    "characterid": "3111"
+  },
+  {
+    "name": "Your Friendly Exorcist",
+    "id": 1438,
+    "rarity": 4,
+    "characterid": "3115#3039"
+  },
+  {
+    "name": "The Final Roll",
+    "id": 1544,
+    "rarity": 5,
+    "characterid": "3114"
+  },
+  {
+    "name": "Mental Cage",
+    "id": 1545,
+    "rarity": 5,
+    "characterid": "3113"
+  },
+  {
+    "name": "Off the Scene",
+    "id": 1439,
+    "rarity": 4,
+    "characterid": "3052#3045"
+  },
+  {
+    "name": "Never-Ending Q&A",
+    "id": 1546,
+    "rarity": 5,
+    "characterid": "3116"
+  },
+  {
+    "name": "Aurora After Winter",
+    "id": 1547,
+    "rarity": 5,
+    "characterid": "3117"
+  },
+  {
+    "name": "Melodies Old and New",
+    "id": 1440,
+    "rarity": 4
+  },
+  {
+    "name": "Embrace the Past",
+    "id": 1548,
+    "rarity": 5,
+    "characterid": "3120"
+  },
+  {
+    "name": "Family Mentor",
+    "id": 1549,
+    "rarity": 5,
+    "characterid": "3121"
+  },
+  {
+    "name": "A Tingle of a Thought",
+    "id": 1550,
+    "rarity": 5,
+    "characterid": "3107"
+  },
+  {
+    "name": "Dust on the Roadside",
+    "id": 1441,
+    "rarity": 4
+  },
+  {
+    "name": "Homecoming Lament",
+    "id": 1553,
+    "rarity": 5,
+    "characterid": "3126"
+  },
+  {
+    "name": "Buds Yet to Bloom",
+    "id": 1554,
+    "rarity": 5,
+    "characterid": "3128"
+  },
+  {
+    "name": "Substitutes and Simulacra",
+    "id": 1442,
+    "rarity": 4
+  },
+  {
+    "name": "As the Bell Tolls",
+    "id": 1551,
+    "rarity": 5,
+    "characterid": "3123"
+  },
+  {
+    "name": "An Epic's End",
+    "id": 1552,
+    "rarity": 5,
+    "characterid": "3124"
+  },
+  {
+    "name": "Into the Gentle Current",
+    "id": 1555,
+    "rarity": 5,
+    "characterid": "3051"
+  },
+  {
+    "name": "The Wandering Improviser",
+    "id": 1556,
+    "rarity": 5,
+    "characterid": "3125"
+  },
+  {
+    "name": "Bitter March of the Living",
+    "id": 1557,
+    "rarity": 5,
+    "characterid": "3132"
+  },
+  {
+    "name": "Faded Epitaphs",
+    "id": 1443,
+    "rarity": 4,
+    "characterid": "3037"
+  },
+  {
+    "name": "The Thousandfold Fate",
+    "id": 1558,
+    "rarity": 5,
+    "characterid": "3134"
+  },
+  {
+    "name": "Her Willful Leap",
+    "id": 1559,
+    "rarity": 5,
+    "characterid": "3135"
+  },
+  {
+    "name": "Shadows in the Subconscious",
+    "id": 1560,
+    "rarity": 5,
+    "characterid": "3081"
+  },
+  {
+    "name": "In Their Figures",
+    "id": 1444,
+    "rarity": 4,
+    "characterid": "3041"
+  },
+  {
+    "name": "Singleness of Heart",
+    "id": 1561,
+    "rarity": 5,
+    "characterid": "3127"
+  },
+  {
+    "name": "Across the Acheron",
+    "id": 1562,
+    "rarity": 5,
+    "characterid": "3092"
+  },
+  {
+    "name": "Parting's Quiet Lament ",
+    "id": 1445,
+    "rarity": 4,
+    "characterid": "3136"
+  },
+  {
+    "name": "Wayfarer of the Dao",
+    "id": 1563,
+    "rarity": 5,
+    "characterid": "3141"
+  },
+  {
+    "name": "All Honor is but Dust",
+    "id": 1564,
+    "rarity": 5,
+    "characterid": "3137"
+  },
+  {
+    "name": "The Wind's Listener",
+    "id": 1446,
+    "rarity": 4,
+    "characterid": "3084"
+  },
+  {
+    "name": "The Fluttering Moment",
+    "id": 1565,
+    "rarity": 5,
+    "characterid": "3139"
+  },
+  {
+    "name": "Drown Out the Hustle",
+    "id": 1566,
+    "rarity": 5,
+    "characterid": "3142"
+  },
+  {
+    "name": "Luck Be a Lady",
+    "id": 1447,
+    "rarity": 4
+  },
+  {
+    "name": "The Riddle's Limit",
+    "id": 1567,
+    "rarity": 5,
+    "characterid": "3143"
+  },
+  {
+    "name": "The Soft Rain of Yesterday",
+    "id": 1568,
+    "rarity": 5,
+    "characterid": "3146"
+  },
+  {
+    "name": "Until I Am Me",
+    "id": 1569,
+    "rarity": 5,
+    "characterid": "3147"
+  },
+  {
+    "name": "The Silent Anthem",
+    "id": 1570,
+    "rarity": 5,
+    "characterid": "3144"
+  },
+  {
+    "name": "Growing Pains",
+    "id": 1448,
+    "rarity": 4,
+    "characterid": "3154"
+  },
+  {
+    "name": "A Dream Beyond Light",
+    "id": 1573,
+    "rarity": 5,
+    "characterid": "3145"
+  },
+  {
+    "name": "Where Light and Shadows Rest",
+    "id": 1574,
+    "rarity": 5,
+    "characterid": "3140"
+  },
+  {
+    "name": "Farewell to the Old Night",
+    "id": 1449,
+    "rarity": 4
+  },
+  {
+    "name": "The Art of Atoms",
+    "id": 1571,
+    "rarity": 5
+  },
+  {
+    "name": "The Dance of Science",
+    "id": 1572,
+    "rarity": 5
+  },
+  {
+    "name": "Dressing Up the Truth",
+    "id": 1450,
+    "rarity": 4
+  },
+  {
+    "name": "Arrow of Verdict",
+    "id": 1575,
+    "rarity": 5
+  },
+  {
+    "name": "Tides Held Within",
+    "id": 1576,
+    "rarity": 5
+  }
+]
