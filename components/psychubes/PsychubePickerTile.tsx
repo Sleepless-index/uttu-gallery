@@ -68,7 +68,7 @@ export function PsychubePickerTile({ id, name, recommended, selected, disabled =
             alt={name}
             fill
             sizes="(max-width: 640px) 33vw, (max-width: 1024px) 16vw, 130px"
-            className={`object-cover transition-opacity duration-200 ${artLoaded ? "opacity-100" : "opacity-0"}`}
+            className={`scale-125 object-cover transition-opacity duration-200 ${artLoaded ? "opacity-100" : "opacity-0"}`}
             onLoad={() => setArtLoaded(true)}
             onError={() => setArtErrored(true)}
           />
