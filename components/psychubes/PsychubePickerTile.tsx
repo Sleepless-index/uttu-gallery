@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { psychubeArtPath } from "@/lib/assets/psychubeAssets";
-import { rarityPlatePath } from "@/lib/assets/characterAssets";
 
 interface PsychubePickerTileProps {
   id: number;
@@ -32,7 +31,7 @@ function IconCheck() {
   );
 }
 
-export function PsychubePickerTile({ id, name, rarity, recommended, selected, disabled = false, onToggle }: PsychubePickerTileProps) {
+export function PsychubePickerTile({ id, name, recommended, selected, disabled = false, onToggle }: PsychubePickerTileProps) {
   const [artLoaded, setArtLoaded] = useState(false);
   const [artErrored, setArtErrored] = useState(false);
 
@@ -43,7 +42,7 @@ export function PsychubePickerTile({ id, name, rarity, recommended, selected, di
       disabled={disabled}
       aria-pressed={selected}
       aria-label={`Select ${name}`}
-      className={`group relative text-left outline-none ${disabled ? "cursor-not-allowed opacity-35" : ""}`}
+      className={`group relative flex flex-col gap-1 text-left outline-none ${disabled ? "cursor-not-allowed opacity-35" : ""}`}
     >
       {recommended && (
         <span className="absolute -top-1.5 left-1 z-20 rounded bg-[var(--color-accent)] px-1.5 py-0.5 text-[0.55rem] font-semibold text-white shadow">
@@ -57,7 +56,6 @@ export function PsychubePickerTile({ id, name, rarity, recommended, selected, di
         style={{ aspectRatio: "224 / 224" }}
       >
         <div className="absolute inset-0 bg-[var(--color-surface)]" />
-
         {!artLoaded && !artErrored && (
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute inset-0 animate-[shimmer_1.6s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
@@ -84,19 +82,6 @@ export function PsychubePickerTile({ id, name, rarity, recommended, selected, di
           </div>
         )}
 
-        <div className="absolute inset-x-0 bottom-0 h-[45%]">
-          <Image src={rarityPlatePath(rarity)} alt="" fill sizes="130px" className="object-cover object-bottom" />
-        </div>
-
-        <div className="absolute inset-x-0 bottom-1 z-10 px-1.5">
-          <span
-            className="block truncate text-center text-[0.62rem] font-semibold leading-tight text-white"
-            style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)", fontFamily: "var(--font-display)" }}
-          >
-            {name}
-          </span>
-        </div>
-
         {selected != null && (
           <div
             className={`pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-black/45 transition-opacity duration-150 ${selected ? "opacity-100" : "opacity-0"}`}
@@ -107,6 +92,13 @@ export function PsychubePickerTile({ id, name, rarity, recommended, selected, di
           </div>
         )}
       </div>
+
+      <span
+        className="line-clamp-2 text-center text-[0.62rem] font-semibold leading-tight text-[var(--color-text)]"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        {name}
+      </span>
     </button>
   );
 }

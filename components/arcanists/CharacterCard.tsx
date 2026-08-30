@@ -26,16 +26,12 @@ interface CharacterCardProps {
    * page, which is meant to browse all characters' default art, not reflect
    * what's been set on the Roster page. */
   galleryMode?: boolean;
-  /** Alignment of the bottom info stack (insight icon, level, name, portrait
-   * pips). Defaults to "center", matching every other page that renders this
-   * card. The Teams page passes "left". */
-  nameAlign?: "center" | "left";
-  /** Reserves space on the right of the name so it doesn't run under a
-   * badge overlaid on the card (e.g. Teams page's compact-mode psychube
-   * badge, bottom-right). Only meaningful together with nameAlign="left" —
-   * ignored otherwise since a centered name has no defined "right side" to
-   * protect. */
-  reserveRightForBadge?: boolean;
+  /** Hides the bottom progress stack (insight icon, Lv text, portrait pips)
+   * and shows just the centered name, same as before any level is logged.
+   * Used on the Teams page: none of this info appears in the exported team
+   * image, so showing it in the live Team UI is inconsistent clutter. The
+   * afflatus ribbon is unaffected — it's a separate element. */
+  hideProgressStack?: boolean;
 }
 
 // Rarity → CSS color var, for the tinted vignette. Falls back to the
@@ -69,14 +65,13 @@ export function CharacterCard({
   showI2Art = false,
   priority = false,
   galleryMode = false,
-  nameAlign = "center",
-  reserveRightForBadge = false,
+  hideProgressStack = false,
 }: CharacterCardProps) {
   const displayName = parseDisplayName(character.name);
   const [artLoaded, setArtLoaded] = useState(false);
   const [artErrored, setArtErrored] = useState(false);
   const [plateErrored, setPlateErrored] = useState(false);
-  const hasLevelInfo = !galleryMode && progress.level > 0;
+  const hasLevelInfo = !galleryMode && !hideProgressStack && progress.level > 0;
 
   // A selected garment or the Insight 2 look (picked in the detail modal's
   // carousel) takes priority over the base/I2-toggle art. If the user hasn't
@@ -176,7 +171,7 @@ export function CharacterCard({
         {/* Resonance badge — inside the card, top-right, with room from the
             edge. Translucent dark backdrop so the art shows through, same
             treatment as reference UI chrome elsewhere in the game. */}
-        {!galleryMode && progress.resonance > 0 && (
+        {!galleryMode && !hideProgressStack && progress.resonance > 0 && (
           <div className="absolute right-1.5 top-1.5 z-20 flex items-center gap-px rounded-md bg-black/45 px-1 py-0.5 text-[var(--color-text)] backdrop-blur-[2px] sm:right-2 sm:top-2 sm:gap-0.5 sm:px-1.5 sm:py-1">
             <span className="relative h-[8px] w-[8px] shrink-0 sm:h-[16px] sm:w-[16px]">
               <svg
@@ -215,13 +210,11 @@ export function CharacterCard({
 
         {/* Bottom info stack — name only until the user has logged a level;
             once level is set, show insight tier, level, name, and portrait
-            pips, matching the in-game card layout. */}
+            pips, matching the in-game card layout. hideProgressStack (Teams
+            page) always takes the name-only branch regardless of level,
+            since none of the progress info appears in the export anyway. */}
         {hasLevelInfo ? (
-          <div
-            className={`absolute inset-x-0 bottom-2 z-10 flex flex-col gap-0.5 ${
-              nameAlign === "left" ? "items-start px-2" : "items-center"
-            }`}
-          >
+          <div className="absolute inset-x-0 bottom-2 z-10 flex flex-col items-center gap-0.5">
             {progress.insight > 0 && (
               <span className="relative mb-0.5 h-3.5 w-3.5 shrink-0 sm:h-6 sm:w-6">
                 <Image
@@ -240,13 +233,7 @@ export function CharacterCard({
               Lv.{progress.level}
             </span>
             <span
-              className={`block text-[0.55rem] font-semibold leading-tight text-white sm:text-[0.95rem] ${
-                nameAlign === "left" ? "text-left" : "text-center"
-              } ${
-                nameAlign === "left" && reserveRightForBadge
-                  ? "w-[calc(100%-3.25rem)] truncate sm:w-[calc(100%-4rem)]"
-                  : "w-full px-1 sm:px-2"
-              } ${displayName.italic ? "italic" : ""}`}
+              className={`block w-full px-1 text-center text-[0.55rem] font-semibold leading-tight text-white sm:px-2 sm:text-[0.95rem] ${displayName.italic ? "italic" : ""}`}
               style={{
                 textShadow: "0 1px 4px rgba(0,0,0,0.9)",
                 fontFamily: "var(--font-display)",
@@ -269,13 +256,7 @@ export function CharacterCard({
         ) : (
           <div className="absolute inset-x-0 bottom-2 z-10 px-2">
             <span
-              className={`block text-[0.55rem] font-semibold leading-tight text-white sm:text-[0.95rem] ${
-                nameAlign === "left" ? "text-left" : "text-center"
-              } ${
-                nameAlign === "left" && reserveRightForBadge
-                  ? "w-[calc(100%-3.25rem)] truncate sm:w-[calc(100%-4rem)]"
-                  : "w-full px-1 sm:px-2"
-              } ${displayName.italic ? "italic" : ""}`}
+              className={`block w-full px-1 text-center text-[0.55rem] font-semibold leading-tight text-white sm:px-2 sm:text-[0.95rem] ${displayName.italic ? "italic" : ""}`}
               style={{
                 textShadow: "0 1px 4px rgba(0,0,0,0.9)",
                 fontFamily: "var(--font-display)",
@@ -286,7 +267,6 @@ export function CharacterCard({
             </span>
           </div>
         )}
-
       </div>
     </div>
   );

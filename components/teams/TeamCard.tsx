@@ -58,7 +58,7 @@ function IconTrash() {
 
 function IconPsychubeSlot() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
       <path d="M8 2.5v11M2.5 8h11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   );
@@ -82,9 +82,9 @@ function EmptySlot({ onClick }: { onClick: () => void }) {
   );
 }
 
-/** Compact-mode badge sitting in the bottom-right corner of a filled slot —
- * sized to be clearly legible (not a tiny corner icon), matching the size
- * shown in the in-game reference. No rarity plate under the art. */
+/** Compact-mode badge sitting middle-center, just above the character name
+ * (not the bottom-right corner anymore) — the name stays centered like
+ * every other page's CharacterCard. */
 function PsychubeCompactBadge({ psychubeId, onClick }: { psychubeId?: number; onClick: () => void }) {
   const psychube = psychubeId != null ? getPsychube(psychubeId) : undefined;
 
@@ -97,16 +97,10 @@ function PsychubeCompactBadge({ psychubeId, onClick }: { psychubeId?: number; on
       }}
       aria-label={psychube ? `Change equipped psychube (${psychube.name})` : "Equip a psychube"}
       title={psychube?.name ?? "Equip a psychube"}
-      className="absolute bottom-1.5 right-1.5 z-30 flex h-12 w-12 items-center justify-center overflow-hidden rounded-md border border-[var(--color-border-strong)] bg-black/60 text-[var(--color-text-faint)] shadow-md backdrop-blur-sm transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-text)] sm:h-14 sm:w-14"
+      className="absolute bottom-9 left-1/2 z-30 flex h-9 w-9 -translate-x-1/2 items-center justify-center overflow-hidden rounded-md border border-[var(--color-border-strong)] bg-black/70 text-[var(--color-text-faint)] shadow-md backdrop-blur-sm transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-text)] sm:bottom-11 sm:h-11 sm:w-11"
     >
       {psychube ? (
-        <Image
-          src={psychubeArtPath(psychube.id)}
-          alt={psychube.name}
-          fill
-          sizes="56px"
-          className="scale-125 object-cover"
-        />
+        <Image src={psychubeArtPath(psychube.id)} alt={psychube.name} fill sizes="44px" className="object-cover" />
       ) : (
         <IconPsychubeSlot />
       )}
@@ -139,12 +133,7 @@ function FilledSlot({
     <div className="flex flex-col gap-1.5">
       <div className="group/slot relative">
         <button type="button" onClick={onClick} className="block w-full text-left outline-none">
-          <CharacterCard
-            character={character}
-            progress={progress}
-            nameAlign="left"
-            reserveRightForBadge={psychubeDisplayMode === "compact"}
-          />
+          <CharacterCard character={character} progress={progress} hideProgressStack />
         </button>
         <button
           type="button"

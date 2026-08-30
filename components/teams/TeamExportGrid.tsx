@@ -27,23 +27,24 @@ function rarityTint(rarity: number): string {
 }
 
 /** Detailed-mode Psychube sub-card for export — plain <img>, mirrors
- * PsychubeDetailedRow but without Next's Image component. */
+ * PsychubeDetailedRow. Name wraps to 2 lines rather than truncating, and
+ * amp only shows once it's actually been raised above 0. */
 function ExportPsychubeDetailedRow({ psychubeId, progress }: { psychubeId: number; progress: PsychubeProgress }) {
   const psychube = getPsychube(psychubeId);
   if (!psychube) return null;
-  const amplifiable = canAmplify(psychube.rarity);
+  const showAmp = canAmplify(psychube.rarity) && progress.amp > 0;
 
   return (
     <div className="flex items-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-1.5" style={{ width: 140 }}>
       <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={psychubeArtPath(psychube.id)} alt={psychube.name} className="h-full w-full scale-125 object-cover" />
+        <img src={psychubeArtPath(psychube.id)} alt={psychube.name} className="h-full w-full object-cover" />
       </div>
-      <div className="flex min-w-0 flex-1 flex-col">
-        <span className="truncate text-[0.68rem] font-medium leading-tight text-[var(--color-text)]">{psychube.name}</span>
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <span className="line-clamp-2 text-[0.68rem] font-medium leading-tight text-[var(--color-text)]">{psychube.name}</span>
         <span className="text-[0.62rem] leading-tight text-white">
           Lv.{progress.level}
-          {amplifiable && <span className="ml-1.5 text-[var(--color-accent)]">A{progress.amp}</span>}
+          {showAmp && <span className="ml-1.5 text-[var(--color-accent)]">A{progress.amp}</span>}
         </span>
       </div>
     </div>
@@ -57,8 +58,8 @@ function ExportPsychubeDetailedRow({ psychubeId, progress }: { psychubeId: numbe
  * Art selection mirrors ExportCard/CharacterCard exactly: a selected
  * garment or an explicitly-picked Insight 2 look wins, falling back to
  * auto-I2 once insight has actually reached tier 2, and finally to base
- * art. Team exports previously always used base art regardless of what
- * was set on the Roster page — this keeps the two in sync. */
+ * art. No Lv/insight text is shown here — this has always matched
+ * TeamCard's hideProgressStack treatment, just centered on the name. */
 function ExportSlot({
   character,
   progress,
@@ -118,17 +119,15 @@ function ExportSlot({
       </div>
 
       {psychubeDisplayMode === "compact" && psychube && (
-        <div className="absolute bottom-2 right-2 z-10 h-14 w-14 overflow-hidden rounded-md border border-[var(--color-border-strong)] bg-black/60 shadow-md">
+        <div className="absolute bottom-9 left-1/2 z-10 h-11 w-11 -translate-x-1/2 overflow-hidden rounded-md border border-[var(--color-border-strong)] bg-black/70 shadow-md">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={psychubeArtPath(psychube.id)} alt={psychube.name} className="h-full w-full scale-125 object-cover" />
+          <img src={psychubeArtPath(psychube.id)} alt={psychube.name} className="h-full w-full object-cover" />
         </div>
       )}
 
       <div className="absolute inset-x-0 bottom-2 z-10 px-2">
         <span
-          className={`block truncate text-[1.05rem] font-semibold leading-tight text-white ${
-            psychubeDisplayMode === "compact" && psychube ? "w-[calc(100%-4rem)]" : "w-full"
-          } text-left ${displayName.italic ? "italic" : ""}`}
+          className={`block truncate text-center text-[1.05rem] font-semibold leading-tight text-white ${displayName.italic ? "italic" : ""}`}
           style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)", fontFamily: "var(--font-display)" }}
         >
           {displayName.text}

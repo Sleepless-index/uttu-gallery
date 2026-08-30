@@ -79,7 +79,7 @@ export default function MyPsychubesPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-4 gap-2 sm:gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
             {myPsychubes.map((p, i) => (
               <button key={p.id} type="button" onClick={() => setDetailId(p.id)} className="text-left outline-none">
                 <PsychubeCard psychube={p} progress={getOwnedPsychube(p.id) ?? { level: 0, amp: 0 }} priority={i < 12} />
