@@ -16,6 +16,7 @@ interface PsychubeDetailModalProps {
 
 const MAX_LEVEL = 60;
 const MAX_AMP = 5;
+const QUICK_LEVELS = [20, 40, 60];
 
 function IconClose() {
   return (
@@ -171,6 +172,24 @@ export function PsychubeDetailModal({ psychube, progress, onClose, onUpdateProgr
         <div className="flex-1 overflow-y-auto px-4 py-4">
           <div className="relative mx-auto mb-4 w-40 overflow-hidden rounded-lg border border-[var(--color-border)]" style={{ aspectRatio: "224 / 224" }}>
             <Image src={psychubeArtPath(psychube.id)} alt={psychube.name} fill sizes="160px" className="object-cover" />
+          </div>
+
+          <div className="mb-3 flex flex-wrap gap-2">
+            {QUICK_LEVELS.map((lvl) => (
+              <button
+                key={lvl}
+                type="button"
+                onClick={() => onUpdateProgress({ level: lvl })}
+                aria-pressed={progress.level === lvl}
+                className={`rounded-lg border px-2.5 py-1.5 text-[0.7rem] font-medium transition-colors ${
+                  progress.level === lvl
+                    ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-white"
+                    : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
+                }`}
+              >
+                Lv{lvl}
+              </button>
+            ))}
           </div>
 
           <div className="flex flex-col gap-3">

@@ -36,9 +36,9 @@ function ExportPsychubeDetailedRow({ psychubeId, progress }: { psychubeId: numbe
 
   return (
     <div className="flex items-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-1.5" style={{ width: 140 }}>
-      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded">
+      <div className="relative h-12 w-12 shrink-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={psychubeArtPath(psychube.id)} alt={psychube.name} className="h-full w-full object-cover" />
+        <img src={psychubeArtPath(psychube.id)} alt={psychube.name} className="h-full w-full object-contain" />
       </div>
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <span className="line-clamp-2 text-[0.68rem] font-medium leading-tight text-[var(--color-text)]">{psychube.name}</span>
@@ -119,9 +119,9 @@ function ExportSlot({
       </div>
 
       {psychubeDisplayMode === "compact" && psychube && (
-        <div className="absolute bottom-9 left-1/2 z-10 h-11 w-11 -translate-x-1/2 overflow-hidden rounded-md border border-[var(--color-border-strong)] bg-black/70 shadow-md">
+        <div className="absolute bottom-8 left-1/2 z-10 h-14 w-14 -translate-x-1/2 overflow-hidden rounded-md drop-shadow-lg">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={psychubeArtPath(psychube.id)} alt={psychube.name} className="h-full w-full object-cover" />
+          <img src={psychubeArtPath(psychube.id)} alt={psychube.name} className="h-full w-full object-contain drop-shadow-lg" />
         </div>
       )}
 

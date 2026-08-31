@@ -51,11 +51,10 @@ export function PsychubePickerTile({ id, name, recommended, selected, disabled =
       )}
 
       <div
-        className={`relative overflow-hidden rounded-md border transition-all duration-150
-          ${selected ? "border-[var(--color-accent)]" : "border-[var(--color-border)] group-hover:border-[var(--color-border-strong)]"}`}
+        className={`relative overflow-hidden rounded-md border transition-all duration-200 group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)]
+          ${selected ? "border-[var(--color-accent)]" : "border-transparent group-hover:-translate-y-1 group-hover:border-[var(--color-border-strong)] group-hover:shadow-lg"}`}
         style={{ aspectRatio: "224 / 224" }}
       >
-        <div className="absolute inset-0 bg-[var(--color-surface)]" />
         {!artLoaded && !artErrored && (
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute inset-0 animate-[shimmer_1.6s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
@@ -68,7 +67,7 @@ export function PsychubePickerTile({ id, name, recommended, selected, disabled =
             alt={name}
             fill
             sizes="(max-width: 640px) 33vw, (max-width: 1024px) 16vw, 130px"
-            className={`scale-125 object-cover transition-opacity duration-200 ${artLoaded ? "opacity-100" : "opacity-0"}`}
+            className={`object-contain transition-opacity duration-200 ${artLoaded ? "opacity-100" : "opacity-0"}`}
             onLoad={() => setArtLoaded(true)}
             onError={() => setArtErrored(true)}
           />

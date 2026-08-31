@@ -97,12 +97,14 @@ function PsychubeCompactBadge({ psychubeId, onClick }: { psychubeId?: number; on
       }}
       aria-label={psychube ? `Change equipped psychube (${psychube.name})` : "Equip a psychube"}
       title={psychube?.name ?? "Equip a psychube"}
-      className="absolute bottom-9 left-1/2 z-30 flex h-9 w-9 -translate-x-1/2 items-center justify-center overflow-hidden rounded-md border border-[var(--color-border-strong)] bg-black/70 text-[var(--color-text-faint)] shadow-md backdrop-blur-sm transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-text)] sm:bottom-11 sm:h-11 sm:w-11"
+      className="absolute bottom-8 left-1/2 z-30 flex h-11 w-11 -translate-x-1/2 items-center justify-center overflow-hidden rounded-md text-[var(--color-text-faint)] transition-transform hover:scale-110 hover:text-[var(--color-text)] sm:bottom-10 sm:h-14 sm:w-14"
     >
       {psychube ? (
-        <Image src={psychubeArtPath(psychube.id)} alt={psychube.name} fill sizes="44px" className="object-cover" />
+        <Image src={psychubeArtPath(psychube.id)} alt={psychube.name} fill sizes="56px" className="object-contain drop-shadow-lg" />
       ) : (
-        <IconPsychubeSlot />
+        <span className="flex h-7 w-7 items-center justify-center rounded-md bg-[var(--color-bg)] shadow-md sm:h-9 sm:w-9">
+          <IconPsychubeSlot />
+        </span>
       )}
     </button>
   );

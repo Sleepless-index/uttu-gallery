@@ -28,10 +28,10 @@ export function PsychubeCard({ psychube, progress, priority = false }: PsychubeC
 
   return (
     <div
-      className="relative overflow-hidden rounded-md border border-[var(--color-border)]"
+      className="relative overflow-hidden rounded-md border border-transparent transition-all duration-200 group-hover:-translate-y-1 group-hover:border-[var(--color-border-strong)] group-hover:shadow-lg group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)]"
       style={{ aspectRatio: "224 / 224" }}
     >
-      <div className="absolute inset-0 bg-[var(--color-surface)]" />
+      <div className="absolute inset-0 bg-[var(--color-bg)]" />
       {!artLoaded && !artErrored && (
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute inset-0 animate-[shimmer_1.6s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
@@ -45,7 +45,7 @@ export function PsychubeCard({ psychube, progress, priority = false }: PsychubeC
           fill
           priority={priority}
           sizes="(max-width: 640px) 33vw, (max-width: 1024px) 16vw, 140px"
-          className={`scale-125 object-cover transition-opacity duration-200 ${artLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`object-contain transition-opacity duration-200 ${artLoaded ? "opacity-100" : "opacity-0"}`}
           onLoad={() => setArtLoaded(true)}
           onError={() => setArtErrored(true)}
         />
@@ -67,7 +67,7 @@ export function PsychubeCard({ psychube, progress, priority = false }: PsychubeC
 
       <div className="absolute inset-x-0 bottom-1.5 z-10 flex flex-col items-center gap-0.5 px-1.5">
         <span
-          className="text-[0.68rem] font-semibold leading-tight text-white sm:text-[0.75rem]"
+          className="mb-0.5 text-[0.68rem] font-semibold leading-tight text-white sm:text-[0.75rem]"
           style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}
         >
           Lv.{progress.level}
