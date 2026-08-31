@@ -360,13 +360,11 @@ function GarmentCarousel({
               }}
             >
               <div
-                className={`relative w-full overflow-hidden rounded-lg border transition-colors duration-200
+                className={`relative w-full overflow-hidden border transition-colors duration-200
                   ${isCenter ? "border-[var(--color-accent)]" : "border-[var(--color-border)]"}`}
                 style={{
                   aspectRatio: "224 / 524",
-                  boxShadow: isCenter
-                    ? "0 0 0 4px var(--color-accent), 0 0 0 7px rgba(0,0,0,0.85)"
-                    : undefined,
+                  boxShadow: isCenter ? "0 0 0 4px var(--color-accent)" : undefined,
                 }}
               >
                 <Image
