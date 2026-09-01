@@ -51,15 +51,6 @@ function ExportPsychubeDetailedRow({ psychubeId, progress }: { psychubeId: numbe
   );
 }
 
-/** Static, plain-<img> replica of a filled team slot — used only for PNG
- * export, same reasoning as ExportCard: avoids Next's image optimizer proxy
- * so html-to-image can capture every card reliably.
- *
- * Art selection mirrors ExportCard/CharacterCard exactly: a selected
- * garment or an explicitly-picked Insight 2 look wins, falling back to
- * auto-I2 once insight has actually reached tier 2, and finally to base
- * art. No Lv/insight text is shown here — this has always matched
- * TeamCard's hideProgressStack treatment, just centered on the name. */
 function ExportSlot({
   character,
   progress,
@@ -201,19 +192,11 @@ interface TeamExportGridProps {
   getPsychubeProgress: (id: number) => PsychubeProgress;
   psychubeDisplayMode: PsychubeDisplayMode;
   profile: UserProfile;
-  /** How many teams stack per column before starting a new one — must match
-   * TEAMS_PER_COLUMN on the Teams page itself, or the export won't reflect
-   * what the page actually shows. */
   teamsPerColumn?: number;
 }
 
 const TEAM_BLOCK_WIDTH = 4 * 140 + 3 * 8 + 2 * 16; // 4 slots + gaps + block padding
 
-/** Fixed-width, non-responsive export target for the Teams page. Teams are
- * chunked into columns of `teamsPerColumn`, laid out side by side — the
- * same top-to-bottom-then-next-column flow as the live page's CSS grid —
- * so a roster of 7+ teams exports as multiple columns instead of one very
- * long single strip. */
 export function TeamExportGrid({
   teams,
   resolveCharacter,

@@ -36,11 +36,6 @@ interface PickerCardProps {
   disabled?: boolean;
 }
 
-/** The character tile used inside picker modals — deliberately smaller/
- * lighter than the roster's CharacterCard (no level/insight/portrait
- * chrome, since pickers show characters before any of that applies). Both
- * CharacterPickerModal and TeamSlotPickerModal render this exact component
- * so their grids always match at the same column count. */
 export function PickerCard({ id, name, rarity, afflatus, italic, selected, onToggle, disabled = false }: PickerCardProps) {
   const [artLoaded, setArtLoaded] = useState(false);
   const [artErrored, setArtErrored] = useState(false);

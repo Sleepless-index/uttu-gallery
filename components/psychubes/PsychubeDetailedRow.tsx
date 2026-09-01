@@ -8,11 +8,6 @@ interface PsychubeDetailedRowProps {
   progress: PsychubeProgress;
 }
 
-/** Horizontal thumbnail + name + Lv/Amplification readout, used under a
- * character card in Detailed team display mode. The name wraps to a 2nd
- * line rather than truncating, since psychube names can run long — losing
- * part of the name is worse than the row being a little taller. Amp is
- * only shown once it's actually been raised (A0 adds no information). */
 export function PsychubeDetailedRow({ psychube, progress }: PsychubeDetailedRowProps) {
   const amplifiable = canAmplify(psychube.rarity);
   const showAmp = amplifiable && progress.amp > 0;

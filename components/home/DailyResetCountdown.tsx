@@ -3,10 +3,7 @@
 import { useEffect, useState } from "react";
 import { FlipNumber } from "@/components/home/FlipNumber";
 
-/** Reverse:1999's daily reset is 18:00 server time (UTC+8), which is a
- * fixed 10:00 UTC every day — using UTC directly here means this is
- * correct for every viewer regardless of their own timezone, with no
- * per-timezone conversion needed. */
+/** Daily reset is 10:00 UTC (18:00 UTC+8 server time). */
 const RESET_HOUR_UTC = 10;
 
 function msUntilNextReset(from: Date): number {
@@ -31,12 +28,6 @@ function formatDuration(ms: number): { h: string; m: string; s: string } {
   };
 }
 
-/** "HH:MM:SS until daily reset" — ticks every second, always counting down
- * to the next reset boundary. Renders nothing until mounted so the
- * server-rendered markup never disagrees with the client's own clock.
- *
- * Each pair of digits renders as a boxed flip-clock style FlipNumber, using
- * the app's normal sans-serif font (not the date badge's display serif). */
 export function DailyResetCountdown() {
   const [remaining, setRemaining] = useState<number | null>(null);
 

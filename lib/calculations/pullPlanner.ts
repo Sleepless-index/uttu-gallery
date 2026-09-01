@@ -1,28 +1,20 @@
 /**
  * Exact-probability pull planner math for Reverse: 1999's 6★ gacha system.
  *
- * Confirmed mechanics (Prydwen Institute + in-game banner text, 2026):
+ * Mechanics:
  * - Base 6★ rate: 1.5%
- * - Soft pity: from the 60th consecutive pull with no 6★, rate jumps to 4%,
- *   then +2.5% per pull after that
- * - Hard pity: guaranteed 6★ at the 70th consecutive pull
- * - On any 6★ pull: 50% chance it's the featured (rate-up) character. If not,
- *   the *next* 6★ pulled is guaranteed to be the featured character.
- * - Pity and guarantee state carry over between banners of the same
- *   "Time-Limited Character Banner" type — they do not reset when a banner ends.
- *
- * This computes an exact probability distribution via dynamic programming
- * over (pity counter, guarantee flag, copies obtained), rather than Monte
- * Carlo simulation — matching the approach of reference planners for other
- * gacha games.
+ * - Soft pity: from 60th pull, 4%, then +2.5% per pull
+ * - Hard pity: guaranteed at 70th pull
+ * - 50/50 on 6★: featured or guaranteed next
+ * - Pity and guarantee carry over between banners
  */
 
 export interface PlannerStartState {
-  /** Pulls since the last 6★, on this banner's shared pity track. */
+  /** Pulls since the last 6★. */
   pity: number;
-  /** Whether the next 6★ pulled is guaranteed to be the featured character. */
+  /** Whether the next 6★ is guaranteed featured. */
   guaranteed: boolean;
-  /** Copies of the featured character already owned (0 = don't have them yet). */
+  /** Copies of the featured character already owned. */
   copies: number;
 }
 
@@ -37,17 +29,13 @@ function rateAt(pity: number): number {
 
 /**
  * Returns the probability distribution over "copies obtained" after
- * `numPulls` additional pulls, starting from `start`. Copies are capped at
- * `maxCopies` (6, for P5) — once reached, further pulls don't change the
- * copy count but pity/guarantee bookkeeping is dropped since it no longer
- * matters for this milestone.
+ * `numPulls` additional pulls, starting from `start`.
  */
 export function copyDistribution(
   numPulls: number,
   maxCopies: number,
   start: PlannerStartState
 ): Map<number, number> {
-  // Key encodes (pity, guaranteed, copies) as a single number for a fast Map.
   const key = (pity: number, guaranteed: boolean, copies: number) =>
     pity * 100000 + (guaranteed ? 50000 : 0) + copies;
 
@@ -73,9 +61,7 @@ export function copyDistribution(
       }
 
       const p6 = rateAt(pity);
-      // No 6★ this pull.
       add(key(pity + 1, guaranteed, copies), prob * (1 - p6));
-      // 6★ this pull.
       if (guaranteed) {
         add(key(0, false, copies + 1), prob * p6);
       } else {
@@ -100,7 +86,7 @@ export interface MilestoneResult {
   label: string;
   /** Chance of reaching this milestone within the given pull budget. */
   successChance: number;
-  /** Expected (average) number of pulls needed to reach this milestone, unbounded. */
+  /** Expected (average) number of pulls needed to reach this milestone. */
   averagePulls: number;
 }
 
@@ -134,12 +120,7 @@ export function calculateMilestones(
   return results;
 }
 
-/**
- * Expected number of additional pulls to reach `targetCopies`, computed by
- * summing the tail probabilities of the "pulls needed" distribution
- * (E[X] = sum P(X > n) for n = 0, 1, 2, ...). Walks the DP forward once,
- * incrementally, rather than recomputing the whole distribution per step.
- */
+/** Expected number of additional pulls to reach `targetCopies`. */
 function averagePullsForMilestone(
   targetCopies: number,
   start: PlannerStartState
@@ -151,7 +132,6 @@ function averagePullsForMilestone(
   let state = new Map<number, number>();
   state.set(key(start.pity, start.guaranteed, start.copies), 1);
 
-  // If the start state already meets the milestone, zero pulls needed.
   if (start.copies >= targetCopies) return 0;
 
   let expected = 0;
@@ -170,7 +150,6 @@ function averagePullsForMilestone(
       const pity = Math.floor(k / 100000);
 
       if (copies >= targetCopies) {
-        // Already reached; stop tracking this branch's pity/guarantee (frozen).
         add(key(pity, guaranteed, copies), prob);
         continue;
       }

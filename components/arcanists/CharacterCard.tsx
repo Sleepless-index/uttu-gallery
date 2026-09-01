@@ -20,22 +20,12 @@ interface CharacterCardProps {
   progress: CharacterProgress;
   showI2Art?: boolean;
   priority?: boolean;
-  /** Gallery mode ignores the user's tracked progress entirely — always
-   * shows base art (or the I2 toggle) and just the name, no level/insight/
-   * portrait overlay or selected-garment art. Used on the Arcanists gallery
-   * page, which is meant to browse all characters' default art, not reflect
-   * what's been set on the Roster page. */
+  /** Gallery mode: always shows base art (or I2 toggle) and just the name. */
   galleryMode?: boolean;
-  /** Hides the bottom progress stack (insight icon, Lv text, portrait pips)
-   * and shows just the centered name, same as before any level is logged.
-   * Used on the Teams page: none of this info appears in the exported team
-   * image, so showing it in the live Team UI is inconsistent clutter. The
-   * afflatus ribbon is unaffected — it's a separate element. */
+  /** Hides the bottom progress stack, shows just the centered name. */
   hideProgressStack?: boolean;
 }
 
-// Rarity → CSS color var, for the tinted vignette. Falls back to the
-// lowest rarity tone if an unexpected value shows up.
 const RARITY_TINT: Record<number, string> = {
   6: "var(--color-rarity-6)",
   5: "var(--color-rarity-5)",
@@ -48,8 +38,6 @@ function rarityTint(rarity: number): string {
   return RARITY_TINT[rarity] ?? RARITY_TINT[2];
 }
 
-// Initials fallback for when the art fails to load — first letter of
-// up to the first two words of the display name.
 function initials(name: string): string {
   return name
     .split(/\s+/)
@@ -73,13 +61,8 @@ export function CharacterCard({
   const [plateErrored, setPlateErrored] = useState(false);
   const hasLevelInfo = !galleryMode && !hideProgressStack && progress.level > 0;
 
-  // A selected garment or the Insight 2 look (picked in the detail modal's
-  // carousel) takes priority over the base/I2-toggle art. If the user hasn't
-  // made an explicit choice, characters that have actually reached Insight 2
-  // default to their I2 art automatically — this is what keeps the roster
-  // card in sync with whatever the carousel last centered on, or with the
-  // character's own progress when nothing's been picked yet. None of this
-  // applies in gallery mode, which always shows base (or I2-toggle) art.
+  // Selected garment or I2 look takes priority over base/I2-toggle art.
+  // Characters that reached Insight 2 default to I2 art automatically.
   const selectedGarment =
     !galleryMode && typeof progress.selectedGarmentId === "number"
       ? garmentsForCharacter(character.id).find((g) => g.id === progress.selectedGarmentId)
@@ -99,9 +82,7 @@ export function CharacterCard({
 
   return (
     <div className="group relative pt-3">
-      {/* Afflatus bookmark — hangs above the card's top edge, left side.
-          Scaled down on mobile but keeps the same overhang ratio as
-          the desktop version relative to the wrapper's pt-3. */}
+      {/* Afflatus bookmark */}
       <div className="absolute left-1.5 top-2 z-20 h-7 w-[1.1rem] sm:left-2 sm:top-1.5 sm:h-11 sm:w-7">
         <Image
           src={afflatusIconPath(character.afflatus)}
@@ -116,13 +97,10 @@ export function CharacterCard({
         className="relative overflow-hidden rounded-md border border-[var(--color-border)] transition-all duration-200 active:scale-[0.98] group-hover:-translate-y-1 group-hover:border-[var(--color-border-strong)] group-hover:shadow-lg group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)]"
         style={{ aspectRatio: "224 / 524" }}
       >
-        {/* Solid backdrop — the character art has transparent cutout edges,
-            so a plain dark fill sits behind it instead of a busy texture. */}
+        {/* Solid backdrop */}
         <div className="absolute inset-0 bg-[var(--color-surface)]" />
 
-        {/* Dark vignette, top to bottom, with a faint rarity-colored glow
-            breathing in at the base — stays inside the card's own
-            atmosphere, never touches UI chrome. */}
+        {/* Dark vignette with rarity glow */}
         <div
           className="absolute inset-0"
           style={{
@@ -130,18 +108,14 @@ export function CharacterCard({
           }}
         />
 
-        {/* Loading skeleton — shown until the art resolves (loaded or
-            errored), so the card never sits there looking dead. */}
+        {/* Loading skeleton */}
         {!artLoaded && !artErrored && (
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute inset-0 animate-[shimmer_1.6s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
           </div>
         )}
 
-        {/* Character art, full bleed, fills the entire card. `priority` is
-            only true for the first couple rows (see page.tsx) — those are
-            the images actually above the fold and worth eager-loading;
-            marking every card priority would defeat lazy loading entirely. */}
+        {/* Character art */}
         {!artErrored && (
           <Image
             src={artSrc}
@@ -155,8 +129,7 @@ export function CharacterCard({
           />
         )}
 
-        {/* Broken-art fallback — initials on a flat panel, so the card
-            still reads as intentional rather than an empty rectangle. */}
+        {/* Broken-art fallback */}
         {artErrored && (
           <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-surface-hover)]">
             <span
@@ -168,9 +141,7 @@ export function CharacterCard({
           </div>
         )}
 
-        {/* Resonance badge — inside the card, top-right, with room from the
-            edge. Translucent dark backdrop so the art shows through, same
-            treatment as reference UI chrome elsewhere in the game. */}
+        {/* Resonance badge */}
         {!galleryMode && !hideProgressStack && progress.resonance > 0 && (
           <div className="absolute right-1.5 top-1.5 z-20 flex items-center gap-px rounded-md bg-black/45 px-1 py-0.5 text-[var(--color-text)] backdrop-blur-[2px] sm:right-2 sm:top-2 sm:gap-0.5 sm:px-1.5 sm:py-1">
             <span className="relative h-[8px] w-[8px] shrink-0 sm:h-[16px] sm:w-[16px]">
@@ -194,7 +165,7 @@ export function CharacterCard({
           </div>
         )}
 
-        {/* Rarity plate, anchored to the bottom, original asset untouched */}
+        {/* Rarity plate */}
         {!plateErrored && (
           <div className="absolute inset-x-0 bottom-0 h-[55%]">
             <Image
@@ -208,11 +179,7 @@ export function CharacterCard({
           </div>
         )}
 
-        {/* Bottom info stack — name only until the user has logged a level;
-            once level is set, show insight tier, level, name, and portrait
-            pips, matching the in-game card layout. hideProgressStack (Teams
-            page) always takes the name-only branch regardless of level,
-            since none of the progress info appears in the export anyway. */}
+        {/* Bottom info stack */}
         {hasLevelInfo ? (
           <div className="absolute inset-x-0 bottom-2 z-10 flex flex-col items-center gap-0.5">
             {progress.insight > 0 && (

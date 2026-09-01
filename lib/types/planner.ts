@@ -1,7 +1,3 @@
-/** Confirmed F2P income constants (Prydwen Institute + official patch notes, 2026).
- * Used to convert a Cleardrops/Crystal Drops balance into an estimated
- * pull count. Kept here rather than a standalone file since the Pull
- * Planner is the only feature that still needs this. */
 export const CLEARDROP_RATES = {
   dailyPerDay: 90,
   weeklyPerWeek: 100,
