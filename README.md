@@ -5,7 +5,12 @@ Updated Version of [Reverse99-Index](https://github.com/Sleepless-index/Reverse-
 
 - Assets are sourced from the [Reverse-1999-CN-Asset](https://github.com/myssal/Reverse-1999-CN-Asset)
 - Claude
+<<<<<<< HEAD
 
 ---
 
 *Disclaimer: This project is fan-made and is not affiliated with or endorsed by Bluepoch.*
+=======
+---
+*Disclaimer: This project is fan-made and is not affiliated with or endorsed by Bluepoch.*
+>>>>>>> 0b7bb36bb171474cd4da7b0879049f12c14425e4
