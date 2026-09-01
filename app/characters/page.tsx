@@ -10,6 +10,7 @@ import { CharacterPickerModal } from "@/components/characters/CharacterPickerMod
 import { CharacterDetailModal } from "@/components/characters/CharacterDetailModal";
 import { ExportGrid } from "@/components/characters/ExportGrid";
 import { insightIconPath } from "@/lib/assets/characterAssets";
+import { assetUrl } from "@/lib/assets/assetUrl";
 
 function IconPlus() {
   return (
@@ -175,7 +176,7 @@ export default function MyCharactersPage() {
           <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
             <span className="relative h-40 w-40">
               <Image
-                src="/Icons/bg_xinxiang_wuzhuangtai.webp"
+                src={assetUrl("/Icons/bg_xinxiang_wuzhuangtai.webp")}
                 alt="Empty"
                 fill
                 sizes="160px"

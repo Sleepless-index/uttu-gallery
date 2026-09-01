@@ -10,6 +10,7 @@ import { TeamSlotPickerModal } from "@/components/teams/TeamSlotPickerModal";
 import { TeamSlotPsychubePickerModal } from "@/components/teams/TeamSlotPsychubePickerModal";
 import { TeamExportGrid } from "@/components/teams/TeamExportGrid";
 import { emptyPsychubeProgress } from "@/lib/types";
+import { assetUrl } from "@/lib/assets/assetUrl";
 
 /** Teams stack top-to-bottom within a column; once a column holds this many
  * teams, the next team starts a new column to the right, beside the first. */
@@ -206,7 +207,7 @@ export default function MyTeamsPage() {
           <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
             <span className="relative h-40 w-40">
               <Image
-                src="/Icons/bg_xinxiang_wuzhuangtai.webp"
+                src={assetUrl("/Icons/bg_xinxiang_wuzhuangtai.webp")}
                 alt="Empty"
                 fill
                 sizes="160px"

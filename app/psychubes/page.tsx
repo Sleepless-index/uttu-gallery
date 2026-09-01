@@ -7,6 +7,7 @@ import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { PsychubeCard } from "@/components/psychubes/PsychubeCard";
 import { PsychubePickerModal } from "@/components/psychubes/PsychubePickerModal";
 import { PsychubeDetailModal } from "@/components/psychubes/PsychubeDetailModal";
+import { assetUrl } from "@/lib/assets/assetUrl";
 
 function IconPlus() {
   return (
@@ -67,7 +68,7 @@ export default function MyPsychubesPage() {
         {myPsychubes.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
             <span className="relative h-40 w-40">
-              <Image src="/Icons/bg_xinxiang_wuzhuangtai.webp" alt="Empty" fill sizes="160px" className="object-contain" />
+              <Image src={assetUrl("/Icons/bg_xinxiang_wuzhuangtai.webp")} alt="Empty" fill sizes="160px" className="object-contain" />
             </span>
             <p className="max-w-xs text-[0.75rem] text-[var(--color-text-faint)]">Add the psychubes you own to start tracking them.</p>
             <button
