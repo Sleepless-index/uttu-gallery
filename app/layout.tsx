@@ -10,7 +10,7 @@ const zhongsong = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "UTTU Gallery — Reverse: 1999 Tracker",
+  title: "UTTU Gallery",
   description:
     "Track your Reverse: 1999 arcanist collection, portraits, resonance, and pull priority.",
 };
