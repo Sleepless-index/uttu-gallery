@@ -1,0 +1,75 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Lets you manually trigger a re-deploy from the Actions tab without
+  # needing an empty commit — handy after changing repo Pages settings.
+  workflow_dispatch:
+
+# Only one deployment runs at a time; a push that lands mid-deploy cancels
+# the in-flight run rather than queuing behind it, so Pages always ends up
+# serving the latest commit instead of an older one that happened to finish
+# building later.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static export
+        run: npm run build
+        env:
+          # Project-site Pages URL is /<repo-name>/, not /. This must match
+          # the actual repo name exactly (case-sensitive) or every asset
+          # and internal link will 404 once deployed. Update this if the
+          # repo is ever renamed.
+          NEXT_PUBLIC_BASE_PATH: /uttu-gallery
+        # next.config.ts has output: "export", so `next build` writes the
+        # full static site to ./out — no separate `next export` step needed
+        # (that command was removed in Next 14+).
+
+      - name: Add .nojekyll
+        run: touch out/.nojekyll
+        # GitHub Pages runs everything through Jekyll by default, which
+        # ignores files/folders starting with an underscore. Next's static
+        # export doesn't currently emit any (no _next output at the root —
+        # that's only for non-export builds), but .nojekyll is cheap
+        # insurance against Jekyll processing interfering with the export
+        # in any way, and is the documented standard practice for
+        # deploying non-Jekyll static sites to Pages.
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
