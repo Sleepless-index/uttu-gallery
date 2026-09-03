@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { psychubes } from "@/lib/data/psychubes";
+import { visiblePsychubes } from "@/lib/data/psychubes";
+import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { useBodyScrollLock } from "@/lib/hooks/useBodyScrollLock";
 import { PsychubePickerTile } from "@/components/psychubes/PsychubePickerTile";
 import type { PsychubeProgress } from "@/lib/types";
@@ -44,10 +45,11 @@ export function TeamSlotPsychubePickerModal({
 }: TeamSlotPsychubePickerModalProps) {
   useBodyScrollLock();
   const [search, setSearch] = useState("");
+  const { state } = useTrackerState();
 
   const owned = useMemo(
-    () => psychubes.filter((p) => ownedPsychubes[p.id]),
-    [ownedPsychubes]
+    () => visiblePsychubes(state.settings.hideCn).filter((p) => ownedPsychubes[p.id]),
+    [ownedPsychubes, state.settings.hideCn]
   );
 
   const filtered = useMemo(() => {
@@ -58,7 +60,7 @@ export function TeamSlotPsychubePickerModal({
         const aRec = a.characterIds?.includes(characterId) ? 1 : 0;
         const bRec = b.characterIds?.includes(characterId) ? 1 : 0;
         if (aRec !== bRec) return bRec - aRec;
-        return b.rarity - a.rarity || a.id - b.id;
+        return b.rarity - a.rarity || b.id - a.id;
       });
   }, [owned, search, characterId]);
 

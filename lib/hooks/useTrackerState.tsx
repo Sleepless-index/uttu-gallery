@@ -1,21 +1,23 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import {
   emptyProfile,
   emptyProgress,
   emptyPsychubeProgress,
+  emptySettings,
   emptyTrackerState,
   emptyTeamSlots,
   type CharacterProgress,
   type PsychubeProgress,
   type Team,
   type TeamSlot,
+  type TrackerSettings,
   type TrackerState,
   type UpcomingArcanist,
   type UserProfile,
 } from "@/lib/types";
-import { roster } from "@/lib/data/roster";
+import { visibleRoster } from "@/lib/data/roster";
 
 const STORAGE_KEY = "r1999-case-file";
 
@@ -31,13 +33,22 @@ function loadState(): TrackerState {
       profile: { ...emptyProfile(), ...parsed.profile },
       teams: parsed.teams ?? [],
       ownedPsychubes: parsed.ownedPsychubes ?? {},
+      settings: { ...emptySettings(), ...parsed.settings },
     };
   } catch {
     return emptyTrackerState();
   }
 }
 
-export function useTrackerState() {
+/** Everything useTrackerState() used to compute locally, now computed once
+ * here and shared via Context — see TrackerStateProvider below. Moving
+ * this from a plain hook to a Context was required because every page/
+ * modal that called useTrackerState() got its OWN independent useState,
+ * so a change made in one place (e.g. the Settings modal's Hide CN
+ * toggle) never reached any other already-mounted component until a full
+ * page reload re-hydrated from localStorage. A Context makes all of them
+ * read the same live state and re-render together. */
+function useTrackerStateInternal() {
   const [state, setState] = useState<TrackerState>(emptyTrackerState);
   const [hydrated, setHydrated] = useState(false);
 
@@ -218,9 +229,16 @@ export function useTrackerState() {
     []
   );
 
+  const updateSettings = useCallback((patch: Partial<TrackerSettings>) => {
+    setState((prev) => ({
+      ...prev,
+      settings: { ...emptySettings(), ...prev.settings, ...patch },
+    }));
+  }, []);
+
   const stats = {
-    owned: roster.filter((c) => state.progress[c.id]?.owned).length,
-    total: roster.length,
+    owned: visibleRoster(state.settings.hideCn).filter((c) => state.progress[c.id]?.owned).length,
+    total: visibleRoster(state.settings.hideCn).length,
   };
 
   return {
@@ -243,5 +261,29 @@ export function useTrackerState() {
     getOwnedPsychube,
     togglePsychubeOwned,
     updatePsychubeProgress,
+    updateSettings,
   };
+}
+
+type TrackerStateValue = ReturnType<typeof useTrackerStateInternal>;
+
+const TrackerStateContext = createContext<TrackerStateValue | null>(null);
+
+/** Wraps the app once, near the root layout, so every page and modal below
+ * it shares the exact same live tracker state instead of each maintaining
+ * its own out-of-sync copy. */
+export function TrackerStateProvider({ children }: { children: ReactNode }) {
+  const value = useTrackerStateInternal();
+  return <TrackerStateContext.Provider value={value}>{children}</TrackerStateContext.Provider>;
+}
+
+/** Same call shape as before the Context conversion — every existing call
+ * site (`const { state, ... } = useTrackerState()`) keeps working
+ * unchanged. Must be called under TrackerStateProvider. */
+export function useTrackerState(): TrackerStateValue {
+  const ctx = useContext(TrackerStateContext);
+  if (!ctx) {
+    throw new Error("useTrackerState must be used within a TrackerStateProvider");
+  }
+  return ctx;
 }

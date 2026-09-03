@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import type { RosterCharacter, CharacterProgress } from "@/lib/types";
-import { garmentsForCharacter } from "@/lib/data/garments";
+import { visibleGarmentsForCharacter } from "@/lib/data/garments";
 import { garmentCardPath, garmentDisplayName } from "@/lib/assets/garmentAssets";
 import {
   characterArtPath,
@@ -14,6 +14,7 @@ import {
 } from "@/lib/assets/characterAssets";
 import { parseDisplayName } from "@/lib/data/roster";
 import { useBodyScrollLock } from "@/lib/hooks/useBodyScrollLock";
+import { useTrackerState } from "@/lib/hooks/useTrackerState";
 
 interface CharacterDetailModalProps {
   character: RosterCharacter;
@@ -408,10 +409,11 @@ export function CharacterDetailModal({
   onClose,
   onUpdateProgress,
 }: CharacterDetailModalProps) {
+  const { state } = useTrackerState();
   const displayName = parseDisplayName(character.name);
   const characterGarments = useMemo(
-    () => garmentsForCharacter(character.id),
-    [character.id]
+    () => visibleGarmentsForCharacter(character.id, state.settings.hideCn),
+    [character.id, state.settings.hideCn]
   );
 
   // Base look is always the first carousel entry, followed by the Insight 2

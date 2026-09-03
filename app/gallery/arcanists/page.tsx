@@ -1,38 +1,29 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { roster } from "@/lib/data/roster";
+import { visibleRoster } from "@/lib/data/roster";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
+import { compareVersionDesc } from "@/lib/version";
 import { FilterBar } from "@/components/arcanists/FilterBar";
 import { CharacterCard } from "@/components/arcanists/CharacterCard";
-import type { Afflatus, RarityFilter, SortOrder } from "@/lib/types";
+import type { Afflatus, RarityFilter } from "@/lib/types";
 
 export default function ArcanistsPage() {
-  const { hydrated, getProgress } = useTrackerState();
+  const { state, hydrated, getProgress } = useTrackerState();
 
   const [rarity, setRarity] = useState<RarityFilter>("all");
   const [afflatus, setAfflatus] = useState<Afflatus | "all">("all");
-  const [sort, setSort] = useState<SortOrder>("default");
   const [showI2Art, setShowI2Art] = useState(false);
 
   const filtered = useMemo(() => {
-    const result = roster.filter((c) => {
+    const result = visibleRoster(state.settings.hideCn).filter((c) => {
       if (rarity !== "all" && c.rarity !== rarity) return false;
       if (afflatus !== "all" && c.afflatus !== afflatus) return false;
       return true;
     });
 
-    switch (sort) {
-      case "rarity-desc":
-        return [...result].sort((a, b) => b.rarity - a.rarity || a.name.localeCompare(b.name));
-      case "rarity-asc":
-        return [...result].sort((a, b) => a.rarity - b.rarity || a.name.localeCompare(b.name));
-      case "name-asc":
-        return [...result].sort((a, b) => a.name.localeCompare(b.name));
-      default:
-        return [...result].sort((a, b) => b.rarity - a.rarity || b.id - a.id);
-    }
-  }, [rarity, afflatus, sort]);
+    return [...result].sort((a, b) => b.rarity - a.rarity || compareVersionDesc(a.version, b.version));
+  }, [rarity, afflatus, state.settings.hideCn]);
 
   if (!hydrated) {
     return (
@@ -56,8 +47,6 @@ export default function ArcanistsPage() {
               onRarityChange={setRarity}
               afflatus={afflatus}
               onAfflatusChange={setAfflatus}
-              sort={sort}
-              onSortChange={setSort}
               showI2Art={showI2Art}
               onToggleI2Art={() => setShowI2Art((v) => !v)}
             />

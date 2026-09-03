@@ -7,6 +7,11 @@ export interface Psychube {
   rarity: Rarity;
   /** Character ids this Psychube is thematically tied to, if any (parsed from the "#"-joined source field). */
   characterIds?: number[];
+  /** Patch version this Psychube released in (e.g. "3.9"). Used to gate
+   * CN-only content via lib/version.ts — undefined for entries with no
+   * version data (data/psychubes.json doesn't carry this yet as of this
+   * writing), which are always shown regardless of the Hide CN setting. */
+  version?: string;
 }
 
 /** Only 4★ and 5★ Psychubes can be amplified. */

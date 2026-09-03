@@ -5,13 +5,13 @@ import {
   rarityPlatePath,
 } from "@/lib/assets/characterAssets";
 import { garmentCardPath } from "@/lib/assets/garmentAssets";
-import { garmentsForCharacter } from "@/lib/data/garments";
+import { visibleGarmentsForCharacter } from "@/lib/data/garments";
 import { parseDisplayName } from "@/lib/data/roster";
+import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { psychubeArtPath } from "@/lib/assets/psychubeAssets";
-import { getPsychube } from "@/lib/data/psychubes";
 import { canAmplify } from "@/lib/types";
 import { ExportHeader } from "@/components/export/ExportHeader";
-import type { RosterCharacter, CharacterProgress, PsychubeProgress, Team, UserProfile } from "@/lib/types";
+import type { Psychube, RosterCharacter, CharacterProgress, PsychubeProgress, Team, UserProfile } from "@/lib/types";
 import type { PsychubeDisplayMode } from "@/components/teams/TeamCard";
 
 const RARITY_TINT: Record<number, string> = {
@@ -29,9 +29,7 @@ function rarityTint(rarity: number): string {
 /** Detailed-mode Psychube sub-card for export — plain <img>, mirrors
  * PsychubeDetailedRow. Name wraps to 2 lines rather than truncating, and
  * amp only shows once it's actually been raised above 0. */
-function ExportPsychubeDetailedRow({ psychubeId, progress }: { psychubeId: number; progress: PsychubeProgress }) {
-  const psychube = getPsychube(psychubeId);
-  if (!psychube) return null;
+function ExportPsychubeDetailedRow({ psychube, progress }: { psychube: Psychube; progress: PsychubeProgress }) {
   const showAmp = canAmplify(psychube.rarity) && progress.amp > 0;
 
   return (
@@ -51,23 +49,32 @@ function ExportPsychubeDetailedRow({ psychubeId, progress }: { psychubeId: numbe
   );
 }
 
+/** Static, plain-<img> replica of a filled team slot — used only for PNG
+ * export, same reasoning as ExportCard: avoids Next's image optimizer proxy
+ * so html-to-image can capture every card reliably.
+ *
+ * Art selection mirrors ExportCard/CharacterCard exactly: a selected
+ * garment or an explicitly-picked Insight 2 look wins, falling back to
+ * auto-I2 once insight has actually reached tier 2, and finally to base
+ * art. No Lv/insight text is shown here — this has always matched
+ * TeamCard's hideProgressStack treatment, just centered on the name. */
 function ExportSlot({
   character,
   progress,
-  psychubeId,
+  psychube,
   psychubeDisplayMode,
 }: {
   character: RosterCharacter;
   progress: CharacterProgress;
-  psychubeId?: number;
+  psychube?: Psychube;
   psychubeDisplayMode: PsychubeDisplayMode;
 }) {
+  const { state } = useTrackerState();
   const displayName = parseDisplayName(character.name);
-  const psychube = psychubeId != null ? getPsychube(psychubeId) : undefined;
 
   const selectedGarment =
     typeof progress.selectedGarmentId === "number"
-      ? garmentsForCharacter(character.id).find((g) => g.id === progress.selectedGarmentId)
+      ? visibleGarmentsForCharacter(character.id, state.settings.hideCn).find((g) => g.id === progress.selectedGarmentId)
       : undefined;
   const selectedInsight2 = progress.selectedGarmentId === "insight2";
   const autoInsight2 =
@@ -142,6 +149,7 @@ interface TeamExportBlockProps {
   team: Team;
   displayNumber: number;
   resolveCharacter: (id: number) => RosterCharacter | undefined;
+  resolvePsychube: (id: number) => Psychube | undefined;
   getProgress: (id: number) => CharacterProgress;
   getPsychubeProgress: (id: number) => PsychubeProgress;
   psychubeDisplayMode: PsychubeDisplayMode;
@@ -151,6 +159,7 @@ function TeamExportBlock({
   team,
   displayNumber,
   resolveCharacter,
+  resolvePsychube,
   getProgress,
   getPsychubeProgress,
   psychubeDisplayMode,
@@ -171,11 +180,12 @@ function TeamExportBlock({
         {team.slots.map((slot, slotIndex) => {
           const character = slot != null ? resolveCharacter(slot.characterId) : undefined;
           if (!(character && slot)) return <ExportEmptySlot key={slotIndex} />;
+          const psychube = slot.psychubeId != null ? resolvePsychube(slot.psychubeId) : undefined;
           return (
             <div key={slotIndex} className="flex flex-col gap-1.5">
-              <ExportSlot character={character} progress={getProgress(character.id)} psychubeId={slot.psychubeId} psychubeDisplayMode={psychubeDisplayMode} />
-              {psychubeDisplayMode === "detailed" && slot.psychubeId != null && (
-                <ExportPsychubeDetailedRow psychubeId={slot.psychubeId} progress={getPsychubeProgress(slot.psychubeId)} />
+              <ExportSlot character={character} progress={getProgress(character.id)} psychube={psychube} psychubeDisplayMode={psychubeDisplayMode} />
+              {psychubeDisplayMode === "detailed" && psychube && (
+                <ExportPsychubeDetailedRow psychube={psychube} progress={getPsychubeProgress(psychube.id)} />
               )}
             </div>
           );
@@ -188,18 +198,28 @@ function TeamExportBlock({
 interface TeamExportGridProps {
   teams: Team[];
   resolveCharacter: (id: number) => RosterCharacter | undefined;
+  resolvePsychube: (id: number) => Psychube | undefined;
   getProgress: (id: number) => CharacterProgress;
   getPsychubeProgress: (id: number) => PsychubeProgress;
   psychubeDisplayMode: PsychubeDisplayMode;
   profile: UserProfile;
+  /** How many teams stack per column before starting a new one — must match
+   * TEAMS_PER_COLUMN on the Teams page itself, or the export won't reflect
+   * what the page actually shows. */
   teamsPerColumn?: number;
 }
 
 const TEAM_BLOCK_WIDTH = 4 * 140 + 3 * 8 + 2 * 16; // 4 slots + gaps + block padding
 
+/** Fixed-width, non-responsive export target for the Teams page. Teams are
+ * chunked into columns of `teamsPerColumn`, laid out side by side — the
+ * same top-to-bottom-then-next-column flow as the live page's CSS grid —
+ * so a roster of 7+ teams exports as multiple columns instead of one very
+ * long single strip. */
 export function TeamExportGrid({
   teams,
   resolveCharacter,
+  resolvePsychube,
   getProgress,
   getPsychubeProgress,
   psychubeDisplayMode,
@@ -223,6 +243,7 @@ export function TeamExportGrid({
                 team={team}
                 displayNumber={colIndex * teamsPerColumn + i + 1}
                 resolveCharacter={resolveCharacter}
+                resolvePsychube={resolvePsychube}
                 getProgress={getProgress}
                 getPsychubeProgress={getPsychubeProgress}
                 psychubeDisplayMode={psychubeDisplayMode}

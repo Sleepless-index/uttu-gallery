@@ -7,8 +7,9 @@ import {
   insightIconPath,
 } from "@/lib/assets/characterAssets";
 import { garmentCardPath } from "@/lib/assets/garmentAssets";
-import { garmentsForCharacter } from "@/lib/data/garments";
+import { visibleGarmentsForCharacter } from "@/lib/data/garments";
 import { parseDisplayName } from "@/lib/data/roster";
+import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { ExportHeader } from "@/components/export/ExportHeader";
 import type { RosterCharacter, CharacterProgress, UserProfile } from "@/lib/types";
 
@@ -35,12 +36,13 @@ interface ExportCardProps {
  * card reliably without CORS/timing flakiness. Visuals intentionally
  * mirror CharacterCard exactly; keep the two in sync if that card changes. */
 function ExportCard({ character, progress, showI2Art = false }: ExportCardProps) {
+  const { state } = useTrackerState();
   const displayName = parseDisplayName(character.name);
   const hasLevelInfo = progress.level > 0;
 
   const selectedGarment =
     typeof progress.selectedGarmentId === "number"
-      ? garmentsForCharacter(character.id).find((g) => g.id === progress.selectedGarmentId)
+      ? visibleGarmentsForCharacter(character.id, state.settings.hideCn).find((g) => g.id === progress.selectedGarmentId)
       : undefined;
   const selectedInsight2 = progress.selectedGarmentId === "insight2";
   const autoInsight2 =

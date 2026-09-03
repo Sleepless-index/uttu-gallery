@@ -2,7 +2,8 @@
 
 import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { roster } from "@/lib/data/roster";
+import { roster, getVisibleCharacter } from "@/lib/data/roster";
+import { isCnOnly } from "@/lib/version";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { exportPngToFile, describeExportError } from "@/lib/export/exportPngToFile";
 import { CharacterCard } from "@/components/arcanists/CharacterCard";
@@ -66,8 +67,9 @@ export default function MyCharactersPage() {
   const myCharacters = useMemo(() => {
     return roster
       .filter((c) => state.progress[c.id]?.owned)
+      .filter((c) => !state.settings.hideCn || !isCnOnly(c.version))
       .sort((a, b) => b.rarity - a.rarity || b.id - a.id);
-  }, [state.progress]);
+  }, [state.progress, state.settings.hideCn]);
 
   const selectedIds = useMemo(
     () => new Set(myCharacters.map((c) => c.id)),
@@ -237,7 +239,7 @@ export default function MyCharactersPage() {
       )}
 
       {detailCharacterId != null && (() => {
-        const detailCharacter = roster.find((c) => c.id === detailCharacterId);
+        const detailCharacter = getVisibleCharacter(detailCharacterId, state.settings.hideCn);
         if (!detailCharacter) return null;
         return (
           <CharacterDetailModal

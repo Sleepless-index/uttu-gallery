@@ -29,7 +29,9 @@ import {
   IconMyCharacters,
   IconMyTeams,
   IconMyPsychubes,
+  IconSettings,
 } from "@/components/layout/navIcons";
+import { SettingsModal } from "@/components/settings/SettingsModal";
 
 const MY_CHARACTERS_ITEM = {
   href: "/characters",
@@ -93,6 +95,7 @@ export function Sidebar() {
   const asideRef = useRef<HTMLElement>(null);
   const { state, hydrated, updateProfile } = useTrackerState();
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [editingUid, setEditingUid] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
@@ -222,7 +225,15 @@ export function Sidebar() {
             </div>
           </div>
 
-          <div className="flex h-11 flex-1 items-center justify-end overflow-hidden">
+          <div className="flex h-11 flex-1 items-center justify-end gap-1 overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(true)}
+              aria-label="Settings"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[var(--color-text-dim)] transition-colors hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+            >
+              <IconSettings />
+            </button>
             <DateBadge />
           </div>
         </div>
@@ -367,6 +378,23 @@ export function Sidebar() {
           ))}
         </nav>
 
+        {/* Settings gear — sits just above the profile card, same
+            expand/collapse treatment as everything else in the rail. */}
+        <div className={`shrink-0 ${expanded ? "px-2.5 pt-2" : "flex justify-center px-2.5 pt-2"}`}>
+          <button
+            type="button"
+            onClick={() => setSettingsOpen(true)}
+            title={expanded ? undefined : "Settings"}
+            className={`flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[0.8rem] font-medium text-[var(--color-text-dim)] transition-colors hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]
+              ${expanded ? "w-full" : "justify-center"}`}
+          >
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+              <IconSettings />
+            </span>
+            {expanded && <span className="truncate">Settings</span>}
+          </button>
+        </div>
+
         {/* Profile — bottom of sidebar, as its own card with breathing room */}
         {hydrated && (
           <div className={`shrink-0 ${expanded ? "px-2.5 pb-3 pt-2" : "flex justify-center px-2.5 pb-3 pt-2"}`}>
@@ -483,6 +511,8 @@ export function Sidebar() {
           }}
         />
       )}
+
+      {settingsOpen && <SettingsModal onClose={() => setSettingsOpen(false)} />}
     </>
   );
 }

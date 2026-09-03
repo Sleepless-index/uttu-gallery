@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { psychubes } from "@/lib/data/psychubes";
+import { visiblePsychubes } from "@/lib/data/psychubes";
+import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import type { RarityFilter } from "@/lib/types";
 import { useBodyScrollLock } from "@/lib/hooks/useBodyScrollLock";
 import { PsychubePickerTile } from "@/components/psychubes/PsychubePickerTile";
@@ -42,17 +43,18 @@ export function PsychubePickerModal({ selectedIds, onClose, onDone }: PsychubePi
   const [draft, setDraft] = useState<Set<number>>(() => new Set(selectedIds));
   const [search, setSearch] = useState("");
   const [rarity, setRarity] = useState<RarityFilter>("all");
+  const { state } = useTrackerState();
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return psychubes
+    return visiblePsychubes(state.settings.hideCn)
       .filter((p) => {
         if (q && !p.name.toLowerCase().includes(q)) return false;
         if (rarity !== "all" && p.rarity !== rarity) return false;
         return true;
       })
-      .sort((a, b) => b.rarity - a.rarity || a.id - b.id);
-  }, [search, rarity]);
+      .sort((a, b) => b.rarity - a.rarity || b.id - a.id);
+  }, [search, rarity, state.settings.hideCn]);
 
   function toggle(id: number) {
     setDraft((prev) => {

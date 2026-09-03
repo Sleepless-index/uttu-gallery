@@ -1,366 +1,428 @@
 [
   {
     "name": "Tides Held Within",
+    "version": "3.9",
     "id": 1576,
     "rarity": 5
   },
   {
     "name": "Arrow of Verdict",
+    "version": "3.9",
     "id": 1575,
     "rarity": 5
   },
   {
     "name": "The Dance of Science",
+    "version": "s02",
     "id": 1572,
     "rarity": 5
   },
   {
     "name": "The Art of Atoms",
+    "version": "s02",
     "id": 1571,
     "rarity": 5
   },
   {
     "name": "Where Light and Shadows Rest",
+    "version": "3.8",
     "id": 1574,
     "rarity": 5,
     "characterid": "3140"
   },
   {
     "name": "A Dream Beyond Light",
+    "version": "3.8",
     "id": 1573,
     "rarity": 5,
     "characterid": "3145"
   },
   {
     "name": "The Silent Anthem",
+    "version": "3.7",
     "id": 1570,
     "rarity": 5,
     "characterid": "3144"
   },
   {
     "name": "Until I Am Me",
+    "version": "3.7",
     "id": 1569,
     "rarity": 5,
     "characterid": "3147"
   },
   {
     "name": "The Soft Rain of Yesterday",
+    "version": "3.7",
     "id": 1568,
     "rarity": 5,
     "characterid": "3146"
   },
   {
     "name": "The Riddle's Limit",
+    "version": "3.6",
     "id": 1567,
     "rarity": 5,
     "characterid": "3143"
   },
   {
     "name": "Drown Out the Hustle",
+    "version": "3.5",
     "id": 1566,
     "rarity": 5,
     "characterid": "3142"
   },
   {
     "name": "The Fluttering Moment",
+    "version": "3.5",
     "id": 1565,
     "rarity": 5,
     "characterid": "3139"
   },
   {
     "name": "All Honor is but Dust",
+    "version": "3.4",
     "id": 1564,
     "rarity": 5,
     "characterid": "3137"
   },
   {
     "name": "Wayfarer of the Dao",
+    "version": "3.4",
     "id": 1563,
     "rarity": 5,
     "characterid": "3141"
   },
   {
     "name": "Across the Acheron",
+    "version": "3.3",
     "id": 1562,
     "rarity": 5,
     "characterid": "3092"
   },
   {
     "name": "Singleness of Heart",
+    "version": "3.3",
     "id": 1561,
     "rarity": 5,
     "characterid": "3127"
   },
   {
     "name": "Shadows in the Subconscious",
+    "version": "3.2",
     "id": 1560,
     "rarity": 5,
     "characterid": "3081"
   },
   {
     "name": "Her Willful Leap",
+    "version": "3.2",
     "id": 1559,
     "rarity": 5,
     "characterid": "3135"
   },
   {
     "name": "The Thousandfold Fate",
+    "version": "3.2",
     "id": 1558,
     "rarity": 5,
     "characterid": "3134"
   },
   {
     "name": "Bitter March of the Living",
+    "version": "3.1",
     "id": 1557,
     "rarity": 5,
     "characterid": "3132"
   },
   {
     "name": "The Wandering Improviser",
+    "version": "3.1",
     "id": 1556,
     "rarity": 5,
     "characterid": "3125"
   },
   {
     "name": "Into the Gentle Current",
+    "version": "s01",
     "id": 1555,
     "rarity": 5,
     "characterid": "3051"
   },
   {
     "name": "An Epic's End",
+    "version": "s01",
     "id": 1552,
     "rarity": 5,
     "characterid": "3124"
   },
   {
     "name": "As the Bell Tolls",
+    "version": "s01",
     "id": 1551,
     "rarity": 5,
     "characterid": "3123"
   },
   {
     "name": "Buds Yet to Bloom",
+    "version": "3.0",
     "id": 1554,
     "rarity": 5,
     "characterid": "3128"
   },
   {
     "name": "Homecoming Lament",
+    "version": "3.0",
     "id": 1553,
     "rarity": 5,
     "characterid": "3126"
   },
   {
     "name": "A Tingle of a Thought",
+    "version": "2.8",
     "id": 1550,
     "rarity": 5,
     "characterid": "3107"
   },
   {
     "name": "Family Mentor",
+    "version": "2.8",
     "id": 1549,
     "rarity": 5,
     "characterid": "3121"
   },
   {
     "name": "Embrace the Past",
+    "version": "2.8",
     "id": 1548,
     "rarity": 5,
     "characterid": "3120"
   },
   {
     "name": "Aurora After Winter",
+    "version": "2.7",
     "id": 1547,
     "rarity": 5,
     "characterid": "3117"
   },
   {
     "name": "Never-Ending Q&A",
+    "version": "2.7",
     "id": 1546,
     "rarity": 5,
     "characterid": "3116"
   },
   {
     "name": "Mental Cage",
+    "version": "2.6",
     "id": 1545,
     "rarity": 5,
     "characterid": "3113"
   },
   {
     "name": "The Final Roll",
+    "version": "2.6",
     "id": 1544,
     "rarity": 5,
     "characterid": "3114"
   },
   {
     "name": "Rehearsal of Dreams",
+    "version": "2.5",
     "id": 1543,
     "rarity": 5,
     "characterid": "3111"
   },
   {
     "name": "Ready on Call",
+    "version": "2.5",
     "id": 1542,
     "rarity": 5,
     "characterid": "3110"
   },
   {
     "name": "Cracks in the Shell",
+    "version": "2.4",
     "id": 1541,
     "rarity": 5,
     "characterid": "3109"
   },
   {
     "name": "Addio Coda",
+    "version": "2.4",
     "id": 1540,
     "rarity": 5,
     "characterid": "3108"
   },
   {
     "name": "On the Hand of Time",
+    "version": "2.3",
     "id": 1539,
     "rarity": 5,
     "characterid": "3105"
   },
   {
     "name": "Offbeat Strides",
+    "version": "2.3",
     "id": 1538,
     "rarity": 5,
     "characterid": "3104"
   },
   {
     "name": "Tiny Wish",
+    "version": "2.3",
     "id": 1535,
     "rarity": 5
   },
   {
     "name": "The Third Commitment",
+    "version": "2.2",
     "id": 1537,
     "rarity": 5,
     "characterid": "3102"
   },
   {
     "name": "Transcendent Love",
+    "version": "2.2",
     "id": 1536,
     "rarity": 5,
     "characterid": "3100"
   },
   {
     "name": "Stray Off the Path",
+    "version": "2.1",
     "id": 1534,
     "rarity": 5,
     "characterid": "3097"
   },
   {
     "name": "And the Maid Says",
+    "version": "2.1",
     "id": 1533,
     "rarity": 5,
     "characterid": "3098"
   },
   {
     "name": "Starlight Wellspring",
+    "version": "2.0",
     "id": 1532,
     "rarity": 5,
     "characterid": "3095"
   },
   {
     "name": "The Unbearable Lightness",
+    "version": "2.0",
     "id": 1531,
     "rarity": 5,
     "characterid": "3094"
   },
   {
     "name": "From the Depths",
+    "version": "2.0",
     "id": 1530,
     "rarity": 5,
     "characterid": "3088"
   },
   {
     "name": "Approaching Rain",
+    "version": "1.9",
     "id": 1529,
     "rarity": 5
   },
   {
     "name": "The Fighter's Best Wishes",
+    "version": "1.9",
     "id": 1528,
     "rarity": 5,
     "characterid": "3080"
   },
   {
     "name": "Steps Forward",
+    "version": "1.9",
     "id": 1527,
     "rarity": 5,
     "characterid": "3086"
   },
   {
     "name": "For Rehabilitation",
+    "version": "1.8",
     "id": 1526,
     "rarity": 5,
     "characterid": "3077#3004"
   },
   {
     "name": "Dawn Is Coming",
+    "version": "1.8",
     "id": 1525,
     "rarity": 5,
     "characterid": "3087"
   },
   {
     "name": "Another Story",
+    "version": "1.7",
     "id": 1524,
     "rarity": 5,
     "characterid": "3065"
   },
   {
     "name": "Knock on the Door",
+    "version": "1.7",
     "id": 1523,
     "rarity": 5,
     "characterid": "3081"
   },
   {
     "name": "Same Old Story",
+    "version": "1.6",
     "id": 1522,
     "rarity": 5,
     "characterid": "3084"
   },
   {
     "name": "Outside the City",
+    "version": "1.6",
     "id": 1521,
     "rarity": 5,
     "characterid": "3083#3004"
   },
   {
     "name": "Long Night Talk",
+    "version": "1.5",
     "id": 1515,
     "rarity": 5,
     "characterid": "3073#3039"
   },
   {
     "name": "Balance, Please",
+    "version": "1.4",
     "id": 1514,
     "rarity": 5,
     "characterid": "3079#3007"
   },
   {
     "name": "Silent and Adoring",
+    "version": "1.4",
     "id": 1513,
     "rarity": 5,
     "characterid": "3066#3070#3052#3004"
   },
   {
     "name": "The Carat of A Heart",
+    "version": "1.3",
     "id": 1512,
     "rarity": 5,
     "characterid": "3072"
   },
   {
     "name": "Beyond Wonderland",
+    "version": "1.2",
     "id": 1511,
     "rarity": 5,
     "characterid": "3053"
   },
   {
     "name": "Luxurious Leisure",
+    "version": "1.1",
     "id": 1509,
     "rarity": 5,
     "characterid": "3062"
@@ -402,185 +464,218 @@
   },
   {
     "name": "Dressing Up the Truth",
+    "version": "3.9",
     "id": 1450,
     "rarity": 4
   },
   {
     "name": "Farewell to the Old Night",
+    "version": "3.8",
     "id": 1449,
     "rarity": 4
   },
   {
     "name": "Growing Pains",
+    "version": "3.7",
     "id": 1448,
     "rarity": 4,
     "characterid": "3154"
   },
   {
     "name": "Luck Be a Lady",
+    "version": "3.5",
     "id": 1447,
     "rarity": 4
   },
   {
     "name": "The Wind's Listener",
+    "version": "3.4",
     "id": 1446,
     "rarity": 4,
     "characterid": "3084"
   },
   {
-    "name": "Parting's Quiet Lament ",
+    "name": "Parting's Quiet Lament",
+    "version": "3.3",
     "id": 1445,
     "rarity": 4,
     "characterid": "3136"
   },
   {
     "name": "In Their Figures",
+    "version": "3.2",
     "id": 1444,
     "rarity": 4,
     "characterid": "3041"
   },
   {
     "name": "Faded Epitaphs",
+    "version": "3.1",
     "id": 1443,
     "rarity": 4,
     "characterid": "3037"
   },
   {
     "name": "Substitutes and Simulacra",
+    "version": "3.0",
     "id": 1442,
     "rarity": 4
   },
   {
     "name": "Dust on the Roadside",
+    "version": "2.8",
     "id": 1441,
     "rarity": 4
   },
   {
     "name": "Melodies Old and New",
+    "version": "2.7",
     "id": 1440,
     "rarity": 4
   },
   {
     "name": "Off the Scene",
+    "version": "2.6",
     "id": 1439,
     "rarity": 4,
     "characterid": "3052#3045"
   },
   {
     "name": "Your Friendly Exorcist",
+    "version": "2.5",
     "id": 1438,
     "rarity": 4,
     "characterid": "3115#3039"
   },
   {
     "name": "Belt It Out",
+    "version": "2.4",
     "id": 1437,
     "rarity": 4,
     "characterid": "3025"
   },
   {
     "name": "One with the Flow",
+    "version": "2.3",
     "id": 1436,
     "rarity": 4,
     "characterid": "3095"
   },
   {
     "name": "The Severed and the Rest",
+    "version": "2.2",
     "id": 1435,
     "rarity": 4,
     "characterid": "3057"
   },
   {
     "name": "Falling for a Sweet Phenomenon",
+    "version": "2.2",
     "id": 1434,
     "rarity": 4,
     "characterid": "3066"
   },
   {
     "name": "The Unknown Artist",
+    "version": "2.1",
     "id": 1433,
     "rarity": 4,
     "characterid": "3064"
   },
   {
     "name": "Spinning Yarns",
+    "version": "2.1",
     "id": 1432,
     "rarity": 4,
     "characterid": "3060"
   },
   {
     "name": "You Deserve It",
+    "version": "2.0",
     "id": 1431,
     "rarity": 4,
     "characterid": "3047#3030"
   },
   {
     "name": "Her Mournful Face",
+    "version": "2.0",
     "id": 1430,
     "rarity": 4,
     "characterid": "3009"
   },
   {
     "name": "Going Along Alone",
+    "version": "1.9",
     "id": 1429,
     "rarity": 4,
     "characterid": "3006"
   },
   {
     "name": "In the Shadow",
+    "version": "1.9",
     "id": 1428,
     "rarity": 4,
     "characterid": "3088"
   },
   {
     "name": "Silent Gaze",
+    "version": "1.8",
     "id": 1427,
     "rarity": 4
   },
   {
     "name": "Night After Night",
+    "version": "1.8",
     "id": 1426,
     "rarity": 4,
     "characterid": "3051"
   },
   {
     "name": "Beyond the Gears",
+    "version": "1.7",
     "id": 1425,
     "rarity": 4
   },
   {
     "name": "His Tail",
+    "version": "1.7",
     "id": 1424,
     "rarity": 4
   },
   {
     "name": "A New Leaf",
+    "version": "1.6",
     "id": 1423,
     "rarity": 4
   },
   {
     "name": "Tea Break",
+    "version": "1.6",
     "id": 1422,
     "rarity": 4
   },
   {
-    "name": "Let's Set Sail ",
+    "name": "Let's Set Sail",
+    "version": "1.5",
     "id": 1421,
     "rarity": 4
   },
   {
     "name": "Take the Hard Journey",
+    "version": "1.5",
     "id": 1420,
     "rarity": 4
   },
   {
     "name": "Remaining Absurdity",
+    "version": "1.4",
     "id": 1414,
     "rarity": 4,
     "characterid": "3052#3043#3018"
   },
   {
     "name": "A Satisfied Eater",
+    "version": "1.4",
     "id": 1413,
     "rarity": 4,
     "characterid": "3051#3017#3015"

@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { roster } from "@/lib/data/roster";
-import { garments } from "@/lib/data/garments";
+import { garments, visibleGarments } from "@/lib/data/garments";
+import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { garmentCardPath, garmentDisplayName } from "@/lib/assets/garmentAssets";
 import { rarityPlatePath } from "@/lib/assets/characterAssets";
 import { parseDisplayName } from "@/lib/data/roster";
@@ -162,6 +163,7 @@ function GarmentCard({ garment, charName, rarity }: GarmentCardProps) {
 export function GarmentsView() {
   const [categoryFilter, setCategoryFilter] = useState<GarmentCategoryFilter>("all");
   const [search, setSearch] = useState("");
+  const { state } = useTrackerState();
 
   const characterRarityById = useMemo(() => {
     const map = new Map<number, number>();
@@ -176,13 +178,13 @@ export function GarmentsView() {
   }, []);
 
   const availableCategories = useMemo(() => {
-    const set = new Set(garments.map((g) => g.category));
+    const set = new Set(visibleGarments(state.settings.hideCn).map((g) => g.category));
     return CATEGORY_ORDER.filter((c) => set.has(c));
-  }, []);
+  }, [state.settings.hideCn]);
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
-    const list = garments.filter((g) => {
+    const list = visibleGarments(state.settings.hideCn).filter((g) => {
       if (categoryFilter !== "all" && g.category !== categoryFilter) return false;
       if (!query) return true;
       const charName = characterNameById.get(g.characterId) ?? "";
@@ -194,7 +196,7 @@ export function GarmentsView() {
       const rarityB = characterRarityById.get(b.characterId) ?? 0;
       return rarityB - rarityA || b.characterId - a.characterId;
     });
-  }, [categoryFilter, search, characterRarityById, characterNameById]);
+  }, [categoryFilter, search, characterRarityById, characterNameById, state.settings.hideCn]);
 
   return (
     <>

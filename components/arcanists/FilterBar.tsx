@@ -3,10 +3,9 @@
 import Image from "next/image";
 import { afflatusFilterIconPath } from "@/lib/afflatus";
 import { insightIconPath } from "@/lib/assets/characterAssets";
-import type { Afflatus, RarityFilter, SortOrder } from "@/lib/types";
+import type { Afflatus, RarityFilter } from "@/lib/types";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { FilterSection } from "@/components/ui/FilterSection";
-import { MenuItem } from "@/components/ui/MenuItem";
 import { IconFilter } from "@/components/ui/IconFilter";
 
 interface FilterBarProps {
@@ -14,8 +13,6 @@ interface FilterBarProps {
   onRarityChange: (r: RarityFilter) => void;
   afflatus: Afflatus | "all";
   onAfflatusChange: (a: Afflatus | "all") => void;
-  sort: SortOrder;
-  onSortChange: (s: SortOrder) => void;
   showI2Art: boolean;
   onToggleI2Art: () => void;
 }
@@ -38,20 +35,11 @@ const RARITY_LABEL: Record<string, string> = {
   "2": "2★ Only",
 };
 
-const SORT_LABEL: Record<SortOrder, string> = {
-  default: "Default order",
-  "rarity-desc": "Rarity: High to low",
-  "rarity-asc": "Rarity: Low to high",
-  "name-asc": "Name: A to Z",
-};
-
 export function FilterBar({
   rarity,
   onRarityChange,
   afflatus,
   onAfflatusChange,
-  sort,
-  onSortChange,
   showI2Art,
   onToggleI2Art,
 }: FilterBarProps) {
@@ -81,7 +69,7 @@ export function FilterBar({
       <Dropdown
         label="Filters"
         icon={<IconFilter />}
-        active={rarity !== "all" || afflatus !== "all" || sort !== "default"}
+        active={rarity !== "all" || afflatus !== "all"}
         panelClassName="right-0 w-72"
       >
         {(close) => (
@@ -145,22 +133,11 @@ export function FilterBar({
               </div>
             </FilterSection>
 
-            <FilterSection title="Sort">
-              <div className="flex flex-col gap-0.5">
-                {(Object.keys(SORT_LABEL) as SortOrder[]).map((key) => (
-                  <MenuItem key={key} active={sort === key} onClick={() => onSortChange(key)}>
-                    {SORT_LABEL[key]}
-                  </MenuItem>
-                ))}
-              </div>
-            </FilterSection>
-
             <div className="p-2">
               <button
                 onClick={() => {
                   onRarityChange("all");
                   onAfflatusChange("all");
-                  onSortChange("default");
                   close();
                 }}
                 className="w-full rounded-lg px-3 py-1.5 text-center text-[0.72rem] font-medium text-[var(--color-text-faint)] transition-colors hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"

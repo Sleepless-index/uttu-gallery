@@ -2,7 +2,8 @@
 
 import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { roster } from "@/lib/data/roster";
+import { roster, getVisibleCharacter } from "@/lib/data/roster";
+import { isCnOnly } from "@/lib/version";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { exportPngToFile, describeExportError } from "@/lib/export/exportPngToFile";
 import { TeamCard, type PsychubeDisplayMode } from "@/components/teams/TeamCard";
@@ -10,6 +11,7 @@ import { TeamSlotPickerModal } from "@/components/teams/TeamSlotPickerModal";
 import { TeamSlotPsychubePickerModal } from "@/components/teams/TeamSlotPsychubePickerModal";
 import { TeamExportGrid } from "@/components/teams/TeamExportGrid";
 import { emptyPsychubeProgress } from "@/lib/types";
+import { getVisiblePsychube } from "@/lib/data/psychubes";
 import { assetUrl } from "@/lib/assets/assetUrl";
 
 /** Teams stack top-to-bottom within a column; once a column holds this many
@@ -94,11 +96,12 @@ export default function MyTeamsPage() {
   const myCharacters = useMemo(() => {
     return roster
       .filter((c) => state.progress[c.id]?.owned)
+      .filter((c) => !state.settings.hideCn || !isCnOnly(c.version))
       .sort((a, b) => b.rarity - a.rarity || b.id - a.id);
-  }, [state.progress]);
+  }, [state.progress, state.settings.hideCn]);
 
-  const rosterById = useMemo(() => new Map(roster.map((c) => [c.id, c])), []);
-  const resolveCharacter = (id: number) => rosterById.get(id);
+  const resolveCharacter = (id: number) => getVisibleCharacter(id, state.settings.hideCn) ?? undefined;
+  const resolvePsychube = (id: number) => getVisiblePsychube(id, state.settings.hideCn) ?? undefined;
   const getPsychubeProgress = (id: number) => getOwnedPsychube(id) ?? emptyPsychubeProgress();
 
   // grid-auto-flow: column fills each column top-to-bottom before starting
@@ -238,6 +241,7 @@ export default function MyTeamsPage() {
                 team={team}
                 displayNumber={i + 1}
                 resolveCharacter={resolveCharacter}
+                resolvePsychube={resolvePsychube}
                 getProgress={getProgress}
                 getPsychubeProgress={getPsychubeProgress}
                 psychubeDisplayMode={psychubeDisplayMode}
@@ -263,6 +267,7 @@ export default function MyTeamsPage() {
           <TeamExportGrid
             teams={state.teams}
             resolveCharacter={resolveCharacter}
+            resolvePsychube={resolvePsychube}
             getProgress={getProgress}
             getPsychubeProgress={getPsychubeProgress}
             psychubeDisplayMode={psychubeDisplayMode}

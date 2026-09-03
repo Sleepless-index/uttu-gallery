@@ -19,6 +19,10 @@ export interface RosterCharacter {
   rarity: Rarity;
   afflatus: Afflatus;
   race: string;
+  /** Patch version this character released in (e.g. "3.9"), or an event
+   * tag like "s01". Used to gate CN-only content via lib/version.ts —
+   * undefined for entries with no version data, which are always shown. */
+  version?: string;
 }
 
 /** Per-character progress the user tracks locally. */
@@ -66,6 +70,17 @@ export const emptyProfile = (): UserProfile => ({
   pfpId: "170001",
 });
 
+export interface TrackerSettings {
+  /** When true (default), CN-only content (version > GLB_VERSION in
+   * lib/version.ts) is hidden everywhere — browse/add pickers, gallery,
+   * and the user's own Roster/Teams alike. */
+  hideCn: boolean;
+}
+
+export const emptySettings = (): TrackerSettings => ({
+  hideCn: true,
+});
+
 export interface TrackerState {
   progress: Record<number, CharacterProgress>;
   upcoming: UpcomingArcanist[];
@@ -73,6 +88,7 @@ export interface TrackerState {
   teams: Team[];
   /** Keyed by Psychube id. Presence of a key means owned. */
   ownedPsychubes: Record<number, PsychubeProgress>;
+  settings: TrackerSettings;
 }
 
 export const emptyTrackerState = (): TrackerState => ({
@@ -81,6 +97,7 @@ export const emptyTrackerState = (): TrackerState => ({
   profile: emptyProfile(),
   teams: [],
   ownedPsychubes: {},
+  settings: emptySettings(),
 });
 
 /** Number of character slots in a single team. */

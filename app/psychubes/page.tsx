@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import { psychubes, getPsychube } from "@/lib/data/psychubes";
+import { psychubes, getVisiblePsychube } from "@/lib/data/psychubes";
+import { isCnOnly } from "@/lib/version";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { PsychubeCard } from "@/components/psychubes/PsychubeCard";
 import { PsychubePickerModal } from "@/components/psychubes/PsychubePickerModal";
@@ -25,8 +26,9 @@ export default function MyPsychubesPage() {
   const myPsychubes = useMemo(() => {
     return psychubes
       .filter((p) => state.ownedPsychubes[p.id])
-      .sort((a, b) => b.rarity - a.rarity || a.id - b.id);
-  }, [state.ownedPsychubes]);
+      .filter((p) => !state.settings.hideCn || !isCnOnly(p.version))
+      .sort((a, b) => b.rarity - a.rarity || b.id - a.id);
+  }, [state.ownedPsychubes, state.settings.hideCn]);
 
   const selectedIds = useMemo(() => new Set(myPsychubes.map((p) => p.id)), [myPsychubes]);
 
@@ -47,7 +49,7 @@ export default function MyPsychubesPage() {
     );
   }
 
-  const detailPsychube = detailId != null ? getPsychube(detailId) : undefined;
+  const detailPsychube = detailId != null ? getVisiblePsychube(detailId, state.settings.hideCn) : undefined;
 
   return (
     <div className="flex min-h-screen flex-col bg-[var(--color-bg)]">

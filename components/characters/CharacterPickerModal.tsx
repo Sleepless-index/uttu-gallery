@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import { roster } from "@/lib/data/roster";
-import { parseDisplayName } from "@/lib/data/roster";
+import { visibleRoster, parseDisplayName } from "@/lib/data/roster";
+import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import { afflatusFilterIconPath } from "@/lib/afflatus";
 import type { Afflatus, RarityFilter } from "@/lib/types";
 import { Dropdown } from "@/components/ui/Dropdown";
@@ -54,10 +54,11 @@ export function CharacterPickerModal({ selectedIds, onClose, onDone }: Character
   const [search, setSearch] = useState("");
   const [rarity, setRarity] = useState<RarityFilter>("all");
   const [afflatus, setAfflatus] = useState<Afflatus | "all">("all");
+  const { state } = useTrackerState();
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return roster
+    return visibleRoster(state.settings.hideCn)
       .filter((c) => {
         if (q && !c.name.toLowerCase().includes(q)) return false;
         if (rarity !== "all" && c.rarity !== rarity) return false;
@@ -65,7 +66,7 @@ export function CharacterPickerModal({ selectedIds, onClose, onDone }: Character
         return true;
       })
       .sort((a, b) => b.rarity - a.rarity || b.id - a.id);
-  }, [search, rarity, afflatus]);
+  }, [search, rarity, afflatus, state.settings.hideCn]);
 
   function toggle(id: number) {
     setDraft((prev) => {

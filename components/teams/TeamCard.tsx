@@ -5,8 +5,7 @@ import Image from "next/image";
 import { CharacterCard } from "@/components/arcanists/CharacterCard";
 import { PsychubeDetailedRow } from "@/components/psychubes/PsychubeDetailedRow";
 import { psychubeArtPath } from "@/lib/assets/psychubeAssets";
-import { getPsychube } from "@/lib/data/psychubes";
-import type { CharacterProgress, PsychubeProgress, RosterCharacter, Team } from "@/lib/types";
+import type { CharacterProgress, Psychube, PsychubeProgress, RosterCharacter, Team } from "@/lib/types";
 
 export type PsychubeDisplayMode = "compact" | "detailed";
 
@@ -16,6 +15,10 @@ interface TeamCardProps {
   displayNumber: number;
   /** Resolves a slot's stored character id to its roster entry, if still owned. */
   resolveCharacter: (id: number) => RosterCharacter | undefined;
+  /** Resolves a slot's stored Psychube id, respecting the Hide CN setting —
+   * a CN-only equipped Psychube resolves to undefined here so the slot
+   * displays as unequipped, same as resolveCharacter does for characters. */
+  resolvePsychube: (id: number) => Psychube | undefined;
   getProgress: (id: number) => CharacterProgress;
   getPsychubeProgress: (id: number) => PsychubeProgress;
   psychubeDisplayMode: PsychubeDisplayMode;
@@ -85,9 +88,7 @@ function EmptySlot({ onClick }: { onClick: () => void }) {
 /** Compact-mode badge sitting middle-center, just above the character name
  * (not the bottom-right corner anymore) — the name stays centered like
  * every other page's CharacterCard. */
-function PsychubeCompactBadge({ psychubeId, onClick }: { psychubeId?: number; onClick: () => void }) {
-  const psychube = psychubeId != null ? getPsychube(psychubeId) : undefined;
-
+function PsychubeCompactBadge({ psychube, onClick }: { psychube?: Psychube; onClick: () => void }) {
   return (
     <button
       type="button"
@@ -113,7 +114,7 @@ function PsychubeCompactBadge({ psychubeId, onClick }: { psychubeId?: number; on
 function FilledSlot({
   character,
   progress,
-  psychubeId,
+  psychube,
   psychubeProgress,
   psychubeDisplayMode,
   onClick,
@@ -122,15 +123,13 @@ function FilledSlot({
 }: {
   character: RosterCharacter;
   progress: CharacterProgress;
-  psychubeId?: number;
+  psychube?: Psychube;
   psychubeProgress: PsychubeProgress;
   psychubeDisplayMode: PsychubeDisplayMode;
   onClick: () => void;
   onClear: () => void;
   onPsychubeClick: () => void;
 }) {
-  const psychube = psychubeId != null ? getPsychube(psychubeId) : undefined;
-
   return (
     <div className="flex flex-col gap-1.5">
       <div className="group/slot relative">
@@ -148,7 +147,7 @@ function FilledSlot({
         >
           <IconClose />
         </button>
-        {psychubeDisplayMode === "compact" && <PsychubeCompactBadge psychubeId={psychubeId} onClick={onPsychubeClick} />}
+        {psychubeDisplayMode === "compact" && <PsychubeCompactBadge psychube={psychube} onClick={onPsychubeClick} />}
       </div>
 
       {psychubeDisplayMode === "detailed" && (
@@ -171,6 +170,7 @@ export function TeamCard({
   team,
   displayNumber,
   resolveCharacter,
+  resolvePsychube,
   getProgress,
   getPsychubeProgress,
   psychubeDisplayMode,
@@ -255,7 +255,7 @@ export function TeamCard({
                 key={slotIndex}
                 character={character}
                 progress={getProgress(character.id)}
-                psychubeId={slot.psychubeId}
+                psychube={slot.psychubeId != null ? resolvePsychube(slot.psychubeId) : undefined}
                 psychubeProgress={slot.psychubeId != null ? getPsychubeProgress(slot.psychubeId) : { level: 0, amp: 0 }}
                 psychubeDisplayMode={psychubeDisplayMode}
                 onClick={() => onSlotClick(slotIndex)}
