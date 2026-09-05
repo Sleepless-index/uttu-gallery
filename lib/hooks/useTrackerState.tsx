@@ -170,6 +170,29 @@ function useTrackerStateInternal() {
     []
   );
 
+  /** Swaps two slots' entire contents (character AND equipped Psychube move
+   * together, as one unit) — used by drag-to-reorder within a team. Works
+   * whether either/both slots are empty: dragging a filled slot onto an
+   * empty one just moves it, no special-casing needed since a plain swap
+   * of `null` and a slot value already produces that result. */
+  const swapTeamSlots = useCallback(
+    (teamId: number, indexA: number, indexB: number) => {
+      if (indexA === indexB) return;
+      setState((prev) => ({
+        ...prev,
+        teams: prev.teams.map((t) => {
+          if (t.id !== teamId) return t;
+          const slots = [...t.slots];
+          const temp = slots[indexA];
+          slots[indexA] = slots[indexB];
+          slots[indexB] = temp;
+          return { ...t, slots };
+        }),
+      }));
+    },
+    []
+  );
+
   /** Equip (or clear, with psychubeId null) a Psychube on one team slot.
    * Enforces the one-Psychube-per-team rule: if another slot in the SAME
    * team already has this Psychube equipped, it's cleared from that slot. */
@@ -257,6 +280,7 @@ function useTrackerStateInternal() {
     renameTeam,
     deleteTeam,
     setTeamSlot,
+    swapTeamSlots,
     setSlotPsychube,
     getOwnedPsychube,
     togglePsychubeOwned,

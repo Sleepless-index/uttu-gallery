@@ -28,15 +28,35 @@ interface PickerCardProps {
   rarity: number;
   afflatus: Afflatus;
   italic: boolean;
-  /** Multi-select checkmark state (My Characters picker). Omit for a plain
-   * single-pick card (My Teams slot picker) — no checkmark overlay, no
-   * pressed/selected border treatment. */
+  /** Multi-select checkmark state. Omit for a plain single-pick card with
+   * no checkmark overlay or pressed/selected border treatment. */
   selected?: boolean;
+  /** Shows this number in the selected-state badge instead of a checkmark
+   * — used by the Team picker, where pick ORDER determines which slot a
+   * character lands in, so the number is the actually-useful information.
+   * Takes priority over the plain checkmark when both `selected` and this
+   * are set. */
+  selectedNumber?: number;
   onToggle: () => void;
   disabled?: boolean;
 }
 
-export function PickerCard({ id, name, rarity, afflatus, italic, selected, onToggle, disabled = false }: PickerCardProps) {
+/** The character tile used inside picker modals — deliberately smaller/
+ * lighter than the roster's CharacterCard (no level/insight/portrait
+ * chrome, since pickers show characters before any of that applies). Both
+ * CharacterPickerModal and TeamSlotPickerModal render this exact component
+ * so their grids always match at the same column count. */
+export function PickerCard({
+  id,
+  name,
+  rarity,
+  afflatus,
+  italic,
+  selected,
+  selectedNumber,
+  onToggle,
+  disabled = false,
+}: PickerCardProps) {
   const [artLoaded, setArtLoaded] = useState(false);
   const [artErrored, setArtErrored] = useState(false);
 
@@ -103,9 +123,15 @@ export function PickerCard({ id, name, rarity, afflatus, italic, selected, onTog
           <div
             className={`pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-black/45 transition-opacity duration-150 ${selected ? "opacity-100" : "opacity-0"}`}
           >
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-accent)] p-1.5 text-white shadow-lg sm:h-11 sm:w-11 sm:p-2.5">
-              <IconCheck />
-            </span>
+            {selectedNumber != null ? (
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-accent)] text-[0.85rem] font-bold text-white shadow-lg sm:h-11 sm:w-11 sm:text-[1.15rem]">
+                {selectedNumber}
+              </span>
+            ) : (
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-accent)] p-1.5 text-white shadow-lg sm:h-11 sm:w-11 sm:p-2.5">
+                <IconCheck />
+              </span>
+            )}
           </div>
         )}
       </div>

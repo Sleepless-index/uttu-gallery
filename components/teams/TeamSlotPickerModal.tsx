@@ -9,11 +9,19 @@ import { useBodyScrollLock } from "@/lib/hooks/useBodyScrollLock";
 interface TeamSlotPickerModalProps {
   /** The user's owned characters to choose from. */
   characters: RosterCharacter[];
-  /** Ids already placed in other slots of this team — shown but disabled,
-   * since the same character can't fill two slots in one team. */
-  disabledIds: Set<number>;
+  /** Ids currently occupying this team's slots — shown pre-selected
+   * (not disabled), since deselecting one is how a slot gets freed up to
+   * pick someone new into. */
+  currentIds: number[];
+  /** Total slots in the team — selection is capped here. */
+  teamSize: number;
   onClose: () => void;
-  onPick: (characterId: number) => void;
+  /** Called once with the final full selection, in pick order (existing
+   * members keep their relative order from `currentIds`, newly-added ones
+   * appended after in the order they were picked). The caller reconciles
+   * this against currentIds itself — removed ids vacate their slot, new
+   * ids fill vacated/empty slots in order. */
+  onConfirm: (characterIds: number[]) => void;
 }
 
 function IconClose() {
@@ -35,12 +43,19 @@ function IconSearch() {
 
 export function TeamSlotPickerModal({
   characters,
-  disabledIds,
+  currentIds,
+  teamSize,
   onClose,
-  onPick,
+  onConfirm,
 }: TeamSlotPickerModalProps) {
   useBodyScrollLock();
   const [search, setSearch] = useState("");
+  // Seeded with the team's current occupants, pre-selected — order matters
+  // (existing members first in their current order, newly-picked ones
+  // appended after), since that order is what the caller uses to decide
+  // which physical slot a newly-added character lands in.
+  const [pickedOrder, setPickedOrder] = useState<number[]>(currentIds);
+  const atCapacity = pickedOrder.length >= teamSize;
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -49,12 +64,23 @@ export function TeamSlotPickerModal({
       .sort((a, b) => b.rarity - a.rarity || b.id - a.id);
   }, [characters, search]);
 
+  function toggle(id: number) {
+    setPickedOrder((prev) => {
+      if (prev.includes(id)) return prev.filter((p) => p !== id);
+      if (prev.length >= teamSize) return prev; // at capacity, ignore new picks
+      return [...prev, id];
+    });
+  }
+
+  const hasChanges =
+    pickedOrder.length !== currentIds.length || pickedOrder.some((id, i) => id !== currentIds[i]);
+
   return (
     <div
       className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
-      aria-label="Choose a character"
+      aria-label="Choose characters"
       onClick={onClose}
     >
       <div
@@ -62,7 +88,12 @@ export function TeamSlotPickerModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex shrink-0 items-center justify-between gap-4 border-b border-[var(--color-border)] px-5 py-4">
-          <h2 className="text-[0.95rem] font-semibold text-[var(--color-text)]">Choose a Character</h2>
+          <div>
+            <h2 className="text-[0.95rem] font-semibold text-[var(--color-text)]">Choose Characters</h2>
+            <p className="text-[0.72rem] text-[var(--color-text-faint)]">
+              {pickedOrder.length} / {teamSize} selected
+            </p>
+          </div>
           <button
             onClick={onClose}
             aria-label="Close"
@@ -97,7 +128,12 @@ export function TeamSlotPickerModal({
           ) : (
             <div className="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7">
               {filtered.map((c) => {
-                const disabled = disabledIds.has(c.id);
+                const pickIndex = pickedOrder.indexOf(c.id);
+                const picked = pickIndex !== -1;
+                // Disabled only when at capacity and this one isn't
+                // already picked — picked ones (including current team
+                // members) stay clickable so they can be deselected.
+                const disabled = atCapacity && !picked;
                 const displayName = parseDisplayName(c.name);
                 return (
                   <PickerCard
@@ -108,12 +144,30 @@ export function TeamSlotPickerModal({
                     rarity={c.rarity}
                     afflatus={c.afflatus}
                     disabled={disabled}
-                    onToggle={() => onPick(c.id)}
+                    selected={picked}
+                    selectedNumber={picked ? pickIndex + 1 : undefined}
+                    onToggle={() => toggle(c.id)}
                   />
                 );
               })}
             </div>
           )}
+        </div>
+
+        <div className="flex shrink-0 items-center justify-end gap-2 border-t border-[var(--color-border)] px-5 py-3">
+          <button
+            onClick={onClose}
+            className="rounded-lg px-4 py-2 text-[0.78rem] font-medium text-[var(--color-text-dim)] transition-colors hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => onConfirm(pickedOrder)}
+            disabled={!hasChanges}
+            className="rounded-lg bg-[var(--color-accent)] px-5 py-2 text-[0.78rem] font-semibold text-white transition-colors hover:bg-[var(--color-accent-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Done
+          </button>
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ import { TeamCard, type PsychubeDisplayMode } from "@/components/teams/TeamCard"
 import { TeamSlotPickerModal } from "@/components/teams/TeamSlotPickerModal";
 import { TeamSlotPsychubePickerModal } from "@/components/teams/TeamSlotPsychubePickerModal";
 import { TeamExportGrid } from "@/components/teams/TeamExportGrid";
-import { emptyPsychubeProgress } from "@/lib/types";
+import { emptyPsychubeProgress, TEAM_SIZE } from "@/lib/types";
 import { getVisiblePsychube } from "@/lib/data/psychubes";
 import { assetUrl } from "@/lib/assets/assetUrl";
 
@@ -83,9 +83,10 @@ export default function MyTeamsPage() {
     renameTeam,
     deleteTeam,
     setTeamSlot,
+    swapTeamSlots,
     setSlotPsychube,
   } = useTrackerState();
-  const [activeSlot, setActiveSlot] = useState<{ teamId: number; slotIndex: number } | null>(null);
+  const [activeTeamId, setActiveTeamId] = useState<number | null>(null);
   const [activePsychubeSlot, setActivePsychubeSlot] = useState<{ teamId: number; slotIndex: number } | null>(null);
   const [psychubeDisplayMode, setPsychubeDisplayMode] = useState<PsychubeDisplayMode>("compact");
   const [exporting, setExporting] = useState(false);
@@ -109,14 +110,15 @@ export default function MyTeamsPage() {
   // column starting next to the 1st team" with zero manual chunking.
   const rowCount = Math.max(1, Math.min(TEAMS_PER_COLUMN, state.teams.length));
 
-  const activeTeam = activeSlot ? state.teams.find((t) => t.id === activeSlot.teamId) : undefined;
-  const disabledIdsForActiveSlot = useMemo(() => {
-    if (!activeTeam) return new Set<number>();
-    return new Set(
-      activeTeam.slots
-        .filter((s): s is NonNullable<typeof s> => s != null)
-        .map((s) => s.characterId)
-    );
+  const activeTeam = activeTeamId != null ? state.teams.find((t) => t.id === activeTeamId) : undefined;
+  // The picker pre-selects whoever currently occupies the team, in slot
+  // order — this is what lets it double as both "fill empty slots" and
+  // "swap out an existing member" without two separate code paths.
+  const currentIdsForActiveTeam = useMemo(() => {
+    if (!activeTeam) return [];
+    return activeTeam.slots
+      .filter((s): s is NonNullable<typeof s> => s != null)
+      .map((s) => s.characterId);
   }, [activeTeam]);
 
   const activePsychubeTeam = activePsychubeSlot ? state.teams.find((t) => t.id === activePsychubeSlot.teamId) : undefined;
@@ -247,9 +249,10 @@ export default function MyTeamsPage() {
                 psychubeDisplayMode={psychubeDisplayMode}
                 onRename={(name) => renameTeam(team.id, name)}
                 onDelete={() => deleteTeam(team.id)}
-                onSlotClick={(slotIndex) => setActiveSlot({ teamId: team.id, slotIndex })}
+                onSlotClick={() => setActiveTeamId(team.id)}
                 onSlotClear={(slotIndex) => setTeamSlot(team.id, slotIndex, null)}
                 onPsychubeClick={(slotIndex) => setActivePsychubeSlot({ teamId: team.id, slotIndex })}
+                onSlotSwap={(fromIndex, toIndex) => swapTeamSlots(team.id, fromIndex, toIndex)}
               />
             ))}
           </div>
@@ -277,14 +280,35 @@ export default function MyTeamsPage() {
         </div>
       </div>
 
-      {activeSlot && (
+      {activeTeamId != null && activeTeam && (
         <TeamSlotPickerModal
           characters={myCharacters}
-          disabledIds={disabledIdsForActiveSlot}
-          onClose={() => setActiveSlot(null)}
-          onPick={(characterId) => {
-            setTeamSlot(activeSlot.teamId, activeSlot.slotIndex, characterId);
-            setActiveSlot(null);
+          currentIds={currentIdsForActiveTeam}
+          teamSize={TEAM_SIZE}
+          onClose={() => setActiveTeamId(null)}
+          onConfirm={(nextIds) => {
+            const team = activeTeam;
+            const nextIdSet = new Set(nextIds);
+            // Slots whose occupant is staying keep their exact slot object
+            // (preserving any equipped Psychube) — only removed/added
+            // members actually change anything.
+            const keptSlots = team.slots.map((s) => (s && nextIdSet.has(s.characterId) ? s : null));
+            const newPickIds = nextIds.filter((id) => !currentIdsForActiveTeam.includes(id));
+            let pickCursor = 0;
+            const finalSlots = keptSlots.map((s) => {
+              if (s) return s;
+              if (pickCursor < newPickIds.length) {
+                return { characterId: newPickIds[pickCursor++] };
+              }
+              return null;
+            });
+            finalSlots.forEach((s, slotIndex) => {
+              const current = team.slots[slotIndex];
+              const currentId = current?.characterId ?? null;
+              const nextId = s?.characterId ?? null;
+              if (currentId !== nextId) setTeamSlot(activeTeamId, slotIndex, nextId);
+            });
+            setActiveTeamId(null);
           }}
         />
       )}

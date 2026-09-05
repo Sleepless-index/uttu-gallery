@@ -94,6 +94,20 @@ body {
   }
 }
 
+/* The floating card's "lift off the grid" animation when a drag starts —
+   grows slightly and gains its shadow over a beat, rather than appearing
+   at full size instantly. No tilt/rotation, just a clean scale-up. */
+@keyframes lift-card {
+  from {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+  }
+  to {
+    transform: scale(1.06);
+    filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.45));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

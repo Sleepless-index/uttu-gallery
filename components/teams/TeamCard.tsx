@@ -2,6 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  useDraggable,
+  useDroppable,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 import { CharacterCard } from "@/components/arcanists/CharacterCard";
 import { PsychubeDetailedRow } from "@/components/psychubes/PsychubeDetailedRow";
 import { psychubeArtPath } from "@/lib/assets/psychubeAssets";
@@ -27,6 +39,10 @@ interface TeamCardProps {
   onSlotClick: (slotIndex: number) => void;
   onSlotClear: (slotIndex: number) => void;
   onPsychubeClick: (slotIndex: number) => void;
+  /** Called with the two slot indices to swap when a filled slot is
+   * dropped onto another slot in this same team (dragging onto an empty
+   * slot just moves it, since swapping with null is the same as moving). */
+  onSlotSwap: (fromIndex: number, toIndex: number) => void;
 }
 
 function IconClose() {
@@ -68,16 +84,25 @@ function IconPsychubeSlot() {
 }
 
 /** Empty slot placeholder — same 224:524 aspect ratio as a filled CharacterCard
- * so the row stays aligned regardless of how many slots are filled. */
-function EmptySlot({ onClick }: { onClick: () => void }) {
+ * so the row stays aligned regardless of how many slots are filled. Also a
+ * drop target: dragging a filled slot here just moves it (empty ↔ filled
+ * "swap" degenerates into a move). */
+function EmptySlot({ slotIndex, onClick }: { slotIndex: number; onClick: () => void }) {
+  const { setNodeRef, isOver } = useDroppable({ id: `slot-${slotIndex}`, data: { slotIndex } });
+
   return (
     <button
+      ref={setNodeRef}
       type="button"
       onClick={onClick}
       aria-label="Add character to this slot"
-      className="group flex w-full items-center justify-center overflow-hidden rounded-md border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)]"
+      className={`group relative flex w-full items-center justify-center overflow-hidden rounded-md border border-dashed bg-[var(--color-surface)] transition-colors
+        ${isOver ? "border-[var(--color-accent)] bg-[var(--color-surface-hover)]" : "border-[var(--color-border)] hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)]"}`}
       style={{ aspectRatio: "224 / 524" }}
     >
+      <span className="absolute left-1/2 top-2 -translate-x-1/2 text-[0.7rem] font-semibold text-[var(--color-text-faint)] transition-colors group-hover:text-[var(--color-text-dim)] sm:top-3 sm:text-[0.85rem]">
+        {slotIndex + 1}
+      </span>
       <span className="text-[var(--color-text-faint)] transition-colors group-hover:text-[var(--color-text-dim)]">
         <IconPlus />
       </span>
@@ -111,31 +136,30 @@ function PsychubeCompactBadge({ psychube, onClick }: { psychube?: Psychube; onCl
   );
 }
 
-function FilledSlot({
+/** The actual visual content of a filled slot — character art, remove
+ * button, Psychube badge. Shared between the in-grid slot and the
+ * DragOverlay's floating copy, so the dragged card looks identical to
+ * what was just picked up. */
+function FilledSlotCard({
   character,
   progress,
   psychube,
-  psychubeProgress,
   psychubeDisplayMode,
-  onClick,
   onClear,
   onPsychubeClick,
 }: {
   character: RosterCharacter;
   progress: CharacterProgress;
   psychube?: Psychube;
-  psychubeProgress: PsychubeProgress;
   psychubeDisplayMode: PsychubeDisplayMode;
-  onClick: () => void;
-  onClear: () => void;
-  onPsychubeClick: () => void;
+  onClear?: () => void;
+  onPsychubeClick?: () => void;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <div className="group/slot relative">
-        <button type="button" onClick={onClick} className="block w-full text-left outline-none">
-          <CharacterCard character={character} progress={progress} hideProgressStack />
-        </button>
+    <div className="relative rounded-md">
+      <CharacterCard character={character} progress={progress} hideProgressStack />
+
+      {onClear && (
         <button
           type="button"
           onClick={(e) => {
@@ -147,7 +171,82 @@ function FilledSlot({
         >
           <IconClose />
         </button>
-        {psychubeDisplayMode === "compact" && <PsychubeCompactBadge psychube={psychube} onClick={onPsychubeClick} />}
+      )}
+      {psychubeDisplayMode === "compact" && onPsychubeClick && (
+        <PsychubeCompactBadge psychube={psychube} onClick={onPsychubeClick} />
+      )}
+    </div>
+  );
+}
+
+function FilledSlot({
+  slotIndex,
+  character,
+  progress,
+  psychube,
+  psychubeProgress,
+  psychubeDisplayMode,
+  onClick,
+  onClear,
+  onPsychubeClick,
+}: {
+  slotIndex: number;
+  character: RosterCharacter;
+  progress: CharacterProgress;
+  psychube?: Psychube;
+  psychubeProgress: PsychubeProgress;
+  psychubeDisplayMode: PsychubeDisplayMode;
+  onClick: () => void;
+  onClear: () => void;
+  onPsychubeClick: () => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDragRef,
+    isDragging,
+    transform,
+  } = useDraggable({ id: `slot-${slotIndex}`, data: { slotIndex } });
+  const { setNodeRef: setDropRef, isOver } = useDroppable({ id: `slot-${slotIndex}`, data: { slotIndex } });
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div
+        ref={(node) => {
+          setDragRef(node);
+          setDropRef(node);
+        }}
+        onClick={onClick}
+        {...listeners}
+        {...attributes}
+        onKeyDown={(e) => {
+          // role="button" on a plain <div> (from dnd-kit's `attributes`)
+          // doesn't get native Enter/Space-activates-click behavior the
+          // way a real <button> would, so that's added back here — while
+          // still calling dnd-kit's own onKeyDown first, since it drives
+          // keyboard-initiated dragging (arrow keys) and must keep running.
+          listeners?.onKeyDown?.(e);
+          if (e.key === "Enter" || e.key === " ") onClick();
+        }}
+        style={{
+          // While actively dragging, the card in its original grid slot
+          // fades and shrinks slightly — the DragOverlay below renders the
+          // floating copy that actually follows the pointer, so this is
+          // just "ghosting" the origin spot rather than moving this node.
+          transform: isDragging ? undefined : CSS.Translate.toString(transform),
+        }}
+        className={`group/slot relative cursor-pointer touch-none rounded-md text-left outline-none transition-[opacity,transform] duration-150 ${
+          isDragging ? "scale-95 opacity-30" : "opacity-100"
+        } ${isOver && !isDragging ? "ring-2 ring-[var(--color-accent)]" : ""}`}
+      >
+        <FilledSlotCard
+          character={character}
+          progress={progress}
+          psychube={psychube}
+          psychubeDisplayMode={psychubeDisplayMode}
+          onClear={onClear}
+          onPsychubeClick={onPsychubeClick}
+        />
       </div>
 
       {psychubeDisplayMode === "detailed" && (
@@ -179,10 +278,25 @@ export function TeamCard({
   onSlotClick,
   onSlotClear,
   onPsychubeClick,
+  onSlotSwap,
 }: TeamCardProps) {
   const [editingName, setEditingName] = useState(false);
   const [nameDraft, setNameDraft] = useState(team.name);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Hybrid activation (dnd-kit 6.3+ supports delay and distance together):
+  // the drag starts the instant EITHER condition is met — a deliberate
+  // move of `distance` px triggers immediately (movement itself is the
+  // trigger, no perceived delay), or holding roughly still for `delay`ms
+  // also triggers. `tolerance` bounds how far the pointer can drift during
+  // the delay countdown before that path is abandoned — but since
+  // `distance` is low enough to fire first in that case anyway, in
+  // practice a held-and-then-moved gesture always seems instant. A quick
+  // tap/click releases before either threshold and reaches the card's own
+  // onClick normally. PointerSensor covers mouse, pen, and touch.
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { delay: 200, tolerance: 8, distance: 5 } })
+  );
 
   useEffect(() => {
     if (editingName) {
@@ -196,6 +310,25 @@ export function TeamCard({
     onRename(trimmed || team.name);
     setEditingName(false);
   }
+
+  const [activeDragIndex, setActiveDragIndex] = useState<number | null>(null);
+
+  function handleDragStart(event: DragStartEvent) {
+    const slotIndex = event.active.data.current?.slotIndex;
+    if (typeof slotIndex === "number") setActiveDragIndex(slotIndex);
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    setActiveDragIndex(null);
+    const fromIndex = event.active.data.current?.slotIndex;
+    const toIndex = event.over?.data.current?.slotIndex;
+    if (typeof fromIndex === "number" && typeof toIndex === "number" && fromIndex !== toIndex) {
+      onSlotSwap(fromIndex, toIndex);
+    }
+  }
+
+  const activeDragSlot = activeDragIndex != null ? team.slots[activeDragIndex] : null;
+  const activeDragCharacter = activeDragSlot ? resolveCharacter(activeDragSlot.characterId) : undefined;
 
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-4">
@@ -246,27 +379,48 @@ export function TeamCard({
         </button>
       </div>
 
-      <div className="grid gap-2 [grid-template-columns:repeat(4,minmax(0,1fr))]">
-        {team.slots.map((slot, slotIndex) => {
-          const character = slot != null ? resolveCharacter(slot.characterId) : undefined;
-          if (character && slot) {
-            return (
-              <FilledSlot
-                key={slotIndex}
-                character={character}
-                progress={getProgress(character.id)}
-                psychube={slot.psychubeId != null ? resolvePsychube(slot.psychubeId) : undefined}
-                psychubeProgress={slot.psychubeId != null ? getPsychubeProgress(slot.psychubeId) : { level: 0, amp: 0 }}
+      <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <div className="grid gap-2 [grid-template-columns:repeat(4,minmax(0,1fr))]">
+          {team.slots.map((slot, slotIndex) => {
+            const character = slot != null ? resolveCharacter(slot.characterId) : undefined;
+            if (character && slot) {
+              return (
+                <FilledSlot
+                  key={slotIndex}
+                  slotIndex={slotIndex}
+                  character={character}
+                  progress={getProgress(character.id)}
+                  psychube={slot.psychubeId != null ? resolvePsychube(slot.psychubeId) : undefined}
+                  psychubeProgress={slot.psychubeId != null ? getPsychubeProgress(slot.psychubeId) : { level: 0, amp: 0 }}
+                  psychubeDisplayMode={psychubeDisplayMode}
+                  onClick={() => onSlotClick(slotIndex)}
+                  onClear={() => onSlotClear(slotIndex)}
+                  onPsychubeClick={() => onPsychubeClick(slotIndex)}
+                />
+              );
+            }
+            return <EmptySlot key={slotIndex} slotIndex={slotIndex} onClick={() => onSlotClick(slotIndex)} />;
+          })}
+        </div>
+
+        {/* The floating copy that actually follows the pointer/finger
+            while dragging — scaled up and shadowed to read as "lifted"
+            off the grid, separate from the origin slot's own fade/shrink
+            (see FilledSlot). Rendered in a portal by dnd-kit, so it isn't
+            clipped by this card's own overflow or stacking context. */}
+        <DragOverlay dropAnimation={{ duration: 220, easing: "cubic-bezier(0.2, 0, 0, 1)" }}>
+          {activeDragCharacter && activeDragSlot ? (
+            <div className="w-[140px] origin-center animate-[lift-card_180ms_cubic-bezier(0.2,0,0,1)_forwards]">
+              <FilledSlotCard
+                character={activeDragCharacter}
+                progress={getProgress(activeDragCharacter.id)}
+                psychube={activeDragSlot.psychubeId != null ? resolvePsychube(activeDragSlot.psychubeId) : undefined}
                 psychubeDisplayMode={psychubeDisplayMode}
-                onClick={() => onSlotClick(slotIndex)}
-                onClear={() => onSlotClear(slotIndex)}
-                onPsychubeClick={() => onPsychubeClick(slotIndex)}
               />
-            );
-          }
-          return <EmptySlot key={slotIndex} onClick={() => onSlotClick(slotIndex)} />;
-        })}
-      </div>
+            </div>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
     </div>
   );
 }

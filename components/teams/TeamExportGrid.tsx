@@ -49,15 +49,6 @@ function ExportPsychubeDetailedRow({ psychube, progress }: { psychube: Psychube;
   );
 }
 
-/** Static, plain-<img> replica of a filled team slot — used only for PNG
- * export, same reasoning as ExportCard: avoids Next's image optimizer proxy
- * so html-to-image can capture every card reliably.
- *
- * Art selection mirrors ExportCard/CharacterCard exactly: a selected
- * garment or an explicitly-picked Insight 2 look wins, falling back to
- * auto-I2 once insight has actually reached tier 2, and finally to base
- * art. No Lv/insight text is shown here — this has always matched
- * TeamCard's hideProgressStack treatment, just centered on the name. */
 function ExportSlot({
   character,
   progress,
