@@ -59,10 +59,21 @@ export function TeamSlotPickerModal({
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return characters
-      .filter((c) => !q || c.name.toLowerCase().includes(q))
-      .sort((a, b) => b.rarity - a.rarity || b.id - a.id);
-  }, [characters, search]);
+    const matches = characters.filter((c) => !q || c.name.toLowerCase().includes(q));
+    // Selected characters float to the top (in pick order) so deselecting
+    // one — especially one picked from further down the list — doesn't
+    // require scrolling back to find it. Unselected characters keep the
+    // usual rarity/id sort beneath them.
+    const pickedIndex = new Map(pickedOrder.map((id, i) => [id, i]));
+    return [...matches].sort((a, b) => {
+      const aPicked = pickedIndex.get(a.id);
+      const bPicked = pickedIndex.get(b.id);
+      if (aPicked != null && bPicked != null) return aPicked - bPicked;
+      if (aPicked != null) return -1;
+      if (bPicked != null) return 1;
+      return b.rarity - a.rarity || b.id - a.id;
+    });
+  }, [characters, search, pickedOrder]);
 
   function toggle(id: number) {
     setPickedOrder((prev) => {

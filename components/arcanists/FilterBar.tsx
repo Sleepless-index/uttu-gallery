@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { afflatusFilterIconPath } from "@/lib/afflatus";
-import { insightIconPath } from "@/lib/assets/characterAssets";
+import { afflatusIconPath, insightIconPath } from "@/lib/assets/characterAssets";
 import type { Afflatus, RarityFilter } from "@/lib/types";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { FilterSection } from "@/components/ui/FilterSection";
@@ -70,7 +69,7 @@ export function FilterBar({
         label="Filters"
         icon={<IconFilter />}
         active={rarity !== "all" || afflatus !== "all"}
-        panelClassName="right-0 w-72"
+        panelClassName="right-0 w-[min(18rem,calc(100vw-2rem))]"
       >
         {(close) => (
           <div>
@@ -119,7 +118,7 @@ export function FilterBar({
                   >
                     <span className="relative h-4 w-4 shrink-0">
                       <Image
-                        src={afflatusFilterIconPath(a)}
+                        src={afflatusIconPath(a)}
                         alt=""
                         fill
                         sizes="16px"

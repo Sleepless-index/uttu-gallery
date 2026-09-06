@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { visibleRoster, parseDisplayName } from "@/lib/data/roster";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
-import { afflatusFilterIconPath } from "@/lib/afflatus";
+import { afflatusIconPath } from "@/lib/assets/characterAssets";
 import type { Afflatus, RarityFilter } from "@/lib/types";
 import { Dropdown } from "@/components/ui/Dropdown";
 import { FilterSection } from "@/components/ui/FilterSection";
@@ -116,7 +116,7 @@ export function CharacterPickerModal({ selectedIds, onClose, onDone }: Character
             label="Filters"
             icon={<IconFilter />}
             active={rarity !== "all" || afflatus !== "all"}
-            panelClassName="left-0 w-72"
+            panelClassName="right-0 w-[min(18rem,calc(100vw-2rem))]"
           >
             {(close) => (
               <div>
@@ -153,7 +153,7 @@ export function CharacterPickerModal({ selectedIds, onClose, onDone }: Character
                       >
                         <span className="relative h-4 w-4 shrink-0">
                           <Image
-                            src={afflatusFilterIconPath(a)}
+                            src={afflatusIconPath(a)}
                             alt=""
                             fill
                             sizes="16px"
