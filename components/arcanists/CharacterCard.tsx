@@ -21,22 +21,11 @@ interface CharacterCardProps {
   progress: CharacterProgress;
   showI2Art?: boolean;
   priority?: boolean;
-  /** Gallery mode ignores the user's tracked progress entirely — always
-   * shows base art (or the I2 toggle) and just the name, no level/insight/
-   * portrait overlay or selected-garment art. Used on the Arcanists gallery
-   * page, which is meant to browse all characters' default art, not reflect
-   * what's been set on the Roster page. */
   galleryMode?: boolean;
-  /** Hides the bottom progress stack (insight icon, Lv text, portrait pips)
-   * and shows just the centered name, same as before any level is logged.
-   * Used on the Teams page: none of this info appears in the exported team
-   * image, so showing it in the live Team UI is inconsistent clutter. The
-   * afflatus ribbon is unaffected — it's a separate element. */
   hideProgressStack?: boolean;
+  isDropTarget?: boolean;
 }
 
-// Rarity → CSS color var, for the tinted vignette. Falls back to the
-// lowest rarity tone if an unexpected value shows up.
 const RARITY_TINT: Record<number, string> = {
   6: "var(--color-rarity-6)",
   5: "var(--color-rarity-5)",
@@ -49,8 +38,6 @@ function rarityTint(rarity: number): string {
   return RARITY_TINT[rarity] ?? RARITY_TINT[2];
 }
 
-// Initials fallback for when the art fails to load — first letter of
-// up to the first two words of the display name.
 function initials(name: string): string {
   return name
     .split(/\s+/)
@@ -67,6 +54,7 @@ export function CharacterCard({
   priority = false,
   galleryMode = false,
   hideProgressStack = false,
+  isDropTarget = false,
 }: CharacterCardProps) {
   const displayName = parseDisplayName(character.name);
   const [artLoaded, setArtLoaded] = useState(false);
@@ -76,16 +64,6 @@ export function CharacterCard({
 
   const { state } = useTrackerState();
 
-  // A selected garment or the Insight 2 look (picked in the detail modal's
-  // carousel) takes priority over the base/I2-toggle art. If the user hasn't
-  // made an explicit choice, characters that have actually reached Insight 2
-  // default to their I2 art automatically — this is what keeps the roster
-  // card in sync with whatever the carousel last centered on, or with the
-  // character's own progress when nothing's been picked yet. None of this
-  // applies in gallery mode, which always shows base (or I2-toggle) art.
-  // The garment lookup respects Hide CN — a previously-selected CN-only
-  // garment stops rendering (falls back to base art) once hidden, same as
-  // an equipped CN Psychube disappearing from a Team slot.
   const selectedGarment =
     !galleryMode && typeof progress.selectedGarmentId === "number"
       ? visibleGarmentsForCharacter(character.id, state.settings.hideCn).find((g) => g.id === progress.selectedGarmentId)
@@ -119,7 +97,7 @@ export function CharacterCard({
       </div>
 
       <div
-        className="relative overflow-hidden rounded-md border border-[var(--color-border)] transition-all duration-200 active:scale-[0.98] group-hover:-translate-y-1 group-hover:border-[var(--color-border-strong)] group-hover:shadow-lg group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)]"
+        className={`relative overflow-hidden rounded-md border border-[var(--color-border)] transition-all duration-200 active:scale-[0.98] group-hover:-translate-y-1 group-hover:border-[var(--color-border-strong)] group-hover:shadow-lg group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)] ${isDropTarget ? "ring-2 ring-[var(--color-accent)]" : ""}`}
         style={{ aspectRatio: "224 / 524" }}
       >
         {/* Solid backdrop — the character art has transparent cutout edges,

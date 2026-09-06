@@ -147,6 +147,7 @@ function FilledSlotCard({
   psychubeDisplayMode,
   onClear,
   onPsychubeClick,
+  isDropTarget = false,
 }: {
   character: RosterCharacter;
   progress: CharacterProgress;
@@ -154,10 +155,11 @@ function FilledSlotCard({
   psychubeDisplayMode: PsychubeDisplayMode;
   onClear?: () => void;
   onPsychubeClick?: () => void;
+  isDropTarget?: boolean;
 }) {
   return (
     <div className="relative rounded-md">
-      <CharacterCard character={character} progress={progress} hideProgressStack />
+      <CharacterCard character={character} progress={progress} hideProgressStack isDropTarget={isDropTarget} />
 
       {onClear && (
         <button
@@ -237,7 +239,7 @@ function FilledSlot({
         }}
         className={`group/slot relative cursor-pointer touch-none rounded-md text-left outline-none transition-[opacity,transform] duration-150 ${
           isDragging ? "scale-95 opacity-30" : "opacity-100"
-        } ${isOver && !isDragging ? "ring-2 ring-[var(--color-accent)]" : ""}`}
+        }`}
       >
         <FilledSlotCard
           character={character}
@@ -246,6 +248,7 @@ function FilledSlot({
           psychubeDisplayMode={psychubeDisplayMode}
           onClear={onClear}
           onPsychubeClick={onPsychubeClick}
+          isDropTarget={isOver && !isDragging}
         />
       </div>
 
@@ -410,7 +413,18 @@ export function TeamCard({
             clipped by this card's own overflow or stacking context. */}
         <DragOverlay dropAnimation={{ duration: 220, easing: "cubic-bezier(0.2, 0, 0, 1)" }}>
           {activeDragCharacter && activeDragSlot ? (
-            <div className="w-[140px] origin-center animate-[lift-card_180ms_cubic-bezier(0.2,0,0,1)_forwards]">
+            <div
+              className="origin-center animate-[lift-card_180ms_cubic-bezier(0.2,0,0,1)_forwards]"
+              style={{
+                // Grid columns are 1fr on mobile (narrower than desktop's
+                // fixed layout), so a hardcoded overlay width renders
+                // visibly bigger than the card it was picked up from.
+                // This tracks "roughly a quarter of the viewport, minus
+                // the card's own gaps/padding" and caps at 140px, which
+                // is what desktop's wider columns actually settle at.
+                width: "min(140px, calc((100vw - 4.5rem) / 4))",
+              }}
+            >
               <FilledSlotCard
                 character={activeDragCharacter}
                 progress={getProgress(activeDragCharacter.id)}
