@@ -57,23 +57,32 @@ export function TeamSlotPickerModal({
   const [pickedOrder, setPickedOrder] = useState<number[]>(currentIds);
   const atCapacity = pickedOrder.length >= teamSize;
 
+  // Frozen at mount — deliberately NOT re-derived from the live
+  // `pickedOrder`. A newly-picked character should stay right where it
+  // was in the grid until the picker is closed and reopened; jumping it
+  // to the top the instant it's tapped would move the grid under the
+  // user's finger mid-interaction, which is worse than the scrolling this
+  // was meant to avoid. Only the team's ALREADY-current members (known
+  // before the modal ever opened) get the top-of-grid treatment.
+  const [initialPickedOrder] = useState<number[]>(currentIds);
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     const matches = characters.filter((c) => !q || c.name.toLowerCase().includes(q));
-    // Selected characters float to the top (in pick order) so deselecting
-    // one — especially one picked from further down the list — doesn't
-    // require scrolling back to find it. Unselected characters keep the
-    // usual rarity/id sort beneath them.
-    const pickedIndex = new Map(pickedOrder.map((id, i) => [id, i]));
+    // Characters already on the team when the picker opened float to the
+    // top (in their slot order) so deselecting one doesn't require
+    // scrolling to find it. Newly-picked characters stay in the normal
+    // rarity/id sort with everyone else — only reshuffling on next open.
+    const initialIndex = new Map(initialPickedOrder.map((id, i) => [id, i]));
     return [...matches].sort((a, b) => {
-      const aPicked = pickedIndex.get(a.id);
-      const bPicked = pickedIndex.get(b.id);
-      if (aPicked != null && bPicked != null) return aPicked - bPicked;
-      if (aPicked != null) return -1;
-      if (bPicked != null) return 1;
+      const aInitial = initialIndex.get(a.id);
+      const bInitial = initialIndex.get(b.id);
+      if (aInitial != null && bInitial != null) return aInitial - bInitial;
+      if (aInitial != null) return -1;
+      if (bInitial != null) return 1;
       return b.rarity - a.rarity || b.id - a.id;
     });
-  }, [characters, search, pickedOrder]);
+  }, [characters, search, initialPickedOrder]);
 
   function toggle(id: number) {
     setPickedOrder((prev) => {
