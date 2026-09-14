@@ -1,11 +1,17 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { roster, getVisibleCharacter } from "@/lib/data/roster";
 import { isCnOnly } from "@/lib/version";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
-import { exportPngToFile, describeExportError } from "@/lib/export/exportPngToFile";
+import {
+  renderExportImage,
+  downloadDataUrl,
+  describeExportError,
+  formatFileSize,
+  type RenderedExportImage,
+} from "@/lib/export/exportPngToFile";
 import { CharacterCard } from "@/components/arcanists/CharacterCard";
 import { CharacterPickerModal } from "@/components/characters/CharacterPickerModal";
 import { CharacterDetailModal } from "@/components/characters/CharacterDetailModal";
@@ -62,7 +68,15 @@ export default function MyCharactersPage() {
   const [exportProgress, setExportProgress] = useState<{ loaded: number; total: number } | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
   const [showI2Art, setShowI2Art] = useState(false);
+  const [renderedExport, setRenderedExport] = useState<RenderedExportImage | null>(null);
   const exportRef = useRef<HTMLDivElement>(null);
+
+  // A previously-rendered preview no longer reflects what's on the page
+  // once the roster or the I2-art toggle change — clear it so the button
+  // goes back to "Export" instead of offering a stale download.
+  useEffect(() => {
+    setRenderedExport(null);
+  }, [state.progress, showI2Art]);
 
   const myCharacters = useMemo(() => {
     return roster
@@ -88,18 +102,19 @@ export default function MyCharactersPage() {
     setPickerOpen(false);
   }
 
-  async function handleExport() {
+  async function handleGenerateExport() {
     if (!exportRef.current || exporting) return;
     setExporting(true);
     setExportError(null);
     setExportProgress(null);
+    setRenderedExport(null);
     try {
-      await exportPngToFile({
+      const result = await renderExportImage({
         node: exportRef.current,
-        filename: "my-roster.webp",
         pixelRatio: 2,
         onProgress: (loaded, total) => setExportProgress({ loaded, total }),
       });
+      setRenderedExport(result);
     } catch (err) {
       console.error("Export failed:", err);
       setExportError(describeExportError(err));
@@ -107,6 +122,12 @@ export default function MyCharactersPage() {
       setExporting(false);
       setExportProgress(null);
     }
+  }
+
+  function handleDownloadExport() {
+    if (!renderedExport) return;
+    downloadDataUrl(renderedExport.dataUrl, "my-roster.webp");
+    setRenderedExport(null);
   }
 
   if (!hydrated) {
@@ -145,7 +166,7 @@ export default function MyCharactersPage() {
                   <IconInsight2 />
                 </button>
                 <button
-                  onClick={handleExport}
+                  onClick={renderedExport ? handleDownloadExport : handleGenerateExport}
                   disabled={exporting}
                   className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
                 >
@@ -154,7 +175,9 @@ export default function MyCharactersPage() {
                     ? exportProgress && exportProgress.total > 0
                       ? `Exporting… ${exportProgress.loaded}/${exportProgress.total}`
                       : "Exporting…"
-                    : "Export"}
+                    : renderedExport
+                      ? `Download (${formatFileSize(renderedExport.byteSize)})`
+                      : "Export"}
                 </button>
               </>
             )}

@@ -64,9 +64,8 @@ export function describeExportError(err: unknown): string {
   return "Export failed for an unknown reason. Please try again, or try with fewer teams.";
 }
 
-interface ExportPngToFileOptions {
+interface RenderExportImageOptions {
   node: HTMLElement;
-  filename: string;
   pixelRatio?: number;
   quality?: number;
   imageWaitMs?: number;
@@ -74,15 +73,26 @@ interface ExportPngToFileOptions {
   captureTimeoutMs?: number;
 }
 
-export async function exportPngToFile({
+export interface RenderedExportImage {
+  dataUrl: string;
+  /** Approximate encoded file size in bytes — derived from the data URL's
+   * base64 payload length, not a network response, so it's exact for the
+   * webp bytes themselves. */
+  byteSize: number;
+}
+
+/** Renders the export node to a webp image and returns it in memory
+ * without downloading anything — lets the caller show the result (size,
+ * preview) and let the user decide whether to actually save it, instead
+ * of the old behavior of downloading immediately on generation. */
+export async function renderExportImage({
   node,
-  filename,
   pixelRatio = 2,
   quality = 0.88,
   imageWaitMs = 8000,
   onProgress,
   captureTimeoutMs,
-}: ExportPngToFileOptions): Promise<void> {
+}: RenderExportImageOptions): Promise<RenderedExportImage> {
   await waitForImages(node, imageWaitMs, onProgress);
 
   const backgroundColor =
@@ -99,9 +109,33 @@ export async function exportPngToFile({
   );
 
   const dataUrl = canvas.toDataURL("image/webp", quality);
+  // Data URL shape is "data:image/webp;base64,<payload>" — each base64
+  // char encodes 6 bits, so payload.length * 3/4 gives the decoded byte
+  // count (minus a byte or two for padding, close enough for a display
+  // estimate rather than a byte-exact figure).
+  const base64Payload = dataUrl.slice(dataUrl.indexOf(",") + 1);
+  const byteSize = Math.round((base64Payload.length * 3) / 4);
 
+  return { dataUrl, byteSize };
+}
+
+/** Triggers the actual save of an already-rendered image — split out from
+ * renderExportImage so generating the preview and downloading it are two
+ * separate, user-controlled steps. */
+export function downloadDataUrl(dataUrl: string, filename: string): void {
   const link = document.createElement("a");
   link.download = filename;
   link.href = dataUrl;
   link.click();
+}
+
+/** Formats a byte count as a short human-readable size (e.g. "582 KB",
+ * "3.1 MB") — matches the style shown on other download UIs, using 1024
+ * as the base like the reference the file-size label was modeled on. */
+export function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${kb < 10 ? kb.toFixed(1) : Math.round(kb)} KB`;
+  const mb = kb / 1024;
+  return `${mb.toFixed(1)} MB`;
 }

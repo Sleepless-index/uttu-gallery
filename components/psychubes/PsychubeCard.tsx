@@ -77,7 +77,7 @@ export function PsychubeCard({ psychube, progress, priority = false }: PsychubeC
       </div>
 
       <span
-        className="line-clamp-2 text-center text-[0.6rem] font-semibold leading-tight text-[var(--color-text)] sm:text-[0.72rem]"
+        className="line-clamp-2 min-h-[2.2em] text-center text-[0.6rem] font-semibold leading-tight text-[var(--color-text)] sm:min-h-[2.4em] sm:text-[0.72rem]"
         style={{ fontFamily: "var(--font-display)" }}
       >
         {psychube.name}

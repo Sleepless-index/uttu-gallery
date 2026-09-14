@@ -1,11 +1,17 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { roster, getVisibleCharacter } from "@/lib/data/roster";
 import { isCnOnly } from "@/lib/version";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
-import { exportPngToFile, describeExportError } from "@/lib/export/exportPngToFile";
+import {
+  renderExportImage,
+  downloadDataUrl,
+  describeExportError,
+  formatFileSize,
+  type RenderedExportImage,
+} from "@/lib/export/exportPngToFile";
 import { TeamCard, type PsychubeDisplayMode } from "@/components/teams/TeamCard";
 import { TeamSlotPickerModal } from "@/components/teams/TeamSlotPickerModal";
 import { TeamSlotPsychubePickerModal } from "@/components/teams/TeamSlotPsychubePickerModal";
@@ -92,7 +98,19 @@ export default function MyTeamsPage() {
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [exportProgress, setExportProgress] = useState<{ loaded: number; total: number } | null>(null);
+  const [renderedExport, setRenderedExport] = useState<RenderedExportImage | null>(null);
   const exportRef = useRef<HTMLDivElement>(null);
+
+  // A previously-rendered preview no longer reflects what's on the page
+  // once teams or the display mode change — clear it so the button goes
+  // back to "Export" instead of offering a download of stale content.
+  // Re-rendering automatically here (instead of just invalidating) was
+  // considered and ruled out: it's the same cost as a full export, so
+  // doing it on every edit would mean constant background rendering work
+  // the user never asked for.
+  useEffect(() => {
+    setRenderedExport(null);
+  }, [state.teams, psychubeDisplayMode]);
 
   const myCharacters = useMemo(() => {
     return roster
@@ -133,22 +151,23 @@ export default function MyTeamsPage() {
     );
   }, [activePsychubeTeam, activePsychubeSlot]);
 
-  async function handleExport() {
+  async function handleGenerateExport() {
     if (!exportRef.current || exporting) return;
     setExporting(true);
     setExportError(null);
     setExportProgress(null);
+    setRenderedExport(null);
     try {
       // pixelRatio 3 keeps card art crisp at typical Discord embed widths
       // (roughly 400-550px display) even though the underlying art files
       // are themselves modest resolution — this avoids the soft/blurry
       // look a 1x or 2x capture gets when Discord scales it back up.
-      await exportPngToFile({
+      const result = await renderExportImage({
         node: exportRef.current,
-        filename: "my-teams.webp",
         pixelRatio: 3,
         onProgress: (loaded, total) => setExportProgress({ loaded, total }),
       });
+      setRenderedExport(result);
     } catch (err) {
       console.error("Export failed:", err);
       setExportError(describeExportError(err));
@@ -156,6 +175,12 @@ export default function MyTeamsPage() {
       setExporting(false);
       setExportProgress(null);
     }
+  }
+
+  function handleDownloadExport() {
+    if (!renderedExport) return;
+    downloadDataUrl(renderedExport.dataUrl, "my-teams.webp");
+    setRenderedExport(null);
   }
 
   if (!hydrated) {
@@ -180,7 +205,7 @@ export default function MyTeamsPage() {
             <PsychubeModeToggle mode={psychubeDisplayMode} onChange={setPsychubeDisplayMode} />
             {state.teams.length > 0 && (
               <button
-                onClick={handleExport}
+                onClick={renderedExport ? handleDownloadExport : handleGenerateExport}
                 disabled={exporting}
                 className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
               >
@@ -189,7 +214,9 @@ export default function MyTeamsPage() {
                   ? exportProgress && exportProgress.total > 0
                     ? `Exporting… ${exportProgress.loaded}/${exportProgress.total}`
                     : "Exporting…"
-                  : "Export"}
+                  : renderedExport
+                    ? `Download (${formatFileSize(renderedExport.byteSize)})`
+                    : "Export"}
               </button>
             )}
             <button
