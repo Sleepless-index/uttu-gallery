@@ -95,54 +95,57 @@ export function IconSettings() {
 }
 
 export function IconMore({ open = false }: { open?: boolean }) {
-  // Three bars that morph into an X — ported from a verified CSS burger
-  // (22px bar, 2px height, 5px gap = 7px center-to-center) into SVG rects
-  // on a 22x22 viewBox so the proportions match exactly: bars centered on
-  // y=7/11/15 (7px apart), rotating/translating around the icon's true
-  // center (11,11) rather than a guessed origin.
-  const barBase: CSSProperties = {
-    transformBox: "fill-box",
-    transformOrigin: "center",
-    transition: "transform 250ms ease, opacity 200ms ease",
-  };
+  // Three bars that morph into an X. Deliberately NOT using CSS
+  // transform-box/transform-origin here — SVG shape elements have
+  // inconsistent support for "fill-box" origins across browsers
+  // (notably WebKit/Safari via inline styles), which produced bars
+  // rotating around the wrong point instead of their own center. Using
+  // SVG's native transform attribute with an explicit rotate(angle, cx,
+  // cy) sidesteps that entirely: cx/cy are each bar's own geometric
+  // center, computed directly from its x/y/width/height below, so the
+  // rotation pivot is correct everywhere.
+  const barWidth = 16;
+  const barHeight = 2;
+  const barX = 3;
+  const cx = barX + barWidth / 2; // 11 — same as the icon's center, by design
+  const topY = 6;
+  const midY = 10;
+  const bottomY = 14;
+
+  const transitionStyle: CSSProperties = { transition: "transform 250ms ease, opacity 200ms ease" };
+
   return (
     <svg width="16" height="16" viewBox="0 0 22 22" fill="none">
       <rect
-        x="3"
-        y="6"
-        width="16"
-        height="2"
+        x={barX}
+        y={topY}
+        width={barWidth}
+        height={barHeight}
         rx="1"
         fill="currentColor"
-        style={{
-          ...barBase,
-          transform: open ? "translateY(7px) rotate(45deg)" : "none",
-        }}
+        style={transitionStyle}
+        transform={open ? `translate(0, 7) rotate(45, ${cx}, ${topY + barHeight / 2})` : undefined}
       />
       <rect
-        x="3"
-        y="10"
-        width="16"
-        height="2"
+        x={barX}
+        y={midY}
+        width={barWidth}
+        height={barHeight}
         rx="1"
         fill="currentColor"
-        style={{
-          ...barBase,
-          transform: open ? "scaleX(0)" : "scaleX(1)",
-          opacity: open ? 0 : 1,
-        }}
+        opacity={open ? 0 : 1}
+        style={transitionStyle}
+        transform={open ? `translate(${cx}, ${midY + barHeight / 2}) scale(0, 1) translate(${-cx}, ${-(midY + barHeight / 2)})` : undefined}
       />
       <rect
-        x="3"
-        y="14"
-        width="16"
-        height="2"
+        x={barX}
+        y={bottomY}
+        width={barWidth}
+        height={barHeight}
         rx="1"
         fill="currentColor"
-        style={{
-          ...barBase,
-          transform: open ? "translateY(-7px) rotate(-45deg)" : "none",
-        }}
+        style={transitionStyle}
+        transform={open ? `translate(0, -7) rotate(-45, ${cx}, ${bottomY + barHeight / 2})` : undefined}
       />
     </svg>
   );
