@@ -46,7 +46,7 @@ const QUICK_FILL_PRESETS: QuickFillPreset[] = [
 /** One carousel entry — the character's base look, its Insight 2 alternate art, or a real garment. */
 interface CarouselItem {
   key: string;
-  garmentId?: number | "insight2";
+  garmentId?: number | "insight2" | "base";
   cardImage: string;
   label: string;
 }
