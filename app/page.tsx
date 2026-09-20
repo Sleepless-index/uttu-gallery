@@ -16,7 +16,7 @@ const HOME_LINKS = [
   { href: "/teams", label: "Teams", icon: <IconMyTeams /> },
   { href: "/gallery/arcanists", label: "Arcanists", icon: <IconArcanists /> },
   { href: "/gallery/garments", label: "Garments", icon: <IconGarments /> },
-  { href: "/tools/planner", label: "Planner", icon: <IconPlanner /> },
+  { href: "/tools/planner", label: "Probability", icon: <IconPlanner /> },
 ];
 
 export default function HomePage() {

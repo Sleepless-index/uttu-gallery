@@ -29,6 +29,7 @@ import {
   IconMyCharacters,
   IconMyTeams,
   IconMyPsychubes,
+  IconMore,
 } from "@/components/layout/navIcons";
 import { SettingsDropdown } from "@/components/settings/SettingsDropdown";
 
@@ -61,10 +62,15 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Tools",
     items: [
-      { href: "/tools/planner", label: "Planner", icon: <IconPlanner /> },
+      { href: "/tools/planner", label: "Probability", icon: <IconPlanner /> },
     ],
   },
 ];
+
+/** Items shown in the mobile "More" drawer — everything from NAV_GROUPS,
+ * flattened, since the drawer doesn't need the desktop rail's group
+ * headers (it's a short enough list to show as one list). */
+const MORE_NAV_ITEMS: NavItem[] = NAV_GROUPS.flatMap((g) => g.items);
 
 function IconUser() {
   return (
@@ -98,6 +104,9 @@ export function Sidebar() {
   const [editingUid, setEditingUid] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
   const [uidDraft, setUidDraft] = useState("");
+  const [moreOpen, setMoreOpen] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const moreTriggerRef = useRef<HTMLButtonElement>(null);
 
   const profile = state.profile;
   const displayName = profile.name.trim() || DEFAULT_NAME;
@@ -116,6 +125,26 @@ export function Sidebar() {
     return () => document.removeEventListener("pointerdown", handlePointerDown);
   }, [expanded, pickerOpen]);
 
+  // Close the More drawer on outside click, same pattern as the desktop
+  // rail's collapse-on-outside-click above.
+  useEffect(() => {
+    if (!moreOpen) return;
+    function handlePointerDown(e: PointerEvent) {
+      const target = e.target as Node;
+      if (drawerRef.current?.contains(target)) return;
+      if (moreTriggerRef.current?.contains(target)) return;
+      setMoreOpen(false);
+    }
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [moreOpen]);
+
+  // Close the drawer automatically on navigation (picking an item already
+  // does this via its own onClick, but this also covers back/forward nav).
+  useEffect(() => {
+    setMoreOpen(false);
+  }, [pathname]);
+
   function commitName() {
     updateProfile({ name: nameDraft.trim() });
     setEditingName(false);
@@ -126,7 +155,7 @@ export function Sidebar() {
     setEditingUid(false);
   }
 
-  const allNavItems = [MY_CHARACTERS_ITEM, MY_TEAMS_ITEM, MY_PSYCHUBES_ITEM, ...NAV_GROUPS.flatMap((g) => g.items)];
+  const moreActive = MORE_NAV_ITEMS.some((item) => item.href === pathname);
 
   return (
     <>
@@ -230,15 +259,16 @@ export function Sidebar() {
         </div>
       )}
 
-      {/* Mobile bottom nav — icons only, always visible, no expand/collapse
-          (that interaction doesn't translate to touch). Desktop keeps the
-          floating rail below untouched. */}
+      {/* Mobile bottom nav — 3 main pages + "More", which opens a top
+          drawer for everything else. Icons only, always visible, no
+          expand/collapse (that interaction doesn't translate to touch).
+          Desktop keeps the floating rail below untouched. */}
       <nav
         aria-label="Primary"
         className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-around border-t border-[var(--color-border)] bg-[var(--color-panel)]/95 px-1 backdrop-blur md:hidden"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        {allNavItems.map((item) => {
+        {[MY_CHARACTERS_ITEM, MY_TEAMS_ITEM, MY_PSYCHUBES_ITEM].map((item) => {
           const active = pathname === item.href;
           return (
             <Link
@@ -254,7 +284,68 @@ export function Sidebar() {
             </Link>
           );
         })}
+        <button
+          ref={moreTriggerRef}
+          type="button"
+          onClick={() => setMoreOpen((v) => !v)}
+          aria-label="More"
+          aria-expanded={moreOpen}
+          aria-current={moreActive ? "page" : undefined}
+          className={`flex h-12 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg text-[0.6rem] font-medium transition-colors
+            ${moreOpen || moreActive ? "text-[var(--color-accent)]" : "text-[var(--color-text-faint)]"}`}
+        >
+          <span className="flex h-5 w-5 items-center justify-center">
+            <IconMore />
+          </span>
+          <span className="truncate">More</span>
+        </button>
       </nav>
+
+      {/* "More" drawer — mobile only, drops down from just below the
+          sticky top header (h-11) rather than from the very top of the
+          screen, so it never covers the profile/date-badge bar. Backdrop
+          click closes it, same as the picker modals elsewhere. */}
+      {moreOpen && (
+        <div className="fixed inset-0 z-30 md:hidden" aria-hidden="true">
+          <div
+            className="absolute inset-0 bg-black/50"
+            style={{ top: "2.75rem" }}
+            onClick={() => setMoreOpen(false)}
+          />
+        </div>
+      )}
+      <div
+        ref={drawerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="More pages"
+        className={`fixed inset-x-0 z-40 origin-top border-b border-[var(--color-border)] bg-[var(--color-panel)] shadow-2xl transition-transform duration-200 ease-out md:hidden
+          ${moreOpen ? "translate-y-0" : "pointer-events-none -translate-y-2 opacity-0"}`}
+        style={{ top: "2.75rem" }}
+      >
+        <nav aria-label="More" className="flex flex-col gap-1 p-2">
+          {MORE_NAV_ITEMS.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMoreOpen(false)}
+                aria-current={active ? "page" : undefined}
+                className={`flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[0.8rem] font-medium transition-colors
+                  ${
+                    active
+                      ? "bg-[var(--color-accent)] text-white"
+                      : "text-[var(--color-text-dim)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+                  }`}
+              >
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center">{item.icon}</span>
+                <span className="truncate">{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
 
       {/* Desktop floating rail — unchanged from before, hidden on mobile. */}
       <aside

@@ -33,11 +33,13 @@ export interface CharacterProgress {
   insight: number; // 0-3
   level: number; // 0-60 (0 = unset)
   /**
-   * The look the user has picked for this character, if any: a real garment
-   * id, or the literal "insight2" for the Insight 2 alternate art. Absent
-   * (undefined) means the base look.
+   * The look the user has picked for this character: a real garment id,
+   * the literal "insight2" for the Insight 2 alternate art, or the literal
+   * "base" for an explicit choice of the base look. Absent (undefined)
+   * means no preference has been set yet, which is NOT the same as "base" —
+   * see docs/fixes.md for why that distinction matters.
    */
-  selectedGarmentId?: number | "insight2";
+  selectedGarmentId?: number | "insight2" | "base";
 }
 
 export const emptyProgress = (): CharacterProgress => ({

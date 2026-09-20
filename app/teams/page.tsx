@@ -16,6 +16,7 @@ import { TeamCard, type PsychubeDisplayMode } from "@/components/teams/TeamCard"
 import { TeamSlotPickerModal } from "@/components/teams/TeamSlotPickerModal";
 import { TeamSlotPsychubePickerModal } from "@/components/teams/TeamSlotPsychubePickerModal";
 import { TeamExportGrid } from "@/components/teams/TeamExportGrid";
+import { ExportButtonLabel } from "@/components/export/ExportButtonLabel";
 import { emptyPsychubeProgress, TEAM_SIZE } from "@/lib/types";
 import { getVisiblePsychube } from "@/lib/data/psychubes";
 import { assetUrl } from "@/lib/assets/assetUrl";
@@ -210,13 +211,11 @@ export default function MyTeamsPage() {
                 className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
               >
                 {exporting ? <IconSpinner /> : <IconDownload />}
-                {exporting
-                  ? exportProgress && exportProgress.total > 0
-                    ? `Exporting… ${exportProgress.loaded}/${exportProgress.total}`
-                    : "Exporting…"
-                  : renderedExport
-                    ? `Download (${formatFileSize(renderedExport.byteSize)})`
-                    : "Export"}
+                <ExportButtonLabel
+                  exporting={exporting}
+                  exportProgress={exportProgress}
+                  byteSizeLabel={renderedExport ? formatFileSize(renderedExport.byteSize) : null}
+                />
               </button>
             )}
             <button

@@ -21,6 +21,7 @@ interface CharacterDetailModalProps {
   progress: CharacterProgress;
   onClose: () => void;
   onUpdateProgress: (patch: Partial<CharacterProgress>) => void;
+  onReset: () => void;
 }
 
 const MAX_LEVEL = 60;
@@ -54,6 +55,20 @@ function IconClose() {
   return (
     <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
       <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function IconReset() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <path
+        d="M13 8A5 5 0 1 1 11.5 4.5M13 2v3.5h-3.5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -408,6 +423,7 @@ export function CharacterDetailModal({
   progress,
   onClose,
   onUpdateProgress,
+  onReset,
 }: CharacterDetailModalProps) {
   const { state } = useTrackerState();
   const displayName = parseDisplayName(character.name);
@@ -421,7 +437,7 @@ export function CharacterDetailModal({
   const items: CarouselItem[] = useMemo(() => {
     const base: CarouselItem = {
       key: "base",
-      garmentId: undefined,
+      garmentId: "base",
       cardImage: characterArtPath(character.id),
       label: "Base",
     };
@@ -496,6 +512,22 @@ export function CharacterDetailModal({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [progress.insight]);
+
+  // The modal stays mounted (same character) across a Reset — that clears
+  // progress.selectedGarmentId out from under an already-open carousel, so
+  // without this the preview would keep showing whatever was equipped
+  // right before the reset. Only acts on that external null-out (previous
+  // value existed, now it doesn't) — never on a normal render where it was
+  // already unset, so it doesn't fight the auto-I2-default effect above.
+  const prevSelectedGarmentIdRef = useRef(progress.selectedGarmentId);
+  useEffect(() => {
+    const prev = prevSelectedGarmentIdRef.current;
+    prevSelectedGarmentIdRef.current = progress.selectedGarmentId;
+    if (prev != null && progress.selectedGarmentId == null) {
+      setCenterIndex(initialIndex);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [progress.selectedGarmentId]);
 
   // Persist the preview as the user's explicit preference — only ever
   // triggered by the Equip button, never by browsing the carousel or
@@ -578,13 +610,28 @@ export function CharacterDetailModal({
                 {displayName.text}
               </span>
             </div>
-            <button
-              onClick={onClose}
-              aria-label="Close"
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
-            >
-              <IconClose />
-            </button>
+            <div className="flex shrink-0 items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  if (window.confirm(`Reset ${displayName.text} back to default?`)) {
+                    onReset();
+                  }
+                }}
+                aria-label={`Reset ${displayName.text}`}
+                title="Reset character"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+              >
+                <IconReset />
+              </button>
+              <button
+                onClick={onClose}
+                aria-label="Close"
+                className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+              >
+                <IconClose />
+              </button>
+            </div>
           </div>
 
           <div className="flex-1 overflow-y-auto px-4 py-4">

@@ -123,6 +123,32 @@ function useTrackerStateInternal() {
     setState(emptyTrackerState());
   }, []);
 
+  const resetAllCharacters = useCallback(() => {
+    setState((prev) => {
+      const progress: typeof prev.progress = {};
+      for (const [id, p] of Object.entries(prev.progress)) {
+        // Reset every tracked field back to default but keep ownership —
+        // this clears levels/insight/resonance/etc. without removing
+        // characters from the roster.
+        if (p.owned) progress[Number(id)] = { ...emptyProgress(), owned: true };
+      }
+      return { ...prev, progress };
+    });
+  }, []);
+
+  const resetCharacter = useCallback((id: number) => {
+    setState((prev) => {
+      const current = prev.progress[id];
+      return {
+        ...prev,
+        progress: {
+          ...prev.progress,
+          [id]: { ...emptyProgress(), owned: current?.owned ?? false },
+        },
+      };
+    });
+  }, []);
+
   const importState = useCallback((incoming: TrackerState) => {
     setState(incoming);
   }, []);
@@ -274,6 +300,8 @@ function useTrackerStateInternal() {
     addUpcoming,
     removeUpcoming,
     resetAll,
+    resetAllCharacters,
+    resetCharacter,
     importState,
     updateProfile,
     addTeam,

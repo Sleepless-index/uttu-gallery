@@ -35,17 +35,7 @@ export function PlannerView() {
 
   return (
     <>
-      <div className="mb-6 flex items-start justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-1.5">
-            <h1 className="text-[1.1rem] font-semibold text-[var(--color-text)]">
-              Pull Planner
-            </h1>
-          </div>
-          <p className="text-[0.75rem] text-[var(--color-text-faint)]">
-            Your odds of reaching a Portray target, given your pulls and pity.
-          </p>
-        </div>
+      <div className="mb-6 flex items-start justify-end gap-4">
         <button
           onClick={() => {
             if (confirm("Reset the pull planner?")) reset();

@@ -92,6 +92,17 @@ export function IconSettings() {
   );
 }
 
+export function IconMore() {
+  // Horizontal ellipsis — "more" overflow menu
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="3.2" cy="8" r="1.3" fill="currentColor" />
+      <circle cx="8" cy="8" r="1.3" fill="currentColor" />
+      <circle cx="12.8" cy="8" r="1.3" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function IconMyPsychubes() {
   // Diamond/gem shape — matches the in-game Psychube icon motif
   return (

@@ -45,7 +45,7 @@ export function PsychubePickerTile({ id, name, recommended, selected, disabled =
       className={`group relative flex flex-col gap-1 text-left outline-none ${disabled ? "cursor-not-allowed opacity-35" : ""}`}
     >
       {recommended && (
-        <span className="absolute -top-1.5 left-1 z-20 rounded bg-[var(--color-accent)] px-1.5 py-0.5 text-[0.55rem] font-semibold text-white shadow">
+        <span className="absolute -top-1.5 left-1 z-20 whitespace-nowrap rounded bg-[var(--color-accent)] px-1 py-0.5 text-[0.5rem] font-semibold text-white shadow">
           Recommended
         </span>
       )}

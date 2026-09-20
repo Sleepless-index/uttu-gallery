@@ -16,6 +16,7 @@ import { CharacterCard } from "@/components/arcanists/CharacterCard";
 import { CharacterPickerModal } from "@/components/characters/CharacterPickerModal";
 import { CharacterDetailModal } from "@/components/characters/CharacterDetailModal";
 import { ExportGrid } from "@/components/characters/ExportGrid";
+import { ExportButtonLabel } from "@/components/export/ExportButtonLabel";
 import { insightIconPath } from "@/lib/assets/characterAssets";
 import { assetUrl } from "@/lib/assets/assetUrl";
 
@@ -32,6 +33,20 @@ function IconDownload() {
     <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
       <path
         d="M8 2v8m0 0L5 7m3 3 3-3M3 12.5v.5a1.5 1.5 0 0 0 1.5 1.5h7a1.5 1.5 0 0 0 1.5-1.5v-.5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function IconReset() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <path
+        d="M13 8A5 5 0 1 1 11.5 4.5M13 2v3.5h-3.5"
         stroke="currentColor"
         strokeWidth="1.6"
         strokeLinecap="round"
@@ -61,7 +76,7 @@ function IconInsight2() {
 }
 
 export default function MyCharactersPage() {
-  const { state, hydrated, getProgress, updateProgress } = useTrackerState();
+  const { state, hydrated, getProgress, updateProgress, resetAllCharacters, resetCharacter } = useTrackerState();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [detailCharacterId, setDetailCharacterId] = useState<number | null>(null);
   const [exporting, setExporting] = useState(false);
@@ -130,6 +145,12 @@ export default function MyCharactersPage() {
     setRenderedExport(null);
   }
 
+  function handleResetAll() {
+    if (window.confirm("Reset all characters back to default? This clears level, insight, resonance, portrait, and garment/art selection for every character in your roster (they stay in your roster). This cannot be undone.")) {
+      resetAllCharacters();
+    }
+  }
+
   if (!hydrated) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)]">
@@ -171,13 +192,20 @@ export default function MyCharactersPage() {
                   className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
                 >
                   {exporting ? <IconSpinner /> : <IconDownload />}
-                  {exporting
-                    ? exportProgress && exportProgress.total > 0
-                      ? `Exporting… ${exportProgress.loaded}/${exportProgress.total}`
-                      : "Exporting…"
-                    : renderedExport
-                      ? `Download (${formatFileSize(renderedExport.byteSize)})`
-                      : "Export"}
+                  <ExportButtonLabel
+                    exporting={exporting}
+                    exportProgress={exportProgress}
+                    byteSizeLabel={renderedExport ? formatFileSize(renderedExport.byteSize) : null}
+                  />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleResetAll}
+                  aria-label="Reset all characters"
+                  title="Reset all characters"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
+                >
+                  <IconReset />
                 </button>
               </>
             )}
@@ -271,6 +299,7 @@ export default function MyCharactersPage() {
             progress={getProgress(detailCharacterId)}
             onClose={() => setDetailCharacterId(null)}
             onUpdateProgress={(patch) => updateProgress(detailCharacterId, patch)}
+            onReset={() => resetCharacter(detailCharacterId)}
           />
         );
       })()}

@@ -61,12 +61,16 @@ export function PsychubeCard({ psychube, progress, priority = false }: PsychubeC
         )}
 
         {showAmp && (
-          <div className="absolute left-1.5 top-1.5 z-10 rounded bg-black/60 px-1.5 py-0.5 text-[0.65rem] font-bold leading-none text-[var(--color-accent)] sm:px-2 sm:py-1 sm:text-[0.8rem]">
+          <div
+            className={`absolute left-1.5 top-1.5 z-10 rounded bg-black/60 px-1.5 py-0.5 text-[0.65rem] font-bold leading-none sm:px-2 sm:py-1 sm:text-[0.8rem] ${
+              progress.amp >= 5 ? "text-[var(--color-accent)]" : "text-white"
+            }`}
+          >
             {progress.amp}
           </div>
         )}
 
-        <div className="absolute inset-x-0 bottom-1.5 z-10 px-1.5">
+        <div className="absolute inset-x-0 bottom-3 z-10 px-1.5 sm:bottom-3.5">
           <span
             className="block text-center text-[0.68rem] font-semibold leading-tight text-white sm:text-[0.75rem]"
             style={{ textShadow: "0 1px 4px rgba(0,0,0,0.9)" }}
