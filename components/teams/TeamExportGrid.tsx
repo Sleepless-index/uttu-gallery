@@ -108,7 +108,7 @@ function ExportSlot({
       </div>
 
       {psychubeDisplayMode === "compact" && psychube && (
-        <div className="absolute bottom-8 left-1/2 z-10 h-14 w-14 -translate-x-1/2 overflow-hidden rounded-md drop-shadow-lg">
+        <div className="absolute bottom-8 left-1/2 z-10 h-24 w-24 -translate-x-1/2 overflow-hidden rounded-md drop-shadow-lg">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={psychubeArtPath(psychube.id)} alt={psychube.name} className="h-full w-full object-contain drop-shadow-lg" />
         </div>

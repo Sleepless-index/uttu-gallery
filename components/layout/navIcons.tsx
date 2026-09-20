@@ -95,49 +95,53 @@ export function IconSettings() {
 }
 
 export function IconMore({ open = false }: { open?: boolean }) {
-  // Three bars that morph into an X when the drawer is open — three
-  // <rect>s animated with CSS transforms/opacity via inline style so no
-  // extra stylesheet or Tailwind keyframes are needed for this one icon.
+  // Three bars that morph into an X — ported from a verified CSS burger
+  // (22px bar, 2px height, 5px gap = 7px center-to-center) into SVG rects
+  // on a 22x22 viewBox so the proportions match exactly: bars centered on
+  // y=7/11/15 (7px apart), rotating/translating around the icon's true
+  // center (11,11) rather than a guessed origin.
   const barBase: CSSProperties = {
-    transformOrigin: "8px 8px",
-    transition: "transform 200ms ease, opacity 150ms ease",
+    transformBox: "fill-box",
+    transformOrigin: "center",
+    transition: "transform 250ms ease, opacity 200ms ease",
   };
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <svg width="16" height="16" viewBox="0 0 22 22" fill="none">
       <rect
-        x="2.5"
-        y="3.7"
-        width="11"
-        height="1.5"
-        rx="0.75"
+        x="3"
+        y="6"
+        width="16"
+        height="2"
+        rx="1"
         fill="currentColor"
         style={{
           ...barBase,
-          transform: open ? "translateY(4.3px) rotate(45deg)" : "none",
+          transform: open ? "translateY(7px) rotate(45deg)" : "none",
         }}
       />
       <rect
-        x="2.5"
-        y="7.25"
-        width="11"
-        height="1.5"
-        rx="0.75"
+        x="3"
+        y="10"
+        width="16"
+        height="2"
+        rx="1"
         fill="currentColor"
         style={{
           ...barBase,
+          transform: open ? "scaleX(0)" : "scaleX(1)",
           opacity: open ? 0 : 1,
         }}
       />
       <rect
-        x="2.5"
-        y="10.8"
-        width="11"
-        height="1.5"
-        rx="0.75"
+        x="3"
+        y="14"
+        width="16"
+        height="2"
+        rx="1"
         fill="currentColor"
         style={{
           ...barBase,
-          transform: open ? "translateY(-4.3px) rotate(-45deg)" : "none",
+          transform: open ? "translateY(-7px) rotate(-45deg)" : "none",
         }}
       />
     </svg>
