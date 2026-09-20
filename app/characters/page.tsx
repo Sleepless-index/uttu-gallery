@@ -17,6 +17,8 @@ import { CharacterPickerModal } from "@/components/characters/CharacterPickerMod
 import { CharacterDetailModal } from "@/components/characters/CharacterDetailModal";
 import { ExportGrid } from "@/components/characters/ExportGrid";
 import { ExportButtonLabel } from "@/components/export/ExportButtonLabel";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useConfirmDialog } from "@/lib/hooks/useConfirmDialog";
 import { insightIconPath } from "@/lib/assets/characterAssets";
 import { assetUrl } from "@/lib/assets/assetUrl";
 
@@ -77,6 +79,7 @@ function IconInsight2() {
 
 export default function MyCharactersPage() {
   const { state, hydrated, getProgress, updateProgress, resetAllCharacters, resetCharacter } = useTrackerState();
+  const { requestConfirm, dialogProps } = useConfirmDialog();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [detailCharacterId, setDetailCharacterId] = useState<number | null>(null);
   const [exporting, setExporting] = useState(false);
@@ -146,9 +149,16 @@ export default function MyCharactersPage() {
   }
 
   function handleResetAll() {
-    if (window.confirm("Reset all characters back to default? This clears level, insight, resonance, portrait, and garment/art selection for every character in your roster (they stay in your roster). This cannot be undone.")) {
-      resetAllCharacters();
-    }
+    requestConfirm(
+      {
+        title: "Reset all characters?",
+        description:
+          "This clears level, insight, resonance, portrait, and garment/art selection for every character in your roster (they stay in your roster). This cannot be undone.",
+        confirmLabel: "Reset all",
+        danger: true,
+      },
+      resetAllCharacters
+    );
   }
 
   if (!hydrated) {
@@ -303,6 +313,8 @@ export default function MyCharactersPage() {
           />
         );
       })()}
+
+      {dialogProps && <ConfirmDialog {...dialogProps} />}
     </div>
   );
 }

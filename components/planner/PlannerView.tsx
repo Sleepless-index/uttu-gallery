@@ -3,12 +3,15 @@
 import { useMemo } from "react";
 import { NumberField } from "@/components/ui/NumberField";
 import { MilestoneRow } from "@/components/planner/MilestoneRow";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useConfirmDialog } from "@/lib/hooks/useConfirmDialog";
 import { usePlannerState } from "@/lib/hooks/usePlannerState";
 import { calculateMilestones } from "@/lib/calculations/pullPlanner";
 import { CLEARDROP_RATES } from "@/lib/types";
 
 export function PlannerView() {
   const { state, hydrated, update, reset } = usePlannerState();
+  const { requestConfirm, dialogProps } = useConfirmDialog();
 
   const totalPulls =
     Math.floor(state.cleardrops / CLEARDROP_RATES.perPull) +
@@ -37,9 +40,12 @@ export function PlannerView() {
     <>
       <div className="mb-6 flex items-start justify-end gap-4">
         <button
-          onClick={() => {
-            if (confirm("Reset the pull planner?")) reset();
-          }}
+          onClick={() =>
+            requestConfirm(
+              { title: "Reset the pull planner?", confirmLabel: "Reset", danger: true },
+              reset
+            )
+          }
           className="shrink-0 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-[0.72rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-danger)] hover:bg-[var(--color-danger)] hover:text-white"
         >
           Reset
@@ -153,6 +159,8 @@ export function PlannerView() {
           ))}
         </div>
       </div>
+
+      {dialogProps && <ConfirmDialog {...dialogProps} />}
     </>
   );
 }

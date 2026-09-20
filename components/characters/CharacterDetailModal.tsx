@@ -15,6 +15,8 @@ import {
 import { parseDisplayName } from "@/lib/data/roster";
 import { useBodyScrollLock } from "@/lib/hooks/useBodyScrollLock";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
+import { useConfirmDialog } from "@/lib/hooks/useConfirmDialog";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 interface CharacterDetailModalProps {
   character: RosterCharacter;
@@ -485,6 +487,7 @@ export function CharacterDetailModal({
 
   // Lock background scroll while the modal is open, and restore it on close.
   useBodyScrollLock();
+  const { requestConfirm, dialogProps } = useConfirmDialog();
 
   function handleCenter(index: number) {
     setCenterIndex(index);
@@ -553,14 +556,15 @@ export function CharacterDetailModal({
   }
 
   return (
-    <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
-      role="dialog"
-      aria-modal="true"
-      aria-label={displayName.text}
-      onClick={onClose}
-    >
+    <>
       <div
+        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+        role="dialog"
+        aria-modal="true"
+        aria-label={displayName.text}
+        onClick={onClose}
+      >
+        <div
         className="flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-panel)] shadow-2xl sm:max-h-[90vh] sm:flex-row"
         onClick={(e) => e.stopPropagation()}
       >
@@ -613,11 +617,17 @@ export function CharacterDetailModal({
             <div className="flex shrink-0 items-center gap-2">
               <button
                 type="button"
-                onClick={() => {
-                  if (window.confirm(`Reset ${displayName.text} back to default?`)) {
-                    onReset();
-                  }
-                }}
+                onClick={() =>
+                  requestConfirm(
+                    {
+                      title: `Reset ${displayName.text}?`,
+                      description: "This clears level, insight, resonance, portrait, and garment/art selection. This cannot be undone.",
+                      confirmLabel: "Reset",
+                      danger: true,
+                    },
+                    onReset
+                  )
+                }
                 aria-label={`Reset ${displayName.text}`}
                 title="Reset character"
                 className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
@@ -686,8 +696,11 @@ export function CharacterDetailModal({
               />
             </div>
           </div>
+          </div>
         </div>
       </div>
-    </div>
+
+      {dialogProps && <ConfirmDialog {...dialogProps} />}
+    </>
   );
 }

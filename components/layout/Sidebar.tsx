@@ -295,7 +295,7 @@ export function Sidebar() {
             ${moreOpen || moreActive ? "text-[var(--color-accent)]" : "text-[var(--color-text-faint)]"}`}
         >
           <span className="flex h-5 w-5 items-center justify-center">
-            <IconMore />
+            <IconMore open={moreOpen} />
           </span>
           <span className="truncate">More</span>
         </button>
@@ -323,27 +323,34 @@ export function Sidebar() {
           ${moreOpen ? "translate-y-0" : "pointer-events-none -translate-y-2 opacity-0"}`}
         style={{ top: "2.75rem" }}
       >
-        <nav aria-label="More" className="flex flex-col gap-1 p-2">
-          {MORE_NAV_ITEMS.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMoreOpen(false)}
-                aria-current={active ? "page" : undefined}
-                className={`flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[0.8rem] font-medium transition-colors
-                  ${
-                    active
-                      ? "bg-[var(--color-accent)] text-white"
-                      : "text-[var(--color-text-dim)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
-                  }`}
-              >
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center">{item.icon}</span>
-                <span className="truncate">{item.label}</span>
-              </Link>
-            );
-          })}
+        <nav aria-label="More" className="flex flex-col gap-3 p-3">
+          {NAV_GROUPS.map((group) => (
+            <div key={group.label} className="flex flex-col gap-1">
+              <span className="px-2.5 pb-1 text-[0.62rem] font-semibold uppercase tracking-wide text-[var(--color-text-faint)]">
+                {group.label}
+              </span>
+              {group.items.map((item) => {
+                const active = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMoreOpen(false)}
+                    aria-current={active ? "page" : undefined}
+                    className={`flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-[0.8rem] font-medium transition-colors
+                      ${
+                        active
+                          ? "bg-[var(--color-accent)] text-white"
+                          : "text-[var(--color-text-dim)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+                      }`}
+                  >
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center">{item.icon}</span>
+                    <span className="truncate">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
       </div>
 

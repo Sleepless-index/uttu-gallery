@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 export function IconArcanists() {
   // Portrait bust — matches the "character" gallery
   return (
@@ -92,13 +94,52 @@ export function IconSettings() {
   );
 }
 
-export function IconMore() {
-  // Horizontal ellipsis — "more" overflow menu
+export function IconMore({ open = false }: { open?: boolean }) {
+  // Three bars that morph into an X when the drawer is open — three
+  // <rect>s animated with CSS transforms/opacity via inline style so no
+  // extra stylesheet or Tailwind keyframes are needed for this one icon.
+  const barBase: CSSProperties = {
+    transformOrigin: "8px 8px",
+    transition: "transform 200ms ease, opacity 150ms ease",
+  };
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <circle cx="3.2" cy="8" r="1.3" fill="currentColor" />
-      <circle cx="8" cy="8" r="1.3" fill="currentColor" />
-      <circle cx="12.8" cy="8" r="1.3" fill="currentColor" />
+      <rect
+        x="2.5"
+        y="3.7"
+        width="11"
+        height="1.5"
+        rx="0.75"
+        fill="currentColor"
+        style={{
+          ...barBase,
+          transform: open ? "translateY(4.3px) rotate(45deg)" : "none",
+        }}
+      />
+      <rect
+        x="2.5"
+        y="7.25"
+        width="11"
+        height="1.5"
+        rx="0.75"
+        fill="currentColor"
+        style={{
+          ...barBase,
+          opacity: open ? 0 : 1,
+        }}
+      />
+      <rect
+        x="2.5"
+        y="10.8"
+        width="11"
+        height="1.5"
+        rx="0.75"
+        fill="currentColor"
+        style={{
+          ...barBase,
+          transform: open ? "translateY(-4.3px) rotate(-45deg)" : "none",
+        }}
+      />
     </svg>
   );
 }
