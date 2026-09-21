@@ -95,56 +95,55 @@ export function IconSettings() {
 }
 
 export function IconMore({ open = false }: { open?: boolean }) {
-  // Three bars that morph into an X — ported from a verified CSS burger
-  // (22px bar, 2px height, 5px gap = 7px center-to-center) into SVG rects
-  // on a 22x22 viewBox so the proportions match exactly: bars centered on
-  // y=7/11/15 (7px apart), rotating/translating around the icon's true
-  // center (11,11) rather than a guessed origin.
+  // Three absolutely-positioned <span> bars morphing into an ×, not an SVG.
+  // Plain HTML/CSS transforms on real block elements avoid the SVG
+  // transform-origin inconsistencies that broke the earlier SVG-<rect>
+  // version — a <span> rotates around its own center by default, no
+  // transform-box/fill-box needed. Proportions (bar width, height, gap)
+  // are scaled down from a verified 26px reference box to fit the 20px
+  // (h-5 w-5) slot this renders inside on the nav bar.
+  const boxSize = 20;
+  const barWidth = 15; // 20/26 of the 26px reference box, scaled to 20px
+  const barHeight = 1.5;
+  const gap = 5.4; // top-to-middle / middle-to-bottom spacing, same ratio as the 7px reference
+  const left = (boxSize - barWidth) / 2;
+  const midTop = (boxSize - barHeight) / 2;
+
   const barBase: CSSProperties = {
-    transformBox: "fill-box",
-    transformOrigin: "center",
-    transition: "transform 250ms ease, opacity 200ms ease",
+    position: "absolute",
+    left,
+    width: barWidth,
+    height: barHeight,
+    borderRadius: barHeight,
+    background: "currentColor",
+    transition: "transform 250ms cubic-bezier(.4, 0, .2, 1), opacity 150ms ease-out",
   };
+
   return (
-    <svg width="16" height="16" viewBox="0 0 22 22" fill="none">
-      <rect
-        x="3"
-        y="6"
-        width="16"
-        height="2"
-        rx="1"
-        fill="currentColor"
+    <span style={{ position: "relative", width: boxSize, height: boxSize, display: "block" }}>
+      <span
         style={{
           ...barBase,
-          transform: open ? "translateY(7px) rotate(45deg)" : "none",
+          top: midTop - gap,
+          transform: open ? `translateY(${gap}px) rotate(45deg)` : "none",
         }}
       />
-      <rect
-        x="3"
-        y="10"
-        width="16"
-        height="2"
-        rx="1"
-        fill="currentColor"
+      <span
         style={{
           ...barBase,
-          transform: open ? "scaleX(0)" : "scaleX(1)",
+          top: midTop,
           opacity: open ? 0 : 1,
+          transform: open ? "scaleX(0.4)" : "none",
         }}
       />
-      <rect
-        x="3"
-        y="14"
-        width="16"
-        height="2"
-        rx="1"
-        fill="currentColor"
+      <span
         style={{
           ...barBase,
-          transform: open ? "translateY(-7px) rotate(-45deg)" : "none",
+          top: midTop + gap,
+          transform: open ? `translateY(${-gap}px) rotate(-45deg)` : "none",
         }}
       />
-    </svg>
+    </span>
   );
 }
 
@@ -159,6 +158,18 @@ export function IconMyPsychubes() {
         strokeLinejoin="round"
       />
       <path d="M2.5 6.5h11M8 2.2v11.6" stroke="currentColor" strokeWidth="1" strokeOpacity="0.6" />
+    </svg>
+  );
+}
+
+export function IconPullChecklist() {
+  // Three stacked rows with a check on the top row — Pull/Maybe/Skip stack
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <rect x="2.5" y="2.5" width="11" height="3" rx="1" stroke="currentColor" strokeWidth="1.3" />
+      <rect x="2.5" y="6.5" width="11" height="3" rx="1" stroke="currentColor" strokeWidth="1.3" strokeOpacity="0.6" />
+      <rect x="2.5" y="10.5" width="11" height="3" rx="1" stroke="currentColor" strokeWidth="1.3" strokeOpacity="0.6" />
+      <path d="M4.8 4 5.6 4.8 7.2 3.2" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

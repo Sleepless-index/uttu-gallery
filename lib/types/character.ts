@@ -83,6 +83,9 @@ export const emptySettings = (): TrackerSettings => ({
   hideCn: true,
 });
 
+/** A decision made on the Playground → Pull Checklist page. */
+export type PullDecision = "pull" | "maybe" | "skip";
+
 export interface TrackerState {
   progress: Record<number, CharacterProgress>;
   upcoming: UpcomingArcanist[];
@@ -91,6 +94,8 @@ export interface TrackerState {
   /** Keyed by Psychube id. Presence of a key means owned. */
   ownedPsychubes: Record<number, PsychubeProgress>;
   settings: TrackerSettings;
+  /** Keyed by character id. Absence means no decision made yet. */
+  pullChecklist: Record<number, PullDecision>;
 }
 
 export const emptyTrackerState = (): TrackerState => ({
@@ -100,6 +105,7 @@ export const emptyTrackerState = (): TrackerState => ({
   teams: [],
   ownedPsychubes: {},
   settings: emptySettings(),
+  pullChecklist: {},
 });
 
 /** Number of character slots in a single team. */

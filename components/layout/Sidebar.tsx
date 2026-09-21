@@ -30,6 +30,7 @@ import {
   IconMyTeams,
   IconMyPsychubes,
   IconMore,
+  IconPullChecklist,
 } from "@/components/layout/navIcons";
 import { SettingsDropdown } from "@/components/settings/SettingsDropdown";
 
@@ -63,6 +64,12 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Tools",
     items: [
       { href: "/tools/planner", label: "Probability", icon: <IconPlanner /> },
+    ],
+  },
+  {
+    label: "Playground",
+    items: [
+      { href: "/playground/pull-checklist", label: "Pull Checklist", icon: <IconPullChecklist /> },
     ],
   },
 ];

@@ -10,6 +10,7 @@ import {
   emptyTeamSlots,
   type CharacterProgress,
   type PsychubeProgress,
+  type PullDecision,
   type Team,
   type TeamSlot,
   type TrackerSettings,
@@ -34,6 +35,7 @@ function loadState(): TrackerState {
       teams: parsed.teams ?? [],
       ownedPsychubes: parsed.ownedPsychubes ?? {},
       settings: { ...emptySettings(), ...parsed.settings },
+      pullChecklist: parsed.pullChecklist ?? {},
     };
   } catch {
     return emptyTrackerState();
@@ -278,6 +280,18 @@ function useTrackerStateInternal() {
     []
   );
 
+  const setPullDecision = useCallback((id: number, decision: PullDecision | null) => {
+    setState((prev) => {
+      const pullChecklist = { ...prev.pullChecklist };
+      if (decision == null) {
+        delete pullChecklist[id];
+      } else {
+        pullChecklist[id] = decision;
+      }
+      return { ...prev, pullChecklist };
+    });
+  }, []);
+
   const updateSettings = useCallback((patch: Partial<TrackerSettings>) => {
     setState((prev) => ({
       ...prev,
@@ -314,6 +328,7 @@ function useTrackerStateInternal() {
     togglePsychubeOwned,
     updatePsychubeProgress,
     updateSettings,
+    setPullDecision,
   };
 }
 
