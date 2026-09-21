@@ -95,59 +95,55 @@ export function IconSettings() {
 }
 
 export function IconMore({ open = false }: { open?: boolean }) {
-  // Three bars that morph into an X. Deliberately NOT using CSS
-  // transform-box/transform-origin here — SVG shape elements have
-  // inconsistent support for "fill-box" origins across browsers
-  // (notably WebKit/Safari via inline styles), which produced bars
-  // rotating around the wrong point instead of their own center. Using
-  // SVG's native transform attribute with an explicit rotate(angle, cx,
-  // cy) sidesteps that entirely: cx/cy are each bar's own geometric
-  // center, computed directly from its x/y/width/height below, so the
-  // rotation pivot is correct everywhere.
-  const barWidth = 16;
-  const barHeight = 2;
-  const barX = 3;
-  const cx = barX + barWidth / 2; // 11 — same as the icon's center, by design
-  const topY = 6;
-  const midY = 10;
-  const bottomY = 14;
+  // Three absolutely-positioned <span> bars morphing into an ×, not an SVG.
+  // Plain HTML/CSS transforms on real block elements avoid the SVG
+  // transform-origin inconsistencies that broke the earlier SVG-<rect>
+  // version — a <span> rotates around its own center by default, no
+  // transform-box/fill-box needed. Proportions (bar width, height, gap)
+  // are scaled down from a verified 26px reference box to fit the 20px
+  // (h-5 w-5) slot this renders inside on the nav bar.
+  const boxSize = 20;
+  const barWidth = 15; // 20/26 of the 26px reference box, scaled to 20px
+  const barHeight = 1.5;
+  const gap = 5.4; // top-to-middle / middle-to-bottom spacing, same ratio as the 7px reference
+  const left = (boxSize - barWidth) / 2;
+  const midTop = (boxSize - barHeight) / 2;
 
-  const transitionStyle: CSSProperties = { transition: "transform 250ms ease, opacity 200ms ease" };
+  const barBase: CSSProperties = {
+    position: "absolute",
+    left,
+    width: barWidth,
+    height: barHeight,
+    borderRadius: barHeight,
+    background: "currentColor",
+    transition: "transform 250ms cubic-bezier(.4, 0, .2, 1), opacity 150ms ease-out",
+  };
 
   return (
-    <svg width="16" height="16" viewBox="0 0 22 22" fill="none">
-      <rect
-        x={barX}
-        y={topY}
-        width={barWidth}
-        height={barHeight}
-        rx="1"
-        fill="currentColor"
-        style={transitionStyle}
-        transform={open ? `translate(0, 7) rotate(45, ${cx}, ${topY + barHeight / 2})` : undefined}
+    <span style={{ position: "relative", width: boxSize, height: boxSize, display: "block" }}>
+      <span
+        style={{
+          ...barBase,
+          top: midTop - gap,
+          transform: open ? `translateY(${gap}px) rotate(45deg)` : "none",
+        }}
       />
-      <rect
-        x={barX}
-        y={midY}
-        width={barWidth}
-        height={barHeight}
-        rx="1"
-        fill="currentColor"
-        opacity={open ? 0 : 1}
-        style={transitionStyle}
-        transform={open ? `translate(${cx}, ${midY + barHeight / 2}) scale(0, 1) translate(${-cx}, ${-(midY + barHeight / 2)})` : undefined}
+      <span
+        style={{
+          ...barBase,
+          top: midTop,
+          opacity: open ? 0 : 1,
+          transform: open ? "scaleX(0.4)" : "none",
+        }}
       />
-      <rect
-        x={barX}
-        y={bottomY}
-        width={barWidth}
-        height={barHeight}
-        rx="1"
-        fill="currentColor"
-        style={transitionStyle}
-        transform={open ? `translate(0, -7) rotate(-45, ${cx}, ${bottomY + barHeight / 2})` : undefined}
+      <span
+        style={{
+          ...barBase,
+          top: midTop + gap,
+          transform: open ? `translateY(${-gap}px) rotate(-45deg)` : "none",
+        }}
       />
-    </svg>
+    </span>
   );
 }
 
