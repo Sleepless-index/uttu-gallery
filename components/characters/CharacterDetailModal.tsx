@@ -614,7 +614,7 @@ export function CharacterDetailModal({
                 {displayName.text}
               </span>
             </div>
-            <div className="flex shrink-0 items-center gap-2">
+            <div className="mr-1 flex shrink-0 items-center gap-2 sm:mr-0">
               <button
                 type="button"
                 onClick={() =>

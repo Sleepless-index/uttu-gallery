@@ -174,7 +174,7 @@ export function CharacterPickerModal({ selectedIds, onClose, onDone }: Character
                       setAfflatus("all");
                       close();
                     }}
-                    className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-center text-[0.72rem] font-medium text-[var(--color-text-faint)] transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+                    className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-center text-[0.72rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
                   >
                     Clear all filters
                   </button>

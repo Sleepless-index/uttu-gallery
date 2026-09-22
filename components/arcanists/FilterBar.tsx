@@ -123,7 +123,6 @@ export function FilterBar({
                         fill
                         sizes="16px"
                         className="object-contain"
-                        style={{ filter: afflatus === a ? "brightness(0) invert(1)" : undefined }}
                       />
                     </span>
                     {a}
@@ -139,7 +138,7 @@ export function FilterBar({
                   onAfflatusChange("all");
                   close();
                 }}
-                className="w-full rounded-lg px-3 py-1.5 text-center text-[0.72rem] font-medium text-[var(--color-text-faint)] transition-colors hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+                className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-center text-[0.72rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
               >
                 Clear all filters
               </button>
