@@ -293,14 +293,6 @@ function PortraitPips({
   );
 }
 
-/** Shortest signed distance from `index` to `center` on a ring of size `count`. */
-function ringOffset(index: number, center: number, count: number): number {
-  let diff = (index - center) % count;
-  if (diff > count / 2) diff -= count;
-  if (diff < -count / 2) diff += count;
-  return diff;
-}
-
 function GarmentCarousel({
   items,
   centerIndex,
@@ -320,18 +312,17 @@ function GarmentCarousel({
     onCenter(((centerIndex + delta) % count + count) % count);
   }
 
-  // Real pixel widths per card state — side cards are genuinely smaller,
-  // not just a scaled-down copy of the center card, so nothing clips.
   const CENTER_WIDTH = centerWidth;
   const SIDE_WIDTH = sideWidth;
-  const CARD_GAP = 10; // visible breathing room between adjacent cards
+  const CARD_GAP = 10;
   const CENTER_HEIGHT = Math.round((CENTER_WIDTH * 524) / 224);
   const SIDE_HEIGHT = Math.round((SIDE_WIDTH * 524) / 224);
   const LABEL_HEIGHT = 52;
+  const STEP = SIDE_WIDTH + CARD_GAP;
 
   return (
     <div
-      className="relative flex items-center justify-center overflow-visible"
+      className="relative flex items-center justify-center overflow-hidden"
       style={{ height: CENTER_HEIGHT + LABEL_HEIGHT }}
     >
       {count > 1 && (
@@ -345,21 +336,14 @@ function GarmentCarousel({
         </button>
       )}
 
-      <div className="relative h-full w-full">
+      <div className="relative h-full w-full overflow-hidden">
         {items.map((item, i) => {
-          const offset = ringOffset(i, centerIndex, count);
-          // Only render the center card and its immediate neighbors — anything
-          // further away would be fully hidden behind them anyway.
-          if (Math.abs(offset) > 1) return null;
-
-          const isCenter = offset === 0;
+          const isCenter = i === centerIndex;
           const width = isCenter ? CENTER_WIDTH : SIDE_WIDTH;
           const cardHeight = isCenter ? CENTER_HEIGHT : SIDE_HEIGHT;
-          const translateX = offset * (CENTER_WIDTH / 2 + SIDE_WIDTH / 2 + CARD_GAP);
-          // Push shorter side-card images down so they align on the same
-          // vertical center as the taller center card image.
           const topOffset = (CENTER_HEIGHT - cardHeight) / 2;
-          const opacity = isCenter ? 1 : 0.45;
+          const translateX = (i - centerIndex) * STEP;
+          const opacity = isCenter ? 1 : 0.5;
           const z = isCenter ? 20 : 10;
 
           return (
@@ -570,20 +554,27 @@ export function CharacterDetailModal({
       >
         {/* Carousel — left column on desktop, top section on mobile.
             Base look + garments, replaces the old static portrait */}
-        <div className="relative flex shrink-0 flex-col overflow-hidden border-b border-[var(--color-border)] bg-[var(--color-surface)] px-2 py-3 sm:w-64 sm:border-b-0 sm:border-r sm:py-4">
-          <span className="mb-2 block text-center text-[0.65rem] font-semibold uppercase tracking-wide text-[var(--color-text-faint)]">
-            Garments
-          </span>
-          <div className="flex flex-1 flex-col justify-center">
-            <GarmentCarousel
-              items={items}
-              centerIndex={centerIndex}
-              onCenter={handleCenter}
-              centerWidth={116}
-              sideWidth={78}
+        <div className="relative flex shrink-0 flex-col overflow-hidden border-b border-[var(--color-border)] bg-[var(--color-surface)] sm:w-64 sm:border-b-0 sm:border-r">
+          <div className="relative w-full" style={{ aspectRatio: "544 / 1080" }}>
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: "url(/Backgrounds/garment-carousel-bg.png)" }}
             />
+            <div className="absolute inset-0 bg-[var(--color-surface)]/40" />
+            <div
+              className="absolute left-0 right-0 z-10 flex items-center justify-center"
+              style={{ top: "18%", height: "76%" }}
+            >
+              <GarmentCarousel
+                items={items}
+                centerIndex={centerIndex}
+                onCenter={handleCenter}
+                centerWidth={100}
+                sideWidth={68}
+              />
+            </div>
           </div>
-          <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-1 items-center justify-center py-3 sm:py-4">
             <button
               type="button"
               onClick={equip}
