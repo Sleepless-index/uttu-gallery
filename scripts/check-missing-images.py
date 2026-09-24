@@ -7,8 +7,10 @@ array) against the actual image files on disk and reports anything missing.
 
 Checks:
   - Base art:       public/Characters/Base/{id}01.webp   (one per roster entry)
-  - Insight-2 art:   public/Characters/Base/{id}02.webp   (only for ids listed in
-                     I2_ART_IDS inside lib/assets/characterAssets.ts)
+  - Insight-2 art:   public/Characters/Base/{id}02.webp   (only for characters who
+                     actually have distinct i2 splash art — see I2_MIN_RARITY /
+                     NO_I2_ART_IDS below, plus the I2_ART_IDS list in
+                     lib/assets/characterAssets.ts)
   - Afflatus icons:  public/Icons/Afflatus/afl_{afflatus}.webp
   - Rarity plates:   public/Icons/RarityBg/bg-rare-{rarity}.webp   (rarity clamped 2-6)
   - Garment cards:   public/Characters/Garments/{garment.id}.webp
@@ -19,6 +21,10 @@ falls back to base art for that character even though Insight 2 art is
 sitting right there — this is exactly the "why doesn't my new character's
 I2 art show up" bug, and it happens every time new I2 art is added without
 updating that manifest by hand.
+
+At the end, prints ready-to-paste `scrape.py` commands that will fetch the
+missing images (per-id fast path for character/garment art, plus the shared
+bundle for afflatus/rarity icons).
 
 Usage:
     python3 scripts/check-missing-images.py
@@ -36,6 +42,13 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 PUBLIC_DIR = ROOT / "public"
 ASSETS_TS = ROOT / "lib" / "assets" / "characterAssets.ts"
+
+# r2/r3 characters never get distinct i2 splash art — that's a game rule.
+I2_MIN_RARITY = 4
+
+# r4+ characters who nonetheless have no distinct i2 splash art
+# (stat-only i2, no outfit change). Maintained by hand, same as I2_ART_IDS.
+NO_I2_ART_IDS = {3023}   # Sonetto
 
 
 def load_json(path: Path):
@@ -89,15 +102,22 @@ def check_roster(roster: list[dict], i2_ids: set[int]) -> dict[str, list[str]]:
     for c in roster:
         cid = c["id"]
         name = c.get("name", f"id {cid}")
+        rarity = clamp_rarity(c.get("rarity", 2))
 
         base_path = PUBLIC_DIR / "Characters" / "Base" / f"{cid}01.webp"
         if not base_path.exists():
             missing["base_art"].append(f"{name} (id {cid}) -> Characters/Base/{cid}01.webp")
 
-        if cid in i2_ids:
+        # Only report missing i2 art for characters who should actually have
+        # it: either explicitly registered, or r4+ (minus the hand-maintained
+        # stat-only-i2 exclusion list).
+        if cid not in NO_I2_ART_IDS and (cid in i2_ids or rarity >= I2_MIN_RARITY):
             i2_path = PUBLIC_DIR / "Characters" / "Base" / f"{cid}02.webp"
             if not i2_path.exists():
-                missing["i2_art"].append(f"{name} (id {cid}) -> Characters/Base/{cid}02.webp")
+                registered = "registered" if cid in i2_ids else "NOT registered in I2_ART_IDS"
+                missing["i2_art"].append(
+                    f"{name} (id {cid}) -> Characters/Base/{cid}02.webp [{registered}]"
+                )
 
         for afl in flatten_afflatus(c.get("afflatus")):
             key = "intellect" if str(afl).lower() == "intelligence" else str(afl).lower()
@@ -108,7 +128,6 @@ def check_roster(roster: list[dict], i2_ids: set[int]) -> dict[str, list[str]]:
             if not icon_path.exists():
                 missing["afflatus_icon"].append(f"{afl} -> Icons/Afflatus/afl_{key}.webp")
 
-        rarity = clamp_rarity(c.get("rarity", 2))
         if rarity not in seen_rarity_plates:
             seen_rarity_plates.add(rarity)
             plate_path = PUBLIC_DIR / "Icons" / "RarityBg" / f"bg-rare-{rarity}.webp"
@@ -181,6 +200,74 @@ def print_section(title: str, items: list[str]):
         print(f"  - {item}")
 
 
+# ---------------------------------------------------------------------------
+# scrape.py integration
+# ---------------------------------------------------------------------------
+
+def build_scrape_commands(
+    roster_missing: dict, garment_missing: list[str]
+) -> tuple[list[str], list[str]]:
+    """Translate the checker's 'what file is missing' output into the
+    arguments scrape.py actually accepts.
+
+    Returns (asset_ids, shared_kinds):
+      - asset_ids:    6-digit ids for `scrape.py --asset-id a,b,c`
+      - shared_kinds: kinds for `scrape.py --assets shared`
+    """
+    asset_ids: list[str] = []
+    seen_ids: set[str] = set()
+
+    def add(aid: str):
+        if aid not in seen_ids:
+            seen_ids.add(aid)
+            asset_ids.append(aid)
+
+    # base art: {char_id}01
+    for line in roster_missing["base_art"]:
+        m = re.search(r"id (\d+)\)", line)
+        if m:
+            add(f"{m.group(1)}01")
+
+    # insight-2 art: {char_id}02
+    for line in roster_missing["i2_art"]:
+        m = re.search(r"id (\d+)\)", line)
+        if m:
+            add(f"{m.group(1)}02")
+
+    # garment cards: garment id verbatim (already 6 digits, ends 03+)
+    for line in garment_missing:
+        m = re.search(r"\(id (\d+)\)", line)
+        if m:
+            add(m.group(1))
+
+    shared: list[str] = []
+    if roster_missing["afflatus_icon"] or roster_missing["rarity_plate"]:
+        shared.append("shared")
+
+    return asset_ids, shared
+
+
+def print_scrape_commands(asset_ids: list[str], shared: list[str]) -> None:
+    if not asset_ids and not shared:
+        return
+
+    print("\n" + "=" * 50)
+    print("scrape.py commands to fetch the missing images")
+    print("=" * 50)
+
+    if asset_ids:
+        print("\n# Per-id assets (fast path, no roster/page fetch):")
+        print(f"python3 scrape.py --asset-id {','.join(asset_ids)}")
+
+    if shared:
+        print("\n# Shared UI assets (afflatus / rarity icons):")
+        print(f"python3 scrape.py --assets {','.join(shared)}")
+
+
+# ---------------------------------------------------------------------------
+# main
+# ---------------------------------------------------------------------------
+
 def main():
     print(f"Checking images referenced by roster.json (characters + nested garments)")
     print(f"Project root: {ROOT}\n")
@@ -206,6 +293,9 @@ def main():
         "Garment cards possibly misfiled into public/Characters/Base/ (id coincides with a character+02 pattern)",
         misfiled_garments,
     )
+
+    asset_ids, shared = build_scrape_commands(roster_missing, garment_missing)
+    print_scrape_commands(asset_ids, shared)
 
     total = (
         sum(len(v) for v in roster_missing.values())

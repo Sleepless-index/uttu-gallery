@@ -1,5 +1,25 @@
 [
   {
+    "id": 3163,
+    "slug": "glyndŵr",
+    "name": "Glyndŵr",
+    "rarity": 4,
+    "afflatus": "Beast",
+    "race": "Arcanist",
+    "version": "4.0",
+    "garments": []
+  },
+  {
+    "id": 3158,
+    "slug": "drake",
+    "name": "Drake",
+    "rarity": 6,
+    "afflatus": "Beast",
+    "race": "Arcanist",
+    "version": "4.0",
+    "garments": []
+  },
+  {
     "id": 3157,
     "slug": "narcissus",
     "name": "Narcissus",
@@ -18,6 +38,25 @@
     "race": "Arcanist",
     "version": "3.9",
     "garments": []
+  },
+  {
+    "id": 3155,
+    "slug": "huntsworn_lilya",
+    "name": "Huntsworn Lilya",
+    "rarity": 6,
+    "afflatus": "Star",
+    "race": "Arcanist",
+    "version": "4.0",
+    "garments": [
+      {
+        "id": 315503,
+        "name": "Rainbow-Colored Crown",
+        "category": "unique",
+        "series_id": 21001,
+        "version": "4.0",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3154,
@@ -98,7 +137,16 @@
     "afflatus": "Mineral",
     "race": "Arcanist",
     "version": "3.8",
-    "garments": []
+    "garments": [
+      {
+        "id": 314503,
+        "name": "A Lullaby for the Spirits",
+        "category": "advanced",
+        "series_id": 21002,
+        "version": "4.0",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3144,
@@ -166,7 +214,16 @@
     "afflatus": "Mineral",
     "race": "Arcanist",
     "version": "3.8",
-    "garments": []
+    "garments": [
+      {
+        "id": 314003,
+        "name": "The Cabinet of Vivification",
+        "category": "advanced",
+        "series_id": 21002,
+        "version": "4.0",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3139,
@@ -244,7 +301,16 @@
     "afflatus": "Intelligence",
     "race": "Arcanist",
     "version": "3.2",
-    "garments": []
+    "garments": [
+      {
+        "id": 313403,
+        "name": "Plucking the Strings of Fate",
+        "category": "unique",
+        "series_id": 20028,
+        "version": "4.0",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3132,
@@ -468,6 +534,14 @@
         "series_id": 20024,
         "version": "3.5",
         "index": 3
+      },
+      {
+        "id": 311705,
+        "name": "Star Shepherdess",
+        "category": "roar_jukebox",
+        "series_id": 24001,
+        "version": "4.0",
+        "index": 4
       }
     ]
   },
@@ -955,7 +1029,16 @@
     "afflatus": "Star",
     "race": "Arcanist",
     "version": "1.9",
-    "garments": []
+    "garments": [
+      {
+        "id": 309103,
+        "name": "Song of the Skeletal Reefs",
+        "category": "free",
+        "series_id": 20021,
+        "version": "4.0",
+        "index": 2
+      }
+    ]
   },
   {
     "id": 3088,
@@ -1781,6 +1864,14 @@
         "series_id": 21001,
         "version": "2.7",
         "index": 3
+      },
+      {
+        "id": 304805,
+        "name": "With the Surge of the Cosmic Tide",
+        "category": "advanced",
+        "series_id": 20028,
+        "version": "4.0",
+        "index": 4
       }
     ]
   },
@@ -2238,6 +2329,14 @@
         "series_id": 20009,
         "version": "1.9",
         "index": 3
+      },
+      {
+        "id": 302507,
+        "name": "The Greatest Chord",
+        "category": "free",
+        "series_id": 20028,
+        "version": "4.0",
+        "index": 4
       }
     ]
   },

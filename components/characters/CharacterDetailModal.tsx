@@ -314,16 +314,17 @@ function GarmentCarousel({
 
   const CENTER_WIDTH = centerWidth;
   const SIDE_WIDTH = sideWidth;
-  const CARD_GAP = 10;
+  const CARD_GAP = 14;
+  const RING_PAD = 6;
   const CENTER_HEIGHT = Math.round((CENTER_WIDTH * 524) / 224);
   const SIDE_HEIGHT = Math.round((SIDE_WIDTH * 524) / 224);
   const LABEL_HEIGHT = 52;
-  const STEP = SIDE_WIDTH + CARD_GAP;
+  const STEP = CENTER_WIDTH / 2 + SIDE_WIDTH / 2 + CARD_GAP;
 
   return (
     <div
       className="relative flex items-center justify-center overflow-hidden"
-      style={{ height: CENTER_HEIGHT + LABEL_HEIGHT }}
+      style={{ height: CENTER_HEIGHT + LABEL_HEIGHT + RING_PAD, paddingTop: RING_PAD }}
     >
       {count > 1 && (
         <button
@@ -331,6 +332,7 @@ function GarmentCarousel({
           onClick={() => go(-1)}
           aria-label="Previous garment"
           className="absolute left-0 z-30 flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-panel)] text-[var(--color-text-dim)] shadow-md ring-1 ring-[var(--color-border)] transition-colors hover:text-[var(--color-text)]"
+          style={{ top: RING_PAD }}
         >
           <IconChevronLeft />
         </button>
@@ -396,6 +398,7 @@ function GarmentCarousel({
           onClick={() => go(1)}
           aria-label="Next garment"
           className="absolute right-0 z-30 flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-panel)] text-[var(--color-text-dim)] shadow-md ring-1 ring-[var(--color-border)] transition-colors hover:text-[var(--color-text)]"
+          style={{ top: RING_PAD }}
         >
           <IconChevronRight />
         </button>
