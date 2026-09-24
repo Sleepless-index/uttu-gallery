@@ -2,7 +2,7 @@
  * higher numeric version has only released in CN and not reached Global
  * yet — that's what "Hide CN content" filters out. Bump this as Global
  * catches up to CN patches. */
-export const GLB_VERSION = "3.7";
+export const GLB_VERSION = "3.8";
 
 const ALWAYS_VISIBLE_VERSIONS = new Set(["s01", "s02"]);
 
