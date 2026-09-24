@@ -554,27 +554,20 @@ export function CharacterDetailModal({
       >
         {/* Carousel — left column on desktop, top section on mobile.
             Base look + garments, replaces the old static portrait */}
-        <div className="relative flex shrink-0 flex-col overflow-hidden border-b border-[var(--color-border)] bg-[var(--color-surface)] sm:w-64 sm:border-b-0 sm:border-r">
-          <div className="relative w-full" style={{ aspectRatio: "544 / 1080" }}>
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: "url(/Backgrounds/garment-carousel-bg.png)" }}
+        <div className="relative flex shrink-0 flex-col overflow-hidden border-b border-[var(--color-border)] bg-[var(--color-surface)] px-2 py-3 sm:w-64 sm:border-b-0 sm:border-r sm:py-4">
+          <span className="mb-2 block text-center text-[0.65rem] font-semibold uppercase tracking-wide text-[var(--color-text-faint)]">
+            Garments
+          </span>
+          <div className="flex flex-1 flex-col justify-center">
+            <GarmentCarousel
+              items={items}
+              centerIndex={centerIndex}
+              onCenter={handleCenter}
+              centerWidth={116}
+              sideWidth={78}
             />
-            <div className="absolute inset-0 bg-[var(--color-surface)]/40" />
-            <div
-              className="absolute left-0 right-0 z-10 flex items-center justify-center"
-              style={{ top: "18%", height: "76%" }}
-            >
-              <GarmentCarousel
-                items={items}
-                centerIndex={centerIndex}
-                onCenter={handleCenter}
-                centerWidth={100}
-                sideWidth={68}
-              />
-            </div>
           </div>
-          <div className="flex flex-1 items-center justify-center py-3 sm:py-4">
+          <div className="flex flex-1 items-center justify-center">
             <button
               type="button"
               onClick={equip}
