@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { DateBadge } from "@/components/layout/DateBadge";
 import { DailyResetCountdown } from "@/components/home/DailyResetCountdown";
+import { PatchCountdown } from "@/components/home/PatchCountdown";
 import {
   IconArcanists,
   IconGarments,
@@ -90,17 +91,25 @@ export default function HomePage() {
             <span className="ml-4 h-px flex-1 bg-[var(--color-border)]" />
           </div>
 
-          <div className="flex flex-col items-center justify-center gap-4 px-1 sm:flex-row sm:justify-between sm:px-2">
+          <div className="flex flex-col items-center justify-center gap-5 px-1 sm:flex-row sm:justify-between sm:px-2">
             <DateBadge scale={1.8} />
+            <DailyResetCountdown />
+          </div>
+        </section>
 
-            <div className="flex min-w-0 flex-1 flex-col items-center sm:items-end">
-              <span className="mb-1 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[var(--color-text-dim)]">
-                Next reset
-              </span>
-              <div className="text-center sm:text-right">
-                <DailyResetCountdown />
-              </div>
-            </div>
+        <section aria-label="Patch status" className="mb-9 flex flex-col gap-4 sm:mb-10">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-dim)]">
+              Patch status
+            </span>
+            <span className="ml-4 h-px flex-1 bg-[var(--color-border)]" />
+          </div>
+
+          <div className="flex items-center justify-between rounded-2xl border border-[var(--color-border)] bg-[var(--color-panel)] px-4 py-3.5 sm:px-5">
+            <span className="text-[0.85rem] font-medium text-[var(--color-text-dim)]">
+              Current patch
+            </span>
+            <PatchCountdown />
           </div>
         </section>
 

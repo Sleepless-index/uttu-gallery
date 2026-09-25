@@ -51,7 +51,7 @@ export default function PullChecklistPage() {
   }, [state.pullChecklist]);
 
   const groups = useMemo(() => {
-    const cnCharacters = roster.filter((c) => isCnOnly(c.version));
+    const cnCharacters = roster.filter((c) => isCnOnly(c.version) && c.rarity === 6);
     const byVersion = new Map<string, typeof cnCharacters>();
     for (const c of cnCharacters) {
       const key = c.version ?? "";

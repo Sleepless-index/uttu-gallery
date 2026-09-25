@@ -77,6 +77,16 @@ function IconInsight2() {
   );
 }
 
+function IconMoreVertical() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="3" r="1.3" fill="currentColor" />
+      <circle cx="8" cy="8" r="1.3" fill="currentColor" />
+      <circle cx="8" cy="13" r="1.3" fill="currentColor" />
+    </svg>
+  );
+}
+
 export default function MyCharactersPage() {
   const { state, hydrated, getProgress, updateProgress, resetAllCharacters, resetCharacter } = useTrackerState();
   const { requestConfirm, dialogProps } = useConfirmDialog();
@@ -87,7 +97,18 @@ export default function MyCharactersPage() {
   const [exportError, setExportError] = useState<string | null>(null);
   const [showI2Art, setShowI2Art] = useState(false);
   const [renderedExport, setRenderedExport] = useState<RenderedExportImage | null>(null);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!moreMenuOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) setMoreMenuOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [moreMenuOpen]);
 
   // A previously-rendered preview no longer reflects what's on the page
   // once the roster or the I2-art toggle change — clear it so the button
@@ -180,44 +201,18 @@ export default function MyCharactersPage() {
           </h2>
           <div className="flex items-center gap-2">
             {myCharacters.length > 0 && (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setShowI2Art((v) => !v)}
-                  aria-pressed={showI2Art}
-                  aria-label="Toggle Insight 2 art for all characters"
-                  title="Show Insight 2 art"
-                  className={`flex h-9 w-9 items-center justify-center rounded-lg border transition-colors
-                    ${
-                      showI2Art
-                        ? "border-[var(--color-accent)] bg-[var(--color-accent)] text-white"
-                        : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
-                    }`}
-                >
-                  <IconInsight2 />
-                </button>
-                <button
-                  onClick={renderedExport ? handleDownloadExport : handleGenerateExport}
-                  disabled={exporting}
-                  className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
-                >
-                  {exporting ? <IconSpinner /> : <IconDownload />}
-                  <ExportButtonLabel
-                    exporting={exporting}
-                    exportProgress={exportProgress}
-                    byteSizeLabel={renderedExport ? formatFileSize(renderedExport.byteSize) : null}
-                  />
-                </button>
-                <button
-                  type="button"
-                  onClick={handleResetAll}
-                  aria-label="Reset all characters"
-                  title="Reset all characters"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
-                >
-                  <IconReset />
-                </button>
-              </>
+              <button
+                onClick={renderedExport ? handleDownloadExport : handleGenerateExport}
+                disabled={exporting}
+                className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
+              >
+                {exporting ? <IconSpinner /> : <IconDownload />}
+                <ExportButtonLabel
+                  exporting={exporting}
+                  exportProgress={exportProgress}
+                  byteSizeLabel={renderedExport ? formatFileSize(renderedExport.byteSize) : null}
+                />
+              </button>
             )}
             <button
               onClick={() => setPickerOpen(true)}
@@ -226,6 +221,51 @@ export default function MyCharactersPage() {
               <IconPlus />
               Add characters
             </button>
+            {myCharacters.length > 0 && (
+              <div className="relative" ref={moreMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => setMoreMenuOpen((v) => !v)}
+                  aria-expanded={moreMenuOpen}
+                  aria-label="More options"
+                  title="More options"
+                  className={`flex h-9 w-9 items-center justify-center rounded-lg border transition-colors
+                    ${
+                      moreMenuOpen
+                        ? "border-[var(--color-border-strong)] bg-[var(--color-surface-hover)] text-[var(--color-text)]"
+                        : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-dim)] hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
+                    }`}
+                >
+                  <IconMoreVertical />
+                </button>
+                {moreMenuOpen && (
+                  <div className="absolute right-0 top-[calc(100%+6px)] z-50 w-48 rounded-lg border border-[var(--color-border)] bg-[var(--color-panel)] py-1 shadow-xl">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowI2Art((v) => !v);
+                        setMoreMenuOpen(false);
+                      }}
+                      className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-[0.78rem] font-medium text-[var(--color-text-dim)] transition-colors hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+                    >
+                      <IconInsight2 />
+                      {showI2Art ? "Hide Insight 2 art" : "Show Insight 2 art"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMoreMenuOpen(false);
+                        handleResetAll();
+                      }}
+                      className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-[0.78rem] font-medium text-[var(--color-text-dim)] transition-colors hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)]"
+                    >
+                      <IconReset />
+                      Reset all characters
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

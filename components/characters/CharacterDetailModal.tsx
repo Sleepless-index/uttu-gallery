@@ -355,12 +355,13 @@ function GarmentCarousel({
               onClick={() => onCenter(i)}
               aria-pressed={isCenter}
               title={item.label}
-              className="absolute left-1/2 top-0 flex flex-col items-center gap-1.5 transition-all duration-300 ease-out"
+              className="absolute left-1/2 top-0 flex flex-col items-center gap-1.5"
               style={{
                 transform: `translateX(calc(-50% + ${translateX}px)) translateY(${topOffset}px)`,
                 opacity,
                 zIndex: z,
                 width,
+                transition: "transform 380ms cubic-bezier(0.22, 1, 0.36, 1), opacity 300ms ease-out, width 380ms cubic-bezier(0.22, 1, 0.36, 1)",
               }}
             >
               <div
