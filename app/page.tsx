@@ -83,32 +83,20 @@ export default function HomePage() {
           </nav>
         </section>
 
-        <section aria-label="Daily status" className="mb-9 flex flex-col gap-4 sm:mb-10">
+        <section aria-label="Status" className="mb-9 flex flex-col gap-4 sm:mb-10">
           <div className="flex items-center justify-between px-1">
             <span className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-dim)]">
-              Daily status
+              Status
             </span>
             <span className="ml-4 h-px flex-1 bg-[var(--color-border)]" />
           </div>
 
-          <div className="flex flex-col items-center justify-center gap-5 px-1 sm:flex-row sm:justify-between sm:px-2">
-            <DateBadge scale={1.8} />
-            <DailyResetCountdown />
-          </div>
-        </section>
+          <div className="flex flex-col items-center gap-7">
+            <div className="flex flex-col items-center justify-center gap-5 px-1 sm:flex-row sm:justify-between sm:px-2 sm:self-stretch">
+              <DateBadge scale={1.8} />
+              <DailyResetCountdown />
+            </div>
 
-        <section aria-label="Patch status" className="mb-9 flex flex-col gap-4 sm:mb-10">
-          <div className="flex items-center justify-between px-1">
-            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-dim)]">
-              Patch status
-            </span>
-            <span className="ml-4 h-px flex-1 bg-[var(--color-border)]" />
-          </div>
-
-          <div className="flex items-center justify-between rounded-2xl border border-[var(--color-border)] bg-[var(--color-panel)] px-4 py-3.5 sm:px-5">
-            <span className="text-[0.85rem] font-medium text-[var(--color-text-dim)]">
-              Current patch
-            </span>
             <PatchCountdown />
           </div>
         </section>
