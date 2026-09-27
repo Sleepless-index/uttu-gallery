@@ -11,7 +11,6 @@
   <!-- Version and License Badges -->
   <p>
     <img src="https://img.shields.io/badge/Game_Version-4.0-2ea44f?style=flat-square" alt="Game Version 4.0" />
-    <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License: MIT" />
   </p>
 
   <p>
@@ -95,9 +94,3 @@
 > **UTTU.Gallery** is an independent, fan-made project. It is **not** affiliated with, sponsored by, or endorsed by Bluepoch. All related characters, artwork, trademarks, and game assets are the property of their respective owners. This tool is provided free of charge for personal and community use only.
 
 ---
-
-## ◫ License
-
-This project's source code is licensed under the [MIT License](LICENSE). 
-
-*Note: This license applies **only** to the original code written for this repository. All game assets, characters, names, and artwork are the intellectual property of Bluepoch and are used here in accordance with fan-made project guidelines. This project does not claim ownership over any of Bluepoch's intellectual property.*
