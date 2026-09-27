@@ -152,6 +152,15 @@ export function Sidebar() {
     setMoreOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!moreOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [moreOpen]);
+
   function commitName() {
     updateProfile({ name: nameDraft.trim() });
     setEditingName(false);
