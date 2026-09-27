@@ -49,30 +49,22 @@ export default function HomePage() {
             <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-text-dim)]">
               Quick access
             </h2>
-            <span className="text-[0.68rem] text-[var(--color-text-dim)]">
-              {HOME_LINKS.length} modules
-            </span>
           </div>
 
           <nav className="grid w-full grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-3.5">
-            {HOME_LINKS.map((link, index) => (
+            {HOME_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="group relative flex min-h-[138px] flex-col justify-between overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-panel)] p-4 text-[var(--color-text-dim)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-strong)] active:translate-y-0"
+                className="group relative flex min-h-[138px] flex-col justify-between overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-panel)] p-4 text-[var(--color-text-dim)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--color-accent)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-strong)] active:translate-y-0"
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] transition-transform duration-200 group-hover:scale-105 [&_svg]:h-5 [&_svg]:w-5">
                   {link.icon}
                 </span>
 
                 <span className="flex items-end justify-between gap-2">
-                  <span>
-                    <span className="block text-[0.88rem] font-semibold tracking-tight">
-                      {link.label}
-                    </span>
-                    <span className="mt-0.5 block text-[0.62rem] uppercase tracking-wider opacity-60">
-                      Module {String(index + 1).padStart(2, "0")}
-                    </span>
+                  <span className="block text-[0.88rem] font-semibold tracking-tight">
+                    {link.label}
                   </span>
                   <span aria-hidden="true" className="translate-x-0 text-sm opacity-30 transition-all duration-200 group-hover:translate-x-0.5 group-hover:opacity-80">
                     →
