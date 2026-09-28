@@ -12,6 +12,7 @@ import { Dropdown } from "@/components/ui/Dropdown";
 import { FilterSection } from "@/components/ui/FilterSection";
 import { MenuItem } from "@/components/ui/MenuItem";
 import { IconFilter } from "@/components/ui/IconFilter";
+import { searchResultDelayStyle } from "@/lib/searchResultAnimation";
 
 type Garment = (typeof garments)[number];
 
@@ -64,9 +65,10 @@ interface GarmentCardProps {
   garment: Garment;
   charName: string;
   rarity: number;
+  style?: React.CSSProperties;
 }
 
-function GarmentCard({ garment, charName, rarity }: GarmentCardProps) {
+function GarmentCard({ garment, charName, rarity, style }: GarmentCardProps) {
   const [artLoaded, setArtLoaded] = useState(false);
   const [artErrored, setArtErrored] = useState(false);
   const [plateErrored, setPlateErrored] = useState(false);
@@ -74,7 +76,7 @@ function GarmentCard({ garment, charName, rarity }: GarmentCardProps) {
   const character = parseDisplayName(charName);
 
   return (
-    <div className="group relative">
+    <div className="group relative animate-search-result" style={style}>
       <div
         className="relative w-full overflow-hidden rounded-md border border-[var(--color-border)] transition-all duration-200 active:scale-[0.98] group-hover:-translate-y-1 group-hover:border-[var(--color-border-strong)] group-hover:shadow-lg group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)]"
         style={{ aspectRatio: "224 / 524" }}
@@ -258,13 +260,14 @@ export function GarmentsView() {
           No garments match your search or filters.
         </p>
       ) : (
-        <div className="grid grid-cols-4 gap-2 sm:gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
-          {filtered.map((g) => (
+        <div key={`${search}|${categoryFilter}`} className="grid grid-cols-4 gap-2 sm:gap-4 sm:grid-cols-4 md:grid-cols-5 lg:[grid-template-columns:repeat(auto-fill,minmax(140px,1fr))]">
+          {filtered.map((g, i) => (
             <GarmentCard
               key={g.id}
               garment={g}
               charName={characterNameById.get(g.characterId) ?? ""}
               rarity={characterRarityById.get(g.characterId) ?? 6}
+              style={searchResultDelayStyle(i)}
             />
           ))}
         </div>

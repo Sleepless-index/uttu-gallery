@@ -11,6 +11,7 @@ import { FilterSection } from "@/components/ui/FilterSection";
 import { IconFilter } from "@/components/ui/IconFilter";
 import { useBodyScrollLock } from "@/lib/hooks/useBodyScrollLock";
 import { PickerCard } from "@/components/characters/PickerCard";
+import { searchResultDelayStyle } from "@/lib/searchResultAnimation";
 
 interface CharacterPickerModalProps {
   /** Currently-selected character ids (owned/added), used to pre-check and to diff on Done. */
@@ -191,20 +192,21 @@ export function CharacterPickerModal({ selectedIds, onClose, onDone }: Character
               No arcanists match your filters.
             </p>
           ) : (
-            <div className="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7">
-              {filtered.map((c) => {
+            <div key={`${search}|${rarity}|${afflatus}`} className="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7">
+              {filtered.map((c, i) => {
                 const displayName = parseDisplayName(c.name);
                 return (
-                  <PickerCard
-                    key={c.id}
-                    id={c.id}
-                    name={displayName.text}
-                    italic={displayName.italic}
-                    rarity={c.rarity}
-                    afflatus={c.afflatus}
-                    selected={draft.has(c.id)}
-                    onToggle={() => toggle(c.id)}
-                  />
+                  <div key={c.id} className="animate-search-result" style={searchResultDelayStyle(i)}>
+                    <PickerCard
+                      id={c.id}
+                      name={displayName.text}
+                      italic={displayName.italic}
+                      rarity={c.rarity}
+                      afflatus={c.afflatus}
+                      selected={draft.has(c.id)}
+                      onToggle={() => toggle(c.id)}
+                    />
+                  </div>
                 );
               })}
             </div>

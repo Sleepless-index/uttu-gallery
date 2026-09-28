@@ -108,6 +108,30 @@ body {
   }
 }
 
+/* Search/filter result grids (Roster picker, Garments, Psychubes, Team
+   slot pickers): item enters with fade + scale-in. Delay is set inline
+   per-item via --search-result-delay (see lib/searchResultAnimation.ts),
+   staggered and capped so large result sets don't take long to settle. */
+@keyframes search-result-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-search-result {
+  animation: search-result-in 220ms ease-out backwards;
+  animation-delay: var(--search-result-delay, 0ms);
+}
+
+.animate-search-result > button {
+  width: 100%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

@@ -5,6 +5,7 @@ import { PickerCard } from "@/components/characters/PickerCard";
 import { parseDisplayName } from "@/lib/data/roster";
 import type { RosterCharacter } from "@/lib/types";
 import { useBodyScrollLock } from "@/lib/hooks/useBodyScrollLock";
+import { searchResultDelayStyle } from "@/lib/searchResultAnimation";
 
 interface TeamSlotPickerModalProps {
   /** The user's owned characters to choose from. */
@@ -146,8 +147,8 @@ export function TeamSlotPickerModal({
                 : "No characters match your search."}
             </p>
           ) : (
-            <div className="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7">
-              {filtered.map((c) => {
+            <div key={search} className="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7">
+              {filtered.map((c, i) => {
                 const pickIndex = pickedOrder.indexOf(c.id);
                 const picked = pickIndex !== -1;
                 // Disabled only when at capacity and this one isn't
@@ -156,18 +157,19 @@ export function TeamSlotPickerModal({
                 const disabled = atCapacity && !picked;
                 const displayName = parseDisplayName(c.name);
                 return (
-                  <PickerCard
-                    key={c.id}
-                    id={c.id}
-                    name={displayName.text}
-                    italic={displayName.italic}
-                    rarity={c.rarity}
-                    afflatus={c.afflatus}
-                    disabled={disabled}
-                    selected={picked}
-                    selectedNumber={picked ? pickIndex + 1 : undefined}
-                    onToggle={() => toggle(c.id)}
-                  />
+                  <div key={c.id} className="animate-search-result" style={searchResultDelayStyle(i)}>
+                    <PickerCard
+                      id={c.id}
+                      name={displayName.text}
+                      italic={displayName.italic}
+                      rarity={c.rarity}
+                      afflatus={c.afflatus}
+                      disabled={disabled}
+                      selected={picked}
+                      selectedNumber={picked ? pickIndex + 1 : undefined}
+                      onToggle={() => toggle(c.id)}
+                    />
+                  </div>
                 );
               })}
             </div>

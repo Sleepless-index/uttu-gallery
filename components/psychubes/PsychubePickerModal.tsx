@@ -6,6 +6,7 @@ import { useTrackerState } from "@/lib/hooks/useTrackerState";
 import type { RarityFilter } from "@/lib/types";
 import { useBodyScrollLock } from "@/lib/hooks/useBodyScrollLock";
 import { PsychubePickerTile } from "@/components/psychubes/PsychubePickerTile";
+import { searchResultDelayStyle } from "@/lib/searchResultAnimation";
 
 interface PsychubePickerModalProps {
   selectedIds: Set<number>;
@@ -114,16 +115,17 @@ export function PsychubePickerModal({ selectedIds, onClose, onDone }: PsychubePi
           {filtered.length === 0 ? (
             <p className="py-16 text-center text-[0.8rem] text-[var(--color-text-faint)]">No psychubes match your filters.</p>
           ) : (
-            <div className="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7">
-              {filtered.map((p) => (
-                <PsychubePickerTile
-                  key={p.id}
-                  id={p.id}
-                  name={p.name}
-                  rarity={p.rarity}
-                  selected={draft.has(p.id)}
-                  onToggle={() => toggle(p.id)}
-                />
+            <div key={`${search}|${rarity}`} className="grid grid-cols-4 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7">
+              {filtered.map((p, i) => (
+                <div key={p.id} className="animate-search-result" style={searchResultDelayStyle(i)}>
+                  <PsychubePickerTile
+                    id={p.id}
+                    name={p.name}
+                    rarity={p.rarity}
+                    selected={draft.has(p.id)}
+                    onToggle={() => toggle(p.id)}
+                  />
+                </div>
               ))}
             </div>
           )}
