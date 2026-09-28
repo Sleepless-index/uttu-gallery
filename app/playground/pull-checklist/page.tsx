@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { roster } from "@/lib/data/roster";
 import { isCnOnly, compareVersionDesc } from "@/lib/version";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
@@ -14,6 +15,9 @@ import {
 import { PullChecklistCard } from "@/components/playground/PullChecklistCard";
 import { PullChecklistExportGrid } from "@/components/playground/PullChecklistExportGrid";
 import { ExportButtonLabel } from "@/components/export/ExportButtonLabel";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+
+const CN_WARNING_ACK_KEY = "pullChecklistCnWarningAck";
 
 function IconDownload() {
   return (
@@ -40,6 +44,8 @@ function IconSpinner() {
 
 export default function PullChecklistPage() {
   const { state, hydrated, setPullDecision } = useTrackerState();
+  const router = useRouter();
+  const [cnAcknowledged, setCnAcknowledged] = useState<boolean | null>(null);
   const [exporting, setExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState<{ loaded: number; total: number } | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
@@ -49,6 +55,15 @@ export default function PullChecklistPage() {
   useEffect(() => {
     setRenderedExport(null);
   }, [state.pullChecklist]);
+
+  useEffect(() => {
+    setCnAcknowledged(window.sessionStorage.getItem(CN_WARNING_ACK_KEY) === "1");
+  }, []);
+
+  function acknowledgeCnWarning() {
+    window.sessionStorage.setItem(CN_WARNING_ACK_KEY, "1");
+    setCnAcknowledged(true);
+  }
 
   const groups = useMemo(() => {
     const cnCharacters = roster.filter((c) => isCnOnly(c.version) && c.rarity === 6);
@@ -97,10 +112,25 @@ export default function PullChecklistPage() {
     setRenderedExport(null);
   }
 
-  if (!hydrated) {
+  if (!hydrated || cnAcknowledged === null) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)]">
         <span className="text-[0.75rem] text-[var(--color-text-faint)]">Loading…</span>
+      </div>
+    );
+  }
+
+  if (!cnAcknowledged) {
+    return (
+      <div className="flex min-h-screen flex-col bg-[var(--color-bg)]">
+        <ConfirmDialog
+          title="CN content ahead"
+          description="This page lists arcanists that have only released in the CN server and are not out on Global yet. Continuing will show their names and art, which may spoil upcoming content."
+          confirmLabel="Show CN content"
+          cancelLabel="Go back"
+          onConfirm={acknowledgeCnWarning}
+          onCancel={() => router.replace("/")}
+        />
       </div>
     );
   }

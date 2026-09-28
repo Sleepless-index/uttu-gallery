@@ -239,7 +239,7 @@ export default function MyCharactersPage() {
                   <IconMoreVertical />
                 </button>
                 {moreMenuOpen && (
-                  <div className="absolute right-0 top-[calc(100%+6px)] z-50 w-48 rounded-lg border border-[var(--color-border)] bg-[var(--color-panel)] py-1 shadow-xl">
+                  <div className="absolute right-0 top-[calc(100%+6px)] z-30 w-48 rounded-lg border border-[var(--color-border)] bg-[var(--color-panel)] py-1 shadow-xl">
                     <button
                       type="button"
                       onClick={() => {

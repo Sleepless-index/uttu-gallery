@@ -54,7 +54,7 @@ export function Dropdown({
       </button>
       {open && (
         <div
-          className={`absolute top-[calc(100%+6px)] z-50 rounded-lg border border-[var(--color-border)] bg-[var(--color-panel)] shadow-xl ${panelClassName ?? "left-0 w-48"}`}
+          className={`absolute top-[calc(100%+6px)] z-30 rounded-lg border border-[var(--color-border)] bg-[var(--color-panel)] shadow-xl ${panelClassName ?? "left-0 w-48"}`}
         >
           {children(() => setOpen(false))}
         </div>

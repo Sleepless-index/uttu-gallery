@@ -145,7 +145,7 @@ function ExportCard({ character, progress, showI2Art = false }: ExportCardProps)
                 {Array.from({ length: 5 }, (_, i) => i + 1).map((n) => (
                   <span
                     key={n}
-                    className={`h-[3px] flex-1 rounded-full ${n <= progress.portrait ? "bg-[var(--color-portrait-bar)]" : "bg-white/25"} ${n > 1 ? "ml-1" : ""}`}
+                    className={`h-[3px] flex-1 rounded-full ${n <= progress.portrait ? "bg-[var(--color-portrait-bar)]" : "bg-black/45"} ${n > 1 ? "ml-1" : ""}`}
                   />
                 ))}
               </div>

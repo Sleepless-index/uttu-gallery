@@ -39,7 +39,7 @@ export function InfoTooltip({ children }: InfoTooltipProps) {
       {open && (
         <div
           onMouseLeave={() => setOpen(false)}
-          className="absolute left-0 top-[calc(100%+6px)] z-50 w-56 rounded-lg border border-[var(--color-border)] bg-[var(--color-panel)] p-3 text-xs leading-relaxed text-[var(--color-text-dim)] shadow-xl"
+          className="absolute left-0 top-[calc(100%+6px)] z-30 w-56 rounded-lg border border-[var(--color-border)] bg-[var(--color-panel)] p-3 text-xs leading-relaxed text-[var(--color-text-dim)] shadow-xl"
         >
           {children}
         </div>
