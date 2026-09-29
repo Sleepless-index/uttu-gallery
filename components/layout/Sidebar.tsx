@@ -31,6 +31,7 @@ import {
   IconMyPsychubes,
   IconMore,
   IconPullChecklist,
+  IconGuessArcanist,
 } from "@/components/layout/navIcons";
 import { SettingsDropdown } from "@/components/settings/SettingsDropdown";
 
@@ -70,6 +71,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: "Playground",
     items: [
       { href: "/playground/pull-checklist", label: "Pull Checklist", icon: <IconPullChecklist /> },
+      { href: "/playground/guess-arcanist", label: "Guess Arcanist", icon: <IconGuessArcanist /> },
     ],
   },
 ];

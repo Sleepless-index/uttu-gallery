@@ -173,3 +173,17 @@ export function IconPullChecklist() {
     </svg>
   );
 }
+
+
+export function IconGuessArcanist() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <rect x="2" y="3" width="3.4" height="3.4" rx="0.8" stroke="currentColor" strokeWidth="1.3" />
+      <rect x="6.3" y="3" width="3.4" height="3.4" rx="0.8" fill="currentColor" fillOpacity="0.9" />
+      <rect x="10.6" y="3" width="3.4" height="3.4" rx="0.8" stroke="currentColor" strokeWidth="1.3" strokeOpacity="0.6" />
+      <rect x="2" y="9.6" width="3.4" height="3.4" rx="0.8" fill="currentColor" fillOpacity="0.9" />
+      <rect x="6.3" y="9.6" width="3.4" height="3.4" rx="0.8" stroke="currentColor" strokeWidth="1.3" strokeOpacity="0.6" />
+      <rect x="10.6" y="9.6" width="3.4" height="3.4" rx="0.8" stroke="currentColor" strokeWidth="1.3" strokeOpacity="0.6" />
+    </svg>
+  );
+}
