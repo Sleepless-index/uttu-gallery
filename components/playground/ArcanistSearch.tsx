@@ -77,6 +77,7 @@ export function ArcanistSearch({ pool, excludedIds, disabled = false, onPick }: 
     onPick(id);
     setQuery("");
     setActive(0);
+    setOpen(false);
     inputRef.current?.focus();
   }
 
@@ -110,7 +111,6 @@ export function ArcanistSearch({ pool, excludedIds, disabled = false, onPick }: 
           setQuery(e.target.value);
           setOpen(true);
         }}
-        onFocus={() => setOpen(true)}
         onKeyDown={handleKeyDown}
         type="text"
         role="combobox"
@@ -130,7 +130,7 @@ export function ArcanistSearch({ pool, excludedIds, disabled = false, onPick }: 
         <ul
           id={listId}
           role="listbox"
-          className="absolute inset-x-0 bottom-full z-30 mb-1.5 max-h-60 overflow-y-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-1 shadow-2xl md:bottom-auto md:top-full md:mb-0 md:mt-1.5"
+          className="absolute inset-x-0 top-full z-30 mt-1.5 max-h-52 overflow-y-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] p-1 shadow-2xl md:max-h-60"
         >
           {results.length === 0 ? (
             <li className="px-3 py-3 text-[0.75rem] text-[var(--color-text-faint)]">
@@ -152,17 +152,6 @@ export function ArcanistSearch({ pool, excludedIds, disabled = false, onPick }: 
                     : "border-transparent"
                 }`}
               >
-                <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
-                  <span className="relative h-[18px] w-[18px]">
-                    <Image
-                      src={afflatusIconPath(entry.character.afflatus)}
-                      alt={entry.character.afflatus}
-                      fill
-                      sizes="18px"
-                      className="object-contain"
-                    />
-                  </span>
-                </span>
                 <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
                   <Image
                     src={characterArtPath(entry.character.id)}
@@ -172,8 +161,19 @@ export function ArcanistSearch({ pool, excludedIds, disabled = false, onPick }: 
                     className="object-cover object-top"
                   />
                 </span>
-                <span className="min-w-0 flex-1 truncate text-[0.82rem] font-medium text-[var(--color-text)]">
-                  {entry.label}
+                <span className="flex min-w-0 flex-1 items-center gap-1.5">
+                  <span className="relative h-4 w-4 shrink-0">
+                    <Image
+                      src={afflatusIconPath(entry.character.afflatus)}
+                      alt={entry.character.afflatus}
+                      fill
+                      sizes="16px"
+                      className="object-contain"
+                    />
+                  </span>
+                  <span className="truncate text-[0.82rem] font-medium text-[var(--color-text)]">
+                    {entry.label}
+                  </span>
                 </span>
                 <span className="shrink-0 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] px-1.5 py-0.5 text-[0.65rem] font-semibold tabular-nums text-[var(--color-text-dim)]">
                   {entry.character.rarity}★
