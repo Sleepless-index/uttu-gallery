@@ -82,7 +82,7 @@ export function CharacterCard({
       : characterArtPath(character.id);
 
   return (
-    <div className="group relative pt-3 transition-transform duration-200 active:scale-[0.98]">
+    <div className="group relative pt-3 transition-transform duration-200 ease-out hover:-translate-y-2 hover:z-30 hover:scale-[1.06] active:scale-[0.98]">
       <div className="absolute left-1.5 top-2 z-20 h-7 w-[1.1rem] sm:left-2 sm:top-1.5 sm:h-11 sm:w-7">
         <Image
           src={afflatusIconPath(character.afflatus)}
@@ -94,7 +94,7 @@ export function CharacterCard({
       </div>
 
       <div
-        className={`relative overflow-hidden rounded-md border border-[var(--color-border)] transition-all duration-200 group-hover:-translate-y-1 group-hover:border-[var(--color-border-strong)] group-hover:shadow-lg group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)] ${isDropTarget ? "ring-2 ring-[var(--color-accent)]" : ""}`}
+        className={`relative overflow-hidden rounded-md border border-[var(--color-border)] transition-all duration-200 group-hover:border-[var(--color-border-strong)] group-hover:shadow-2xl group-hover:shadow-black/60 group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)] ${isDropTarget ? "ring-2 ring-[var(--color-accent)]" : ""}`}
         style={{ aspectRatio: "224 / 524" }}
       >
         <div className="absolute inset-0 bg-[var(--color-surface)]" />

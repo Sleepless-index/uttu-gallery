@@ -29,7 +29,7 @@ export function PsychubeCard({ psychube, progress, priority = false }: PsychubeC
   return (
     <div className="flex flex-col gap-1">
       <div
-        className="relative overflow-hidden rounded-md border border-transparent transition-all duration-200 group-hover:-translate-y-1 group-hover:border-[var(--color-border-strong)] group-hover:shadow-lg group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)]"
+        className="relative overflow-hidden rounded-md border border-transparent transition-all duration-200 ease-out group-hover:z-30 group-hover:-translate-y-2 group-hover:scale-[1.06] group-hover:border-[var(--color-border-strong)] group-hover:shadow-2xl group-hover:shadow-black/60 group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)]"
         style={{ aspectRatio: "224 / 224" }}
       >
         <div className="absolute inset-0 bg-[var(--color-bg)]" />

@@ -76,9 +76,9 @@ function GarmentCard({ garment, charName, rarity, style }: GarmentCardProps) {
   const character = parseDisplayName(charName);
 
   return (
-    <div className="group relative animate-search-result" style={style}>
+    <div className="group relative animate-search-result transition-transform duration-200 ease-out hover:-translate-y-2 hover:z-30 hover:scale-[1.06]" style={style}>
       <div
-        className="relative w-full overflow-hidden rounded-md border border-[var(--color-border)] transition-all duration-200 active:scale-[0.98] group-hover:-translate-y-1 group-hover:border-[var(--color-border-strong)] group-hover:shadow-lg group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)]"
+        className="relative w-full overflow-hidden rounded-md border border-[var(--color-border)] transition-all duration-200 active:scale-[0.98] group-hover:border-[var(--color-border-strong)] group-hover:shadow-2xl group-hover:shadow-black/60 group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[var(--color-accent)]"
         style={{ aspectRatio: "224 / 524" }}
       >
         {/* Solid backdrop behind cutout art */}
