@@ -1,204 +1,202 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import { parseDisplayName } from "@/lib/data/roster";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { roster } from "@/lib/data/roster";
+import { isCnOnly, compareVersionDesc } from "@/lib/version";
 import { useTrackerState } from "@/lib/hooks/useTrackerState";
-import { useGuessArcanist } from "@/lib/hooks/useGuessArcanist";
-import { afflatusIconPath, characterArtPath } from "@/lib/assets/characterAssets";
 import {
-  MAX_GUESSES,
-  compareGuess,
-  msUntilNextDaily,
-  type GuessMode,
-} from "@/lib/playground/guessArcanist";
-import { ArcanistSearch } from "@/components/playground/ArcanistSearch";
-import { GUESS_GRID, GuessRow } from "@/components/playground/GuessRow";
+  renderExportImage,
+  downloadDataUrl,
+  describeExportError,
+  formatFileSize,
+  type RenderedExportImage,
+} from "@/lib/export/exportPngToFile";
+import { PullChecklistCard } from "@/components/playground/PullChecklistCard";
+import { PullChecklistExportGrid } from "@/components/playground/PullChecklistExportGrid";
+import { ExportButtonLabel } from "@/components/export/ExportButtonLabel";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
-const COLUMNS = ["Arcanist", "Rarity", "Afflatus", "Race", "Version"];
+const CN_WARNING_ACK_KEY = "pullChecklistCnWarningAck";
 
-function pad(value: number): string {
-  return String(value).padStart(2, "0");
-}
-
-function Countdown() {
-  const [remaining, setRemaining] = useState<number | null>(null);
-
-  useEffect(() => {
-    const tick = () => setRemaining(msUntilNextDaily(Date.now()));
-    tick();
-    const timer = window.setInterval(tick, 1000);
-    return () => window.clearInterval(timer);
-  }, []);
-
-  if (remaining === null) return null;
-  const total = Math.max(0, Math.floor(remaining / 1000));
-  const hours = Math.floor(total / 3600);
-  const minutes = Math.floor((total % 3600) / 60);
-  const seconds = total % 60;
-
+function IconDownload() {
   return (
-    <span className="tabular-nums">
-      {pad(hours)}:{pad(minutes)}:{pad(seconds)}
-    </span>
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+      <path
+        d="M8 2v8m0 0L5 7m3 3 3-3M3 12.5v.5a1.5 1.5 0 0 0 1.5 1.5h7a1.5 1.5 0 0 0 1.5-1.5v-.5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
-const MODES: { key: GuessMode; label: string }[] = [
-  { key: "daily", label: "Daily" },
-  { key: "unlimited", label: "Unlimited" },
-];
+function IconSpinner() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" className="animate-spin">
+      <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.6" strokeOpacity="0.25" />
+      <path d="M14 8a6 6 0 0 0-6-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
 
-export default function GuessArcanistPage() {
-  const { state, hydrated } = useTrackerState();
-  const game = useGuessArcanist(state.settings.hideCn, hydrated);
-  const { mode, guesses, target, status, pool } = game;
+export default function PullChecklistPage() {
+  const { state, hydrated, setPullDecision } = useTrackerState();
+  const router = useRouter();
+  const [cnAcknowledged, setCnAcknowledged] = useState<boolean | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const [exportProgress, setExportProgress] = useState<{ loaded: number; total: number } | null>(null);
+  const [exportError, setExportError] = useState<string | null>(null);
+  const [renderedExport, setRenderedExport] = useState<RenderedExportImage | null>(null);
+  const exportRef = useRef<HTMLDivElement>(null);
 
-  const guessedIds = useMemo(() => new Set(guesses.map((g) => g.id)), [guesses]);
-  const emptySlots = Math.max(0, MAX_GUESSES - guesses.length);
-  const finished = status !== "playing";
+  useEffect(() => {
+    setRenderedExport(null);
+  }, [state.pullChecklist]);
 
-  if (!game.ready || !target) {
+  useEffect(() => {
+    setCnAcknowledged(window.sessionStorage.getItem(CN_WARNING_ACK_KEY) === "1");
+  }, []);
+
+  function acknowledgeCnWarning() {
+    window.sessionStorage.setItem(CN_WARNING_ACK_KEY, "1");
+    setCnAcknowledged(true);
+  }
+
+  const groups = useMemo(() => {
+    const cnCharacters = roster.filter((c) => isCnOnly(c.version) && c.rarity === 6);
+    const byVersion = new Map<string, typeof cnCharacters>();
+    for (const c of cnCharacters) {
+      const key = c.version ?? "";
+      const list = byVersion.get(key) ?? [];
+      list.push(c);
+      byVersion.set(key, list);
+    }
+    return Array.from(byVersion.entries())
+      .sort((a, b) => compareVersionDesc(a[0], b[0]))
+      .map(([version, characters]) => ({
+        version,
+        characters: [...characters].sort((a, b) => b.rarity - a.rarity),
+      }));
+  }, []);
+
+  const totalCount = useMemo(() => groups.reduce((sum, g) => sum + g.characters.length, 0), [groups]);
+
+  async function handleGenerateExport() {
+    if (!exportRef.current || exporting) return;
+    setExporting(true);
+    setExportError(null);
+    setExportProgress(null);
+    setRenderedExport(null);
+    try {
+      const result = await renderExportImage({
+        node: exportRef.current,
+        pixelRatio: 2,
+        onProgress: (loaded, total) => setExportProgress({ loaded, total }),
+      });
+      setRenderedExport(result);
+    } catch (err) {
+      console.error("Export failed:", err);
+      setExportError(describeExportError(err));
+    } finally {
+      setExporting(false);
+      setExportProgress(null);
+    }
+  }
+
+  function handleDownloadExport() {
+    if (!renderedExport) return;
+    downloadDataUrl(renderedExport.dataUrl, "pull-checklist.webp");
+    setRenderedExport(null);
+  }
+
+  if (!hydrated || cnAcknowledged === null) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[var(--color-bg)]">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)]">
         <span className="text-[0.75rem] text-[var(--color-text-faint)]">Loading…</span>
       </div>
     );
   }
 
-  const targetLabel = parseDisplayName(target.name).text;
+  if (!cnAcknowledged) {
+    return (
+      <div className="flex min-h-screen flex-col bg-[var(--color-bg)]">
+        <ConfirmDialog
+          title="CN content ahead"
+          description="This page lists arcanists that have only released in the CN server and are not out on Global yet. Continuing will show their names and art, which may spoil upcoming content."
+          confirmLabel="Show CN content"
+          cancelLabel="Go back"
+          onConfirm={acknowledgeCnWarning}
+          onCancel={() => router.replace("/")}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col bg-[var(--color-bg)]">
-      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-5 px-4 py-6 sm:px-6 sm:py-8">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-0.5">
-            {MODES.map((m) => (
-              <button
-                key={m.key}
-                type="button"
-                onClick={() => game.setMode(m.key)}
-                aria-pressed={mode === m.key}
-                className={`rounded-md px-3 py-1.5 text-[0.75rem] font-medium transition-colors ${
-                  mode === m.key
-                    ? "bg-[var(--color-accent)] text-white"
-                    : "text-[var(--color-text-dim)] hover:text-[var(--color-text)]"
-                }`}
-              >
-                {m.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3 text-[0.72rem] text-[var(--color-text-dim)]">
-            {mode === "daily" && (
-              <span>
-                Streak <strong className="font-semibold text-[var(--color-text)]">{game.streak}</strong>
-                <span className="text-[var(--color-text-faint)]"> · Best {game.bestStreak}</span>
-              </span>
-            )}
-            <span>
-              Guess{" "}
-              <strong className="font-semibold text-[var(--color-text)]">
-                {Math.min(guesses.length + (finished ? 0 : 1), MAX_GUESSES)}
-              </strong>{" "}
-              of {MAX_GUESSES}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1.5 sm:gap-2">
-          <div className={GUESS_GRID}>
-            {COLUMNS.map((column) => (
-              <span
-                key={column}
-                className="truncate px-1 text-center text-[0.6rem] font-semibold uppercase tracking-wide text-[var(--color-text-faint)] first:text-left"
-              >
-                {column}
-              </span>
-            ))}
-          </div>
-
-          {guesses.map((guess, index) => (
-            <GuessRow
-              key={guess.id}
-              guess={guess}
-              comparison={compareGuess(guess, target)}
-              animate={guess.id === game.freshId && index === guesses.length - 1}
-            />
-          ))}
-
-          {Array.from({ length: emptySlots }).map((_, index) => (
-            <div key={`empty-${index}`} className={GUESS_GRID}>
-              <div className="col-span-5 h-12 rounded-md border border-dashed border-[var(--color-border)]" />
-            </div>
-          ))}
-        </div>
-
-        {finished ? (
-          <section
-            aria-live="polite"
-            className="flex items-center gap-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-panel)] p-4"
-          >
-            <div
-              className="relative w-20 shrink-0 overflow-hidden rounded-lg border border-[var(--color-border)]"
-              style={{ aspectRatio: "224 / 524" }}
+    <div className="flex min-h-screen flex-col bg-[var(--color-bg)]">
+      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col overflow-y-auto px-4 py-6 sm:px-6 sm:py-8">
+        <div className="mb-3 flex justify-end">
+          {totalCount > 0 && (
+            <button
+              onClick={renderedExport ? handleDownloadExport : handleGenerateExport}
+              disabled={exporting}
+              className="flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[0.75rem] font-medium text-[var(--color-text-dim)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)] disabled:opacity-60"
             >
-              <Image src={characterArtPath(target.id)} alt={targetLabel} fill sizes="80px" className="object-cover" />
-            </div>
-            <div className="flex min-w-0 flex-1 flex-col gap-3">
-              <div className="flex flex-col gap-1">
-                <span
-                  className={`text-[0.65rem] font-semibold uppercase tracking-[0.16em] ${
-                    status === "won" ? "text-[var(--color-success)]" : "text-[var(--color-text-faint)]"
-                  }`}
-                >
-                  {status === "won"
-                    ? `Solved in ${guesses.length} ${guesses.length === 1 ? "guess" : "guesses"}`
-                    : "Out of guesses"}
-                </span>
-                <h2
-                  className="flex items-center gap-2 text-[1.6rem] font-bold leading-tight tracking-tight text-[var(--color-text)] sm:text-[1.9rem]"
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
-                  <span className="relative inline-block h-5 w-5 shrink-0 sm:h-6 sm:w-6">
-                    <Image src={afflatusIconPath(target.afflatus)} alt={target.afflatus} fill sizes="24px" className="object-contain" />
-                  </span>
-                  <span className="truncate">{targetLabel}</span>
-                </h2>
-              </div>
+              {exporting ? <IconSpinner /> : <IconDownload />}
+              <ExportButtonLabel
+                exporting={exporting}
+                exportProgress={exportProgress}
+                byteSizeLabel={renderedExport ? formatFileSize(renderedExport.byteSize) : null}
+              />
+            </button>
+          )}
+        </div>
 
-              <div className="border-t border-[var(--color-border)] pt-3">
-                {mode === "unlimited" ? (
-                  <button
-                    type="button"
-                    onClick={game.newUnlimited}
-                    className="w-fit rounded-lg bg-[var(--color-accent)] px-3.5 py-2 text-[0.75rem] font-semibold tracking-wide text-white transition-colors hover:bg-[var(--color-accent-hover)]"
-                  >
-                    New arcanist
-                  </button>
-                ) : (
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-[var(--color-text-faint)]">
-                      Next daily arcanist in
-                    </span>
-                    <span className="font-mono text-[1.05rem] font-medium text-[var(--color-text)]">
-                      <Countdown />
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
+        {exportError && (
+          <p className="mb-3 rounded-lg border border-[var(--color-danger)] bg-[var(--color-danger)]/10 px-3 py-2 text-[0.75rem] text-[var(--color-danger)]">
+            {exportError}
+          </p>
+        )}
+
+        {totalCount === 0 ? (
+          <p className="py-16 text-center text-[0.8rem] text-[var(--color-text-faint)]">
+            No CN-exclusive arcanists to plan for right now.
+          </p>
         ) : (
-          <ArcanistSearch
-            key={mode}
-            pool={pool}
-            excludedIds={guessedIds}
-            onPick={game.submitGuess}
-          />
+          <div className="flex flex-col gap-6">
+            {groups.map((group) => (
+              <div key={group.version} className="flex flex-col gap-2">
+                <span
+                  className="text-[0.7rem] font-semibold uppercase tracking-wide text-[var(--color-text-faint)]"
+                >
+                  Version {group.version}
+                </span>
+                <div className="flex flex-col gap-2 sm:grid sm:grid-cols-2 sm:gap-3">
+                  {group.characters.map((c) => (
+                    <PullChecklistCard
+                      key={c.id}
+                      character={c}
+                      decision={state.pullChecklist[c.id] ?? null}
+                      onChange={(decision) => setPullDecision(c.id, decision)}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </main>
+
+      {/* Off-screen export target — see app/characters/page.tsx for why this
+          is positioned far outside the viewport rather than display:none. */}
+      <div aria-hidden style={{ position: "fixed", top: 0, left: "-99999px", pointerEvents: "none" }}>
+        <div ref={exportRef}>
+          <PullChecklistExportGrid groups={groups} decisions={state.pullChecklist} />
+        </div>
+      </div>
     </div>
   );
 }
